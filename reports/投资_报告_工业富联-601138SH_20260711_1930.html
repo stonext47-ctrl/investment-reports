@@ -130,6 +130,7 @@
     .market-ask strong { display: block; margin-top: 6px; font: 700 24px/1.2 var(--mono); }
     .market-ask p { margin: 7px 0 0; color: var(--soft); font-size: 12px; }
     .quality-split { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 28px; }
+    .quality-split > * { min-width: 0; }
     details { margin-top: 14px; border-top: 1px solid var(--rule); }
     summary { padding: 14px 0; cursor: pointer; font-weight: 700; }
     .stage-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
@@ -157,7 +158,7 @@
       section { padding: 48px 20px; }
       .section-head { grid-template-columns: 1fr; gap: 6px; }
       .triad, .grid-2, .grid-3, .evidence-grid, .final-decision, .coverage { grid-template-columns: 1fr; }
-      .market-ask, .quality-split { grid-template-columns: 1fr; }
+      .market-ask, .quality-split { grid-template-columns: minmax(0, 1fr); }
       .quant-panel-head { grid-template-columns: 1fr; gap: 12px; }
       .quant-panel { padding: 18px 16px; }
       .market-ask article { border-right: 0; border-bottom: 1px solid var(--rule); }
