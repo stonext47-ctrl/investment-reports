@@ -282,14 +282,23 @@
     }
     @media (max-width: 720px) {
       .cover-inner, .audit-inner { width: min(100% - 28px, 1280px); }
-      .cover-inner { min-height: 0; padding: 24px 0 22px; }
+      .cover-inner { min-height: 0; padding: 20px 0 18px; grid-template-areas: "title" "thesis" "decision"; gap: 14px; }
       .cover-title { padding-top: 0; }
       h1 { font-size: 42px; }
-      .thesis { margin-top: 0; font-size: 17px; -webkit-line-clamp: 4; }
-      .decision-strip { grid-template-columns: 1fr; }
-      .decision-primary { border-right: 0; border-bottom: 1px solid var(--line); }
-      .signal-row, .decision-overview { grid-template-columns: 1fr; }
-      .price-rail-track { min-height: 360px; margin-top: 12px; }
+      .thesis { margin-top: 0; font-size: 16px; line-height: 1.62; -webkit-line-clamp: 3; }
+      .decision-strip { grid-template-columns: .92fr 1.08fr; }
+      .decision-primary { padding: 14px 15px; border-right: 1px solid var(--line); border-bottom: 0; }
+      .decision-primary strong { font-size: 34px; }
+      .decision-primary b { margin-top: 6px; font-size: 18px; }
+      .decision-stat { padding: 10px 11px; }
+      .decision-stat strong { font-size: 15px; }
+      .signal-row { grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 7px; }
+      .signal-chip { padding: 9px 10px; }
+      .signal-chip p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .decision-overview { display: none; }
+      .price-rail { margin-top: 8px; padding: 12px 14px 8px; }
+      .price-rail-head p { display: none; }
+      .price-rail-track { min-height: 250px; margin-top: 8px; }
       .price-rail-line { top: 4%; bottom: 4%; left: 24px; width: 3px; height: auto; background: linear-gradient(180deg, var(--critical), var(--amber) 45%, var(--cobalt)); }
       .price-node { left: 0 !important; width: calc(100% - 42px); padding-left: 46px; transform: translateY(-50%); text-align: left; }
       .price-node::after, .price-node.current::before { position: absolute; top: 50%; left: 18px; width: 14px; height: 2px; margin: 0; }
