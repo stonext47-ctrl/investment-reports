@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="aihf-report-schema" content="aihf-v3-decision-report.v1">
+  <link rel="icon" href="data:,">
+  <title>药明康德 · IC 投资裁决台</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --ink-2: #263149;
+      --soft: #5d6778;
+      --muted: #8993a5;
+      --paper: #f4f6f9;
+      --sheet: #ffffff;
+      --cobalt: #2557d6;
+      --cobalt-pale: #eaf0ff;
+      --amber: #d58b22;
+      --amber-pale: #fff4df;
+      --critical: #b33a46;
+      --critical-pale: #fff0f1;
+      --line: #dde2e8;
+      --line-strong: #bcc5d1;
+      --shadow: 0 18px 50px rgba(23, 32, 51, .08);
+      --sans: "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+      --serif: "Songti SC", STSong, SimSun, serif;
+      --mono: "DIN Alternate", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; background: var(--paper); }
+    body { max-width: 100%; overflow-x: hidden; margin: 0; color: var(--ink); background: var(--paper); font: 15px/1.68 var(--sans); }
+    a { color: inherit; }
+    p { margin: 0 0 14px; }
+    ul, ol { margin: 10px 0 0; }
+    small { color: var(--soft); }
+    :focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
+    .skip-link { position: fixed; z-index: 50; top: 8px; left: 8px; padding: 10px 14px; color: #fff; background: var(--cobalt); transform: translateY(-150%); }
+    .skip-link:focus { transform: translateY(0); }
+    .kicker, .label, th, .audit-key, .eyebrow { font: 700 10px/1.35 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .kicker { color: var(--cobalt); }
+    .label, .eyebrow { color: var(--soft); }
+    h1 { margin: 12px 0 8px; font: 750 clamp(40px, 5.2vw, 68px)/1.02 var(--sans); letter-spacing: -.055em; }
+    h2 { margin: 0; font: 720 clamp(25px, 3vw, 34px)/1.2 var(--sans); letter-spacing: -.035em; }
+    h3 { margin: 0 0 12px; font: 700 18px/1.4 var(--sans); }
+    .identity { color: var(--soft); font: 650 12px/1.55 var(--mono); }
+    .lede { max-width: 78ch; color: var(--soft); font: 500 16px/1.78 var(--sans); }
+    .compact { padding-left: 19px; }
+    .compact li + li { margin-top: 7px; }
+
+    /* Decision cockpit */
+    .cover {
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(37, 87, 214, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 87, 214, .045) 1px, transparent 1px),
+        var(--sheet);
+      background-size: 28px 28px;
+      border-top: 7px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+    }
+    .cover-inner {
+      width: min(1280px, calc(100vw - 48px));
+      min-height: 660px;
+      margin: auto;
+      padding: 34px 0 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(470px, .95fr);
+      grid-template-areas: "title decision" "thesis decision";
+      gap: 24px 56px;
+      align-items: start;
+    }
+    .cover-title { grid-area: title; padding-top: 8px; }
+    .cover-decision { grid-area: decision; min-width: 0; }
+    .thesis-block { grid-area: thesis; max-width: 700px; }
+    .thesis {
+      max-width: 700px;
+      margin: 8px 0 0;
+      font: 600 20px/1.7 var(--serif);
+    }
+    .thesis-details { margin-top: 10px; border-top: 1px solid var(--line); }
+    .thesis-details summary { min-height: 44px; padding: 11px 0; color: var(--soft); font: 700 11px/1.6 var(--mono); }
+    .thesis-details p { margin: 0; padding: 0 0 12px; color: var(--soft); font: 500 14px/1.75 var(--sans); }
+    .decision-strip {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      border: 1px solid var(--line-strong);
+      background: rgba(255, 255, 255, .94);
+      box-shadow: var(--shadow);
+    }
+    .decision-primary { padding: 20px 22px; border-right: 1px solid var(--line); }
+    .decision-primary span, .decision-stat span { display: block; color: var(--soft); font: 700 10px/1.4 var(--mono); text-transform: uppercase; }
+    .decision-primary strong { display: block; margin-top: 7px; color: var(--cobalt); font: 760 42px/1 var(--sans); letter-spacing: -.045em; }
+    .decision-primary b { display: block; margin-top: 8px; font: 750 22px/1.1 var(--mono); }
+    .decision-stats { display: grid; grid-template-columns: 1fr 1fr; }
+    .decision-stat { min-width: 0; padding: 14px 15px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .decision-stat:nth-child(2n) { border-right: 0; }
+    .decision-stat:nth-last-child(-n+2) { border-bottom: 0; }
+    .decision-stat strong { display: block; margin-top: 6px; font: 750 18px/1.2 var(--mono); }
+    .signal-row { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+    .signal-chip { min-width: 0; padding: 11px 13px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .signal-chip.cautious, .signal-chip.fragile { border-color: var(--amber); background: var(--amber-pale); }
+    .signal-chip.adverse { border-color: var(--critical); background: var(--critical-pale); }
+    .signal-chip b { display: block; font: 700 12px/1.4 var(--mono); }
+    .signal-chip p { margin: 4px 0 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+    .decision-waterfall { margin-top: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, .96); }
+    .decision-waterfall-head { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.8fr); gap: 16px; padding: 11px 13px; border-bottom: 1px solid var(--line); }
+    .decision-waterfall-head b { font: 750 12px/1.45 var(--mono); }
+    .decision-waterfall-head p { margin: 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+    .decision-waterfall-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .decision-step { position: relative; min-width: 0; padding: 10px 13px; border-right: 1px solid var(--line); }
+    .decision-step:last-child { border-right: 0; }
+    .decision-step::after { content: "→"; position: absolute; z-index: 1; top: 50%; right: -8px; width: 16px; color: var(--muted); background: var(--sheet); text-align: center; transform: translateY(-50%); }
+    .decision-step:last-child::after { display: none; }
+    .decision-step span, .decision-step strong, .decision-step small { display: block; overflow-wrap: anywhere; }
+    .decision-step span { color: var(--muted); font: 700 9px/1.35 var(--mono); text-transform: uppercase; }
+    .decision-step strong { margin-top: 3px; font: 750 15px/1.25 var(--mono); }
+    .decision-step small { margin-top: 4px; color: var(--soft); font-size: 10px; }
+    .decision-step.block { border-top: 3px solid var(--amber); }
+    .decision-step.pass { border-top: 3px solid var(--gain); }
+
+    /* The signature: one honest scale for bear/current/base/bull. */
+    .price-rail { margin-top: 16px; padding: 16px 18px 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, .96); }
+    .price-rail-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .price-rail-head p { color: var(--soft); font-size: 11px; }
+    .price-rail-track { position: relative; min-height: 144px; margin-top: 4px; }
+    .price-rail-line { position: absolute; top: 66px; right: 4%; left: 4%; height: 3px; background: linear-gradient(90deg, var(--critical), var(--amber) 45%, var(--cobalt)); }
+    .price-node {
+      position: absolute;
+      top: 8px;
+      width: 104px;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .price-node::after { content: ""; display: block; width: 2px; height: 22px; margin: 7px auto 0; background: var(--ink); }
+    .price-node.current { top: 74px; }
+    .price-node.current::before { content: ""; display: block; width: 2px; height: 18px; margin: -8px auto 6px; background: var(--cobalt); }
+    .price-node.current::after { display: none; }
+    .price-node span { display: block; color: var(--soft); font: 700 9px/1.35 var(--mono); text-transform: uppercase; }
+    .price-node strong { display: block; margin-top: 3px; font: 760 17px/1.2 var(--mono); }
+    .price-node em { display: block; color: var(--soft); font: normal 650 10px/1.4 var(--mono); }
+    .price-node-card { min-width: 0; }
+    .price-node[data-price-coordinate="4.00"] { left: 4.00%; }
+    .price-node[data-price-coordinate="46.77"] { left: 46.77%; }
+    .price-node[data-price-coordinate="96.00"] { left: 96.00%; }
+    .price-node.current[data-price-coordinate="44.59"] { left: 44.59%; }
+    .decision-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .decision-overview article { min-width: 0; padding: 12px 14px; border: 1px solid var(--line); background: rgba(255, 255, 255, .96); }
+    .decision-overview li { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+
+    /* Status is present, but no longer louder than the decision. */
+    .audit-strip { border-bottom: 1px solid var(--line); background: #eef1f6; }
+    .audit-inner { width: min(1280px, calc(100vw - 48px)); margin: auto; }
+    .audit-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .audit-cell { min-width: 0; padding: 10px 14px; border-right: 1px solid var(--line); }
+    .audit-cell:first-child { padding-left: 0; }
+    .audit-cell:last-child { border-right: 0; }
+    .audit-key { display: block; color: var(--soft); font-size: 10px; }
+    .audit-cell strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 11px/1.5 var(--mono); }
+    .freshness-drawer { margin: 0; border-top: 1px solid var(--line); }
+    .freshness-drawer summary { min-height: 44px; padding: 12px 0; }
+    .freshness-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 12px; }
+
+    .decision-nav {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      min-width: 0;
+      padding: 8px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(14px);
+    }
+    .decision-nav a { padding: 9px 13px; color: var(--soft); border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 700; }
+    .decision-nav a:hover { color: var(--cobalt); background: var(--cobalt-pale); }
+
+    .layout { width: min(1180px, calc(100vw - 48px)); margin: 26px auto 70px; }
+    .content { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--sheet); box-shadow: var(--shadow); }
+    section { padding: 56px 58px; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; }
+    section:last-child { border-bottom: 0; }
+    .section-head { display: grid; gap: 7px; margin-bottom: 26px; }
+    .section-head .eyebrow { color: var(--cobalt); }
+    .section-secondary { background: #fafbfc; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .quality-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px; }
+    .quality-split > * { min-width: 0; }
+    .note-block { min-width: 0; padding: 18px 20px; border: 1px solid var(--line); border-top: 3px solid var(--cobalt); background: var(--sheet); }
+    .note-block.risk { border-top-color: var(--critical); background: var(--critical-pale); }
+    .note-block.gain { border-top-color: var(--cobalt); background: var(--cobalt-pale); }
+    .degraded { padding: 13px 15px; color: #714714; border-left: 3px solid var(--amber); background: var(--amber-pale); }
+
+    .decision-chain { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 24px; border: 1px solid var(--line-strong); }
+    .decision-node { position: relative; min-width: 0; padding: 18px 18px 20px; border-right: 1px solid var(--line); }
+    .decision-node:last-child { border-right: 0; }
+    .decision-node:not(:last-child)::after { content: "→"; position: absolute; z-index: 2; top: 50%; right: -11px; width: 21px; color: var(--cobalt); background: var(--sheet); text-align: center; font-weight: 800; }
+    .decision-node strong { display: block; margin: 7px 0 5px; font: 750 16px/1.3 var(--sans); }
+    .decision-node p { margin: 0; color: var(--soft); font-size: 12px; }
+    .hypothesis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .hypothesis { padding: 17px 18px; border-left: 3px solid var(--cobalt); background: #f7f9fe; }
+    .hypothesis p { margin: 6px 0; }
+    .catalyst-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .catalyst-strip article { min-width: 0; padding: 14px 15px; border: 1px solid var(--line); }
+    .catalyst-strip p { margin: 5px 0 0; color: var(--soft); font-size: 12px; }
+
+    .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 20px 0; border: 1px solid var(--line); }
+    .metric { min-width: 0; min-height: 78px; padding: 14px 15px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .metric:nth-child(3n) { border-right: 0; }
+    .metric:nth-last-child(-n+3) { border-bottom: 0; }
+    .metric strong { display: block; margin-top: 7px; overflow-wrap: anywhere; font: 750 18px/1.2 var(--mono); }
+    .market-ask { display: grid; grid-template-columns: 1.05fr .8fr 1.15fr; margin-top: 20px; border: 1px solid var(--line); }
+    .market-ask article { min-width: 0; padding: 17px 18px; border-right: 1px solid var(--line); }
+    .market-ask article:last-child { border-right: 0; }
+    .market-ask strong { display: block; margin-top: 6px; font: 750 19px/1.25 var(--mono); overflow-wrap: anywhere; }
+    .market-ask p { margin: 6px 0 0; color: var(--soft); font-size: 11px; }
+
+    .scenario-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .scenario-card { min-width: 0; padding: 17px 18px; border: 1px solid var(--line); border-top: 4px solid var(--line-strong); background: var(--sheet); }
+    .scenario-card.base { border-top-color: var(--cobalt); background: #f8faff; }
+    .scenario-card.bear { border-top-color: var(--critical); }
+    .scenario-card.bull { border-top-color: var(--amber); }
+    .scenario-card strong { display: block; margin: 5px 0; font: 750 24px/1.1 var(--mono); }
+    .scenario-card p { color: var(--soft); font-size: 12px; }
+
+    details { margin-top: 14px; border-top: 1px solid var(--line); }
+    summary { display: flex; min-height: 44px; cursor: pointer; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; font-weight: 700; }
+    summary::after { content: "＋"; color: var(--cobalt); font: 700 17px/1 var(--mono); }
+    details[open] > summary::after { content: "－"; }
+    .drawer-body { padding: 4px 0 22px; }
+    .drawer-body > h3:not(:first-child) { margin-top: 28px; }
+    .table-wrap { width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; border-top: 2px solid var(--ink); }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    caption { padding: 9px 0; color: var(--soft); text-align: left; font-weight: 700; }
+    th, td { padding: 10px 9px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { color: var(--soft); background: #f2f4f7; }
+    td { font-size: 14px; }
+    td.wrap, th.wrap { min-width: 240px; white-space: normal; }
+    .table-note { margin-top: 9px; color: var(--soft); font-size: 11px; }
+
+    .quant-panel { padding: 21px 22px; border: 1px solid var(--line); border-top: 4px solid var(--cobalt); background: #f8faff; }
+    .quant-panel-head { display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: end; }
+    .quant-score { font: 760 30px/1 var(--mono); }
+    .position-waterfall { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 16px; background: var(--line); border: 1px solid var(--line); }
+    .position-waterfall div { min-width: 0; padding: 13px 14px; background: var(--sheet); }
+    .position-waterfall strong { display: block; margin-top: 5px; font: 750 14px/1.35 var(--mono); overflow-wrap: anywhere; }
+    .quant-layer { margin-top: 22px; }
+    .quant-audit-grid, .decision-math-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+    .quant-audit-card, .decision-math-grid div { min-width: 0; padding: 12px 13px; border: 1px solid var(--line); background: var(--sheet); }
+    .quant-audit-card strong, .quant-audit-card small, .decision-math-grid strong { display: block; overflow-wrap: anywhere; }
+    .quant-boundary { margin: 16px 0 0; padding: 11px 13px; border-left: 3px solid var(--amber); background: var(--amber-pale); }
+    .decision-math-audit { margin-top: 18px; padding: 18px 20px; border: 1px solid var(--line); background: #f7f8fb; }
+    .robustness-callout, .quant-callout { margin-top: 12px; padding: 12px 14px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .robustness-callout.fragile, .quant-callout.cautious { border-color: var(--amber); background: var(--amber-pale); }
+    .quant-callout.adverse { border-color: var(--critical); background: var(--critical-pale); }
+    .robustness-callout p, .quant-callout p { margin: 4px 0 0; color: var(--soft); font-size: 11px; }
+
+    .claim { display: grid; grid-template-columns: 100px 1.4fr .7fr 1fr; gap: 14px; padding: 15px 0; border-top: 1px solid var(--line); }
+    .claim strong { display: block; }
+    .tag { display: inline-block; padding: 2px 7px; color: var(--cobalt); background: var(--cobalt-pale); font: 700 9px/1.5 var(--mono); }
+    .challenge { padding: 18px 0; border-top: 1px solid var(--line); }
+    .challenge-meta { color: var(--critical); font: 700 10px/1.45 var(--mono); }
+    .response { margin-top: 10px; padding: 12px 14px; background: #f2f4f7; }
+    .premortem { padding: 21px 22px; color: #fff; background: var(--ink-2); }
+    .review-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .review-card { padding: 16px 17px; border: 1px solid var(--line); }
+    .review-card strong { display: block; font: 750 18px/1.25 var(--mono); }
+    .tracking-change { padding: 15px 16px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .tracking-changed { color: var(--cobalt); font-weight: 700; }
+    .tracking-unchanged { color: var(--soft); }
+
+    .evidence-room-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .evidence-room-summary div { padding: 14px 15px; border: 1px solid var(--line); }
+    .evidence-group { border: 0; }
+    .evidence-drawer { margin-top: 8px; border: 1px solid var(--line); }
+    .evidence-drawer summary { padding: 13px 15px; background: #fafbfc; }
+    .evidence-stack { padding: 0 15px 15px; }
+    .evidence { padding: 14px 0; border-top: 1px solid var(--line); }
+    .evidence p { margin: 6px 0; }
+    .evidence-meta { color: var(--soft); font: 600 9px/1.55 var(--mono); overflow-wrap: anywhere; }
+    .stage-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .stage { min-width: 0; padding: 11px; background: var(--sheet); }
+    .stage b, .stage small { display: block; overflow-wrap: anywhere; }
+    .stage b { color: var(--cobalt); font-family: var(--mono); }
+    progress { width: 100%; height: 7px; accent-color: var(--cobalt); }
+
+    @media (max-width: 1050px) {
+      .cover-inner { grid-template-columns: 1fr; grid-template-areas: "title" "decision" "thesis"; min-height: 0; }
+      .cover-decision { width: 100%; }
+      .decision-chain { grid-template-columns: 1fr 1fr; }
+      .decision-node { border-bottom: 1px solid var(--line); }
+      .decision-node:not(:last-child)::after { display: none; }
+      .decision-node:last-child { grid-column: 1 / -1; }
+      .stage-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .cover-inner, .audit-inner { width: min(100% - 28px, 1280px); }
+      .cover-inner { min-height: 0; padding: 20px 0 18px; grid-template-areas: "title" "decision" "thesis"; gap: 14px; }
+      .cover-title { padding-top: 0; }
+      h1 { font-size: 42px; }
+      .thesis { margin-top: 0; font-size: 16px; line-height: 1.62; }
+      .thesis-details { margin-top: 7px; }
+      .decision-strip { grid-template-columns: .92fr 1.08fr; }
+      .decision-primary { padding: 14px 15px; border-right: 1px solid var(--line); border-bottom: 0; }
+      .decision-primary strong { font-size: 34px; }
+      .decision-primary b { margin-top: 6px; font-size: 18px; }
+      .decision-stat { padding: 10px 11px; }
+      .decision-stat strong { font-size: 15px; }
+      .signal-row { grid-template-columns: 1fr; gap: 7px; margin-top: 7px; }
+      .signal-chip { padding: 9px 10px; }
+      .signal-chip p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .decision-waterfall-head { grid-template-columns: 1fr; gap: 4px; padding: 9px 10px; }
+      .decision-waterfall-head p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+      .decision-step { padding: 9px 8px; }
+      .decision-step strong { font-size: 12px; }
+      .decision-step small { font-size: 9px; }
+      .decision-overview { grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 7px; }
+      .decision-overview article { padding: 9px 10px; }
+      .decision-overview li:nth-child(n+2) { display: none; }
+      .decision-overview li { font-size: 11px; -webkit-line-clamp: 3; }
+      .price-rail { margin-top: 8px; padding: 12px 14px 8px; }
+      .price-rail-head p { display: none; }
+      .price-rail-track { min-height: 220px; margin-top: 8px; }
+      .price-rail-line { top: 4%; bottom: 4%; left: 24px; width: 3px; height: auto; background: linear-gradient(180deg, var(--critical), var(--amber) 45%, var(--cobalt)); }
+      .price-node { left: 0 !important; width: calc(100% - 42px); padding-left: 46px; transform: translateY(-50%); text-align: left; }
+      .price-node::after, .price-node.current::before { position: absolute; top: 50%; left: 18px; width: 14px; height: 2px; margin: 0; }
+      .price-node.current { top: auto; }
+      .price-node[data-price-coordinate="4.00"] { top: 4.00%; }
+      .price-node[data-price-coordinate="46.77"] { top: 46.77%; }
+      .price-node[data-price-coordinate="96.00"] { top: 96.00%; }
+      .price-node.current[data-price-coordinate="44.59"] { top: 44.59%; }
+      .price-node-card.offset-up { transform: translateY(-22px); }
+      .price-node-card.offset-down { transform: translateY(22px); }
+      .audit-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .audit-cell { padding: 9px 10px; border-bottom: 1px solid var(--line); }
+      .audit-cell:first-child { padding-left: 10px; }
+      .freshness-grid { grid-template-columns: 1fr; }
+      .decision-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 5px 8px; }
+      .decision-nav a { display: flex; min-height: 44px; padding: 6px 8px; align-items: center; justify-content: center; text-align: center; }
+      .layout { width: 100%; margin: 0; }
+      .content { border: 0; box-shadow: none; }
+      section { padding: 42px 18px; scroll-margin-top: 54px; }
+      .grid-2, .grid-3, .hypothesis-grid, .catalyst-strip, .scenario-cards, .review-grid, .evidence-room-summary { grid-template-columns: 1fr; }
+      .market-ask, .quality-split { grid-template-columns: minmax(0, 1fr); }
+      .market-ask article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .market-ask article:last-child { border-bottom: 0; }
+      .decision-chain { grid-template-columns: 1fr; }
+      .decision-node, .decision-node:last-child { grid-column: auto; border-right: 0; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric:nth-child(3n) { border-right: 1px solid var(--line); }
+      .metric:nth-child(2n) { border-right: 0; }
+      .metric:nth-last-child(-n+3) { border-bottom: 1px solid var(--line); }
+      .metric:nth-last-child(-n+2) { border-bottom: 0; }
+      .quant-panel-head { grid-template-columns: 1fr; gap: 12px; }
+      .position-waterfall { grid-template-columns: 1fr 1fr; }
+      .quant-audit-grid, .decision-math-grid { grid-template-columns: minmax(0, 1fr); }
+      .claim { grid-template-columns: 1fr; gap: 6px; }
+      .stage-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media print {
+      @page { size: A4; margin: 13mm; }
+      html, body { background: #fff; }
+      .cover { border: 1px solid #111; background: #fff; }
+      .cover-inner { width: 100%; min-height: 0; padding: 20px; }
+      .decision-nav { display: none; }
+      .layout { width: 100%; margin: 0; }
+      .content { border: 0; box-shadow: none; }
+      section { padding: 26px 0; }
+      details { break-inside: auto; }
+      .note-block, .scenario-card, .claim, tr { break-inside: avoid; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#summary">跳到投资结论</a>
+<main data-schema="aihf-v3-decision-report.v1"
+      data-action="avoid"
+      data-position="0.0"
+      data-reference-price="123.3"
+      data-target-bear="73.0"
+      data-target-base="126.0"
+      data-target-bull="187.0"
+      data-prob-bear="0.38"
+      data-prob-base="0.47"
+      data-prob-bull="0.15"
+      data-quant-signal="supportive"
+      data-quant-score="91.25"
+      data-quant-coverage="1.0"
+      data-quant-policy-version="aihf_quant_timing_policy.2.0.0"
+      data-quant-policy-hash="2021c7d63f9136f27232f58f"
+      data-quant-observation-id="6fc89f74910d81adeac916ed"
+      data-run-status="complete"
+      data-process-status="complete"
+      data-snapshot-hash="790c3d7e589c09ab5245c761"
+      data-research-run-id="2c1863125565101f90496da0"
+      data-fundamental-coverage="broad"
+      data-investment-readiness="conditional"
+      data-data-quality="current"
+      data-report-date="2026-07-12"
+      data-requested-end-date="2026-07-10"
+      data-market-data-as-of="2026-07-10"
+      data-latest-available-trading-day="2026-07-10"
+      data-stale-trading-days="0"
+      data-freshness-status="current"
+      data-freshness-message="行情截至最近可用交易日 2026-07-10。">
+
+  <!-- DECISION COCKPIT -->
+  <header class="cover" id="top">
+    <div class="cover-inner">
+      <div class="cover-title">
+        <div class="kicker">IC DECISION CONSOLE · CANONICAL V3</div>
+        <h1>药明康德</h1>
+        <div class="identity">603259.SH / 医药外包服务（CXO/CRDMO） / CNY / 截止 2026-07-10</div>
+      </div>
+      <div class="cover-decision">
+        <div class="decision-strip">
+          <div class="decision-primary">
+            <span>当前动作 / target action</span>
+            <strong data-current-field="action">暂不新开仓</strong>
+            <b data-current-field="position">0.0%</b>
+          </div>
+          <div class="decision-stats">
+            <div class="decision-stat"><span>原始净 EV</span><strong>-7.1%</strong></div>
+            <div class="decision-stat"><span>原始赔率</span><strong>0.57</strong></div>
+            <div class="decision-stat"><span>稳健性</span><strong>稳定</strong></div>
+            <div class="decision-stat"><span>量化分</span><strong data-current-field="quant-score">91.25 / 100</strong></div>
+          </div>
+        </div>
+        <div class="signal-row">
+          <div class="signal-chip supportive" data-quant-overlay="true"><b>量化闸门 · <span data-current-field="quant-signal">支持</span></b><p>覆盖 <span data-current-field="quant-coverage">100.0%</span> · 仓位乘数 ×1.00（未应用）</p></div>
+        </div>
+        <div class="decision-waterfall stable" data-decision-gate="true" data-decision-waterfall="true">
+          <div class="decision-waterfall-head"><b>双重门禁 · 原始回避 → 压力回避 → 最终回避</b><p>原始净 EV -7.1% / 赔率 0.57，未同时达到开仓线 EV≥15.0% 且赔率≥2.00；预设压力后动作未翻转；流程与数据门禁允许按当前动作交付</p></div>
+          <div class="decision-waterfall-steps"><div class="decision-step neutral" data-decision-step="true"><span>原始判定</span><strong>回避 0.0%</strong><small>净 EV -7.1% · 赔率 0.57</small></div><div class="decision-step pass" data-decision-step="true"><span>预设压力门禁</span><strong>回避</strong><small>指标未提供</small></div><div class="decision-step pass" data-decision-step="true"><span>数据门禁</span><strong>通过</strong><small>complete · fatal 0</small></div></div>
+        </div>
+        <div class="price-rail" data-price-rail="true" role="img" aria-label="价格从低到高：悲观 73.00；现价 123.30；基准 126.00；乐观 187.00">
+          <div class="price-rail-head"><b>情景价格轨</b><p>节点间距按真实价格比例，而非等距装饰</p></div>
+          <div class="price-rail-track">
+            <div class="price-rail-line"></div>
+            <div class="price-node bear" data-price-coordinate="4.00">
+              <div class="price-node-card offset-none"><span>悲观</span><strong data-current-field="target-bear">73.00</strong><em data-current-field="prob-bear">38.0%</em></div>
+            </div>
+            <div class="price-node base" data-price-coordinate="46.77">
+              <div class="price-node-card offset-none"><span>基准</span><strong data-current-field="target-base">126.00</strong><em data-current-field="prob-base">47.0%</em></div>
+            </div>
+            <div class="price-node bull" data-price-coordinate="96.00">
+              <div class="price-node-card offset-none"><span>乐观</span><strong data-current-field="target-bull">187.00</strong><em data-current-field="prob-bull">15.0%</em></div>
+            </div>
+            <div class="price-node current" data-price-coordinate="44.59">
+              <div class="price-node-card offset-none"><span>现价</span><strong data-current-field="reference-price">123.30</strong><em>reference</em></div>
+            </div>
+          </div>
+        </div>
+        <div class="decision-overview" data-decision-overview="true">
+          <article><span class="label">成立理由</span><ol class="compact"><li><b>经营兑现条件</b> · 2026 年总收入落在 513-530 亿元指引附近，597.7 亿元订单正常转化；1260H 争议继续形成估值折价，但主要商业客户没有大规模取消存量项目；FY2027 收入增长约 18%、调整后净利率维持 33%，估值维持约 18.5 倍。</li><li><b>盈利兑现路径</b> · FY2027 收入 615 亿元 × 调整后净利率 33% ÷ PIT 股本 29.8376 亿股，EPS 约 6.80 元。</li><li><b>估值兑现锚</b> · 6.80 元 × 18.5 倍 = 125.8 元，按统一舍入策略为 126 元。目标只比现价高约 2%，意味着基本面增长大部分已被当前价格计入。</li></ol></article>
+          <article><span class="label">改变判断的条件</span><ol class="compact"><li>2026 中报在手订单同比仍保持中双位数增长</li><li>2026 中报持续经营在手订单同比增速显著低于 Q1 的 +23.6%</li><li>2026Q3 持续经营收入增长降至低双位数或以下</li></ol></article>
+        </div>
+      </div>
+      <div class="thesis-block">
+        <p class="thesis" data-decision-excerpt="true">药明康德的持续经营 CRDMO 飞轮、597.7 亿元在手订单和 D&amp;M/TIDES 项目漏斗支持 2026-2027 盈利增长，但当前 123.30 元已对应自有 FY2027 base EPS 约 6.80 元的 18.1 倍前瞻 PE；投资赔率取决于增长兑现能否覆盖 FY2026 NDAA 第 851 节与 1260H 列名引发的客户提前去风险，而不是笼统押注“政策缓和”。</p>
+<span data-full-thesis="true" hidden></span>      </div>
+    </div>
+  </header>
+
+  <div class="audit-strip" data-freshness-strip="true">
+    <div class="audit-inner">
+      <div class="audit-summary">
+        <div class="audit-cell"><span class="audit-key">process</span><strong data-current-field="run-status">complete</strong></div>
+        <div class="audit-cell"><span class="audit-key">investment readiness</span><strong>conditional</strong></div>
+        <div class="audit-cell"><span class="audit-key">freshness</span><strong data-current-field="freshness-status">current</strong></div>
+        <div class="audit-cell"><span class="audit-key">market as of</span><strong data-current-field="freshness-market-data-as-of">2026-07-10</strong></div>
+      </div>
+      <details class="freshness-drawer">
+        <summary>数据截止与审计口径</summary>
+        <div class="freshness-grid">
+          <div class="audit-cell"><span class="audit-key">report date</span><strong data-current-field="freshness-report-date">2026-07-12</strong></div>
+          <div class="audit-cell"><span class="audit-key">requested end</span><strong data-current-field="freshness-requested-end-date">2026-07-10</strong></div>
+          <div class="audit-cell"><span class="audit-key">latest trading day</span><strong data-current-field="freshness-latest-available-trading-day">2026-07-10</strong></div>
+          <div class="audit-cell"><span class="audit-key">stale days</span><strong data-current-field="freshness-stale-trading-days">0</strong></div>
+          <div class="audit-cell"><span class="audit-key">data note</span><strong data-current-field="freshness-message">行情截至最近可用交易日 2026-07-10。</strong></div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <nav class="decision-nav" aria-label="投资决策路径">
+    <a data-decision-nav-item="true" href="#top">结论</a>
+    <a data-decision-nav-item="true" href="#company-industry">盈利逻辑</a>
+    <a data-decision-nav-item="true" href="#financials">财务兑现</a>
+    <a data-decision-nav-item="true" href="#valuation">定价仓位</a>
+    <a data-decision-nav-item="true" href="#interrogation-risk">证伪跟踪</a>
+    <a data-decision-nav-item="true" href="#research-intel">证据审计</a>
+  </nav>
+
+  <div class="layout">
+    <article class="content" id="report-content">
+      <!-- DECISION CAUSAL CHAIN -->
+      <section id="summary" data-section="summary">
+        <div class="section-head"><span class="eyebrow">THESIS → CASH → VALUE</span><h2>这个判断是怎样被推出来的</h2><p class="lede">正文不再按数据源排队，而是沿“需求—产品—报表—估值—仓位”检查每个环节是否成立。</p></div>
+        <div class="decision-chain" data-decision-chain="true">
+          <article class="decision-node"><span class="label">01 需求证据</span><strong>需求证据缺失</strong><p>原始模型 未提供 / 未提供 · 强度分 未提供；先验证真实订单和终端资本开支。</p></article>
+          <article class="decision-node"><span class="label">02 产品量价</span><strong>化学业务(产品)</strong><p>占比 80.2% · 增速 +25.5% · 毛利率 分部毛利率 51.9%</p></article>
+          <article class="decision-node"><span class="label">03 财务兑现</span><strong>2025</strong><p>营收 454.6亿 · 扣非 132.4亿</p></article>
+          <article class="decision-node"><span class="label">04 估值要求</span><strong>Reverse DCF 16.7%</strong><p>历史 PE TTM 分位 27.1%</p></article>
+          <article class="decision-node"><span class="label">05 概率与仓位</span><strong>EV -7.1% / Odds 0.57</strong><p>量化只修正时点与新增仓位，不改写基本面动作。</p></article>
+        </div>
+        <div class="hypothesis-grid">
+          <article class="hypothesis"><span class="label">H1 · 经营兑现条件</span><p><b>2026 年总收入落在 513-530 亿元指引附近，597.7 亿元订单正常转化；1260H 争议继续形成估值折价，但主要商业客户没有大规模取消存量项目；FY2027 收入增长约 18%、调整后净利率维持 33%，估值维持约 18.5 倍。</b></p><p>复核：thesis.scenarios/base/preconditions</p><small>证据：E01、E02、E08、E14、E04、E19、E06、E07、E15、E18</small></article>
+          <article class="hypothesis"><span class="label">H2 · 盈利兑现路径</span><p><b>FY2027 收入 615 亿元 × 调整后净利率 33% ÷ PIT 股本 29.8376 亿股，EPS 约 6.80 元。</b></p><p>复核：thesis.scenarios/base/eps_path</p><small>证据：E01、E02、E08、E14、E04、E19、E06、E07、E15、E18</small></article>
+          <article class="hypothesis"><span class="label">H3 · 估值兑现锚</span><p><b>6.80 元 × 18.5 倍 = 125.8 元，按统一舍入策略为 126 元。目标只比现价高约 2%，意味着基本面增长大部分已被当前价格计入。</b></p><p>复核：thesis.scenarios/base/valuation_anchor</p><small>证据：E01、E02、E08、E14、E04、E19、E06、E07、E15、E18</small></article>
+        </div>
+        <div class="catalyst-strip"><article><span class="label">未来1-2季 · 利多</span><h3>业绩继续验证</h3><p>若收入和扣非继续高增，估值修复概率提升</p></article><article><span class="label">持续跟踪 · 利空/利多</span><h3>政策/监管风险变化</h3><p>政策缓和提升估值，政策恶化压低目标价</p></article><article><span class="label">未来12个月 · 利多</span><h3>估值向同业折价收敛</h3><p>兑现基准目标价的核心路径</p></article></div>
+        <div class="market-ask">
+          <article><span class="label">现价隐含要求 · Reverse DCF</span><strong>收入增速 16.7%</strong><p>5.0 年 / WACC 10.0%；这是市场要求，不是管理层指引。</p></article>
+          <article><span class="label">历史估值位置</span><strong>27.1%</strong><p>PE TTM / 1231 个正估值样本。</p></article>
+          <article><span class="label">最敏感假设</span><strong>收入增速 · 经营利润率 · WACC</strong><p>先验证增长、利润率和折现率，再讨论目标价上修。</p></article>
+        </div>
+      </section>
+
+      <!-- PROFIT LOGIC -->
+      <section id="company-industry" data-section="company-industry">
+        <div class="section-head"><span class="eyebrow">PROFIT LOGIC</span><h2>盈利逻辑：公司如何把需求变成现金</h2></div>
+        <div class="grid-2">
+          <div><h3>公司如何赚钱</h3><p class="lede">全球一体化药物发现、开发和生产 CRDMO 平台。持续经营业务由 WuXi Chemistry、WuXi Testing、WuXi Biology 和其他业务构成；2025 年持续经营收入 434.21 亿元，其中 Chemistry 占 84%，TIDES 已成为 Chemistry 内部的高增长新模态引擎。</p><p><b>公司类型：</b>quality_value。ROE&gt;15%+PE&lt;25+非周期 | 行业类=consumer 增速=15.8 PE=18.2759 ROE=27.7 PB=4.3682</p><p><b>市值：</b>¥3679亿</p></div>
+          <div class="note-block"><h3>护城河与失效条件</h3><ul class="compact"><li>从早期发现到商业化生产的端到端 CRDMO 飞轮、全球客户与分子漏斗、超过 4,000kL 的小分子 API 反应釜体量、TIDES 产能和合规审计记录共同形成转换成本。2025 年末持续经营未完成订单 580.05 亿元，其中 422.07 亿元预计于 2026 年确认。</li></ul></div>
+        </div>
+        <details class="audit-drawer"><summary>展开宏观传导、近期走势与事件候选</summary><div class="drawer-body">
+          <h3>宏观变量只保留与 CSP capex、折现率和出口风险有关的传导</h3>
+          <div class="metrics"><div class="metric"><span class="label">GDP 同比</span><strong>5.00%</strong></div><div class="metric"><span class="label">CPI 同比</span><strong>1.20%</strong></div><div class="metric"><span class="label">PPI 同比</span><strong>3.90%</strong></div><div class="metric"><span class="label">M2 同比</span><strong>8.60%</strong></div><div class="metric"><span class="label">Shibor 1Y</span><strong>1.47%</strong></div><div class="metric"><span class="label">美债 10Y</span><strong>4.56%</strong></div></div>
+          <div class="grid-2"><div><h3>近期走势</h3><div class="metrics"><div class="metric"><span class="label">1M</span><strong>+27.0%</strong></div><div class="metric"><span class="label">3M</span><strong>+18.5%</strong></div><div class="metric"><span class="label">6M</span><strong>+27.6%</strong></div><div class="metric"><span class="label">量比</span><strong>0.99</strong></div></div></div><div><h3>驱动候选</h3><ul class="compact"><li><b>2026-06-26</b> · 公司完成 10 亿元 A 股回购，共回购 9,701,231 股，均价 103.08 元；用于员工持股计划。该事件可解释部分风险偏好改善，但不单独证明盈利预测上修。（公司事件，WuXi AppTec/HKEX 回购完成公告）</li></ul><p class="table-note">事件仅是相关候选，不自动认定为股价单一因果。</p></div></div>
+        </div></details>
+      </section>
+
+      <section id="demand-chain" data-section="demand-chain" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">DEMAND → PRODUCT → EPS</span><h2>关键变量：需求、产品量价与盈利桥</h2></div>
+        <div class="grid-2"><div class="note-block gain"><h3>需求证据边界</h3><p><b>需求证据缺失</b><br>原始模型 未提供 / 未提供 · 分数 未提供</p><ul class="compact"><li>未取得官方前瞻证据。</li></ul></div><div class="note-block risk"><h3>反证纪律</h3><p>合同负债、存货与在建工程只能表示订单能见度、生产排期或扩产信号；若终端需求转弱，也可能是长鞭效应和库存堆积。</p></div></div>
+        <div class="scenario-cards"><article class="scenario-card bear"><span class="label">bear · 2027</span><strong>EPS 5.4</strong><p>收入 556.0 · 净利润 161.2 · 净利率 29.0% · 隐含 Forward PE 22.8</p></article><article class="scenario-card base"><span class="label">base · 2027</span><strong>EPS 6.8</strong><p>收入 615.0 · 净利润 203.0 · 净利率 33.0% · 隐含 Forward PE 18.1</p></article><article class="scenario-card bull"><span class="label">bull · 2027</span><strong>EPS 8.14</strong><p>收入 675.0 · 净利润 243.0 · 净利率 36.0% · 隐含 Forward PE 15.1</p></article></div>
+        <details class="audit-drawer"><summary>展开终端价格、上游投入与分产品假设</summary><div class="drawer-body">
+          <h3>终端价格与上游投入</h3><div class="table-wrap"><table><caption>价格链与样本口径</caption><thead><tr><th>环节</th><th>品类</th><th>期间</th><th>当前</th><th>前值</th><th>变化</th><th>单位</th><th>来源</th><th>样本口径</th><th>置信度</th></tr></thead><tbody><tr><td colspan="10">价格链数据缺失，无法计算真实价差。</td></tr></tbody></table></div>
+          <p class="table-note">价差判断：unavailable / 50。未配置终端产品与上游物料价格样本。</p>
+          <h3>分产品经营假设</h3><div class="table-wrap"><table><caption>Bear / Base / Bull 产品桥</caption><thead><tr><th>产品</th><th>Bear 假设</th><th>Base 假设</th><th>Bull 假设</th><th>来源</th><th>置信度</th></tr></thead><tbody><tr><td>WuXi Chemistry（小分子 R/D&amp;M + TIDES）</td><td>收入 471.0亿元</td><td>收入 520.0亿元</td><td>收入 570.0亿元</td><td>2025 年报 Chemistry 收入 364.66 亿元；2026Q1 收入 106.20 亿元同比 +43.7%，小分子 D&amp;M +80.1%，TIDES 全年指引约 +40%；三档分别计入政策扰动、订单正常转化和新模态超预期。</td><td>medium</td></tr><tr><td>WuXi Testing + WuXi Biology + 其他持续经营</td><td>收入 85.0亿元</td><td>收入 95.0亿元</td><td>收入 105.0亿元</td><td>2025 年三项持续经营合计 69.55 亿元；2026Q1 Testing/Biology 合计 17.95 亿元，分别同比 +27.4%/+10.1%；按价格压力与新模态修复分档。</td><td>medium</td></tr></tbody></table></div>
+          <div class="note-block"><b>共识校验：</b>卖方 EPS 中位 6.98，自有 Base EPS 6.8，偏差 -2.6%。自有模型与卖方共识基本一致，交叉校验通过。<br><small>自有 bottom-up 模型，只作卖方共识交叉校验与大师分析输入，不直接作为 PM 目标价锚。</small></div>
+        </div></details>
+      </section>
+
+      <!-- FINANCIAL REALIZATION -->
+      <section id="financials" data-section="financials">
+        <div class="section-head"><span class="eyebrow">FINANCIAL REALIZATION</span><h2>财务兑现：增长有没有进入利润与现金</h2></div>
+        <div class="grid-2">
+          <article class="note-block"><span class="label">最新年度 · 2025</span><h3>营收 454.6亿</h3><p>增速 +15.8% · 扣非 132.4亿 · 毛利率 +47.6% · ROE +27.7%</p></article>
+          <article class="note-block"><span class="label">最新单季 · 26Q1</span><h3>营收 124.4亿</h3><p>同比 +28.8% · 环比 -1.3% · 扣非 42.8亿 · 利润环比 +15.0%</p></article>
+        </div>
+        <details class="audit-drawer"><summary>查看完整年度与单季趋势</summary><div class="drawer-body">
+          <h3>年度趋势</h3><div class="table-wrap"><table><caption>年度收入、利润率与 ROE</caption><thead><tr><th>期间</th><th>营收</th><th>营收增速</th><th>扣非净利</th><th>利润增速</th><th>毛利率</th><th>净利率</th><th>ROE</th></tr></thead><tbody><tr data-financial-annual="true"><td>2021</td><td>229.0亿</td><td>未提供</td><td>40.6亿</td><td>未提供</td><td>+36.3%</td><td>+22.4%</td><td>+14.4%</td></tr><tr data-financial-annual="true"><td>2022</td><td>393.5亿</td><td>+71.8%</td><td>82.6亿</td><td>+103.3%</td><td>+37.3%</td><td>+22.6%</td><td>+20.7%</td></tr><tr data-financial-annual="true"><td>2023</td><td>403.4亿</td><td>+2.5%</td><td>97.5亿</td><td>+18.0%</td><td>+41.2%</td><td>+24.0%</td><td>+18.9%</td></tr><tr data-financial-annual="true"><td>2024</td><td>392.4亿</td><td>-2.7%</td><td>99.9亿</td><td>+2.5%</td><td>+41.5%</td><td>+24.4%</td><td>+16.6%</td></tr><tr data-financial-annual="true"><td>2025</td><td>454.6亿</td><td>+15.8%</td><td>132.4亿</td><td>+32.6%</td><td>+47.6%</td><td>+42.5%</td><td>+27.7%</td></tr></tbody></table></div>
+          <h3>单季边际</h3><div class="table-wrap"><table><caption>最近单季同比与环比</caption><thead><tr><th>期间</th><th>营收</th><th>营收同比</th><th>营收环比</th><th>扣非净利</th><th>利润同比</th><th>利润环比</th><th>毛利率</th><th>净利率</th></tr></thead><tbody><tr data-financial-quarterly="true"><td>24Q2</td><td>92.6亿</td><td>-6.5%</td><td>+16.0%</td><td>23.8亿</td><td>-17.7%</td><td>+17.0%</td><td>+40.4%</td><td>+25.7%</td></tr><tr data-financial-quarterly="true"><td>24Q3</td><td>104.6亿</td><td>-2.0%</td><td>+13.0%</td><td>22.7亿</td><td>-23.1%</td><td>-4.7%</td><td>+42.8%</td><td>+21.7%</td></tr><tr data-financial-quarterly="true"><td>24Q4</td><td>115.4亿</td><td>+6.9%</td><td>+10.3%</td><td>33.1亿</td><td>+62.2%</td><td>+45.8%</td><td>+43.5%</td><td>+28.7%</td></tr><tr data-financial-quarterly="true"><td>25Q1</td><td>96.5亿</td><td>+21.0%</td><td>-16.3%</td><td>23.3亿</td><td>+14.5%</td><td>-29.6%</td><td>+42.3%</td><td>+24.1%</td></tr><tr data-financial-quarterly="true"><td>25Q2</td><td>111.4亿</td><td>+20.4%</td><td>+15.4%</td><td>32.5亿</td><td>+36.7%</td><td>+39.7%</td><td>+46.3%</td><td>+29.2%</td></tr><tr data-financial-quarterly="true"><td>25Q3</td><td>120.6亿</td><td>+15.3%</td><td>+8.2%</td><td>39.4亿</td><td>+73.7%</td><td>+21.1%</td><td>+50.4%</td><td>+32.7%</td></tr><tr data-financial-quarterly="true"><td>25Q4</td><td>126.0亿</td><td>+9.2%</td><td>+4.5%</td><td>37.2亿</td><td>+12.5%</td><td>-5.6%</td><td>+50.3%</td><td>+29.5%</td></tr><tr data-financial-quarterly="true"><td>26Q1</td><td>124.4亿</td><td>+28.8%</td><td>-1.3%</td><td>42.8亿</td><td>+83.6%</td><td>+15.0%</td><td>+50.4%</td><td>+34.4%</td></tr></tbody></table></div>
+        </div></details>
+        <details class="audit-drawer"><summary>查看经营现金流、自由现金流与再投资质量</summary><div class="drawer-body">
+          <div class="quality-split">
+            <div><h3>现金兑现</h3><div class="table-wrap"><table><caption>利润转现金</caption><thead><tr><th>期间 / 披露日</th><th>经营现金流</th><th>资本开支</th><th>自由现金流</th><th>净现金</th><th>现金利润比</th><th>FCF率</th></tr></thead><tbody><tr data-financial-quality="true"><td>20251231<br><small>20260324</small></td><td>172.0亿</td><td>55.4亿</td><td>116.7亿</td><td>273.3亿</td><td>0.90x</td><td>25.7%</td></tr><tr data-financial-quality="true"><td>20241231<br><small>20250318</small></td><td>124.1亿</td><td>40.0亿</td><td>84.0亿</td><td>141.2亿</td><td>1.31x</td><td>21.4%</td></tr><tr data-financial-quality="true"><td>20231231<br><small>20240319</small></td><td>133.9亿</td><td>55.2亿</td><td>78.7亿</td><td>94.1亿</td><td>1.39x</td><td>19.5%</td></tr><tr data-financial-quality="true"><td>20221231<br><small>20230321</small></td><td>106.2亿</td><td>99.7亿</td><td>6.5亿</td><td>33.3亿</td><td>1.20x</td><td>1.7%</td></tr><tr data-financial-quality="true"><td>20211231<br><small>20220324</small></td><td>45.9亿</td><td>69.4亿</td><td>-23.5亿</td><td>53.7亿</td><td>0.90x</td><td>-10.2%</td></tr></tbody></table></div></div>
+            <div><h3>再投资与股本变化</h3><div class="table-wrap"><table><caption>资本开支、研发与营运资本</caption><thead><tr><th>期间</th><th>资本开支强度</th><th>研发强度</th><th>营运资本/收入</th><th>期末股本变动（未复权）</th></tr></thead><tbody><tr><td>20251231</td><td>12.2%</td><td>2.5%</td><td>29.8%</td><td>+3.3%</td></tr><tr><td>20241231</td><td>10.2%</td><td>3.2%</td><td>28.3%</td><td>-2.7%</td></tr><tr><td>20231231</td><td>13.7%</td><td>3.6%</td><td>26.5%</td><td>+0.3%</td></tr><tr><td>20221231</td><td>25.3%</td><td>4.1%</td><td>23.2%</td><td>+0.2%</td></tr><tr><td>20211231</td><td>30.3%</td><td>4.1%</td><td>32.9%</td><td>未提供</td></tr></tbody></table></div><p class="table-note">期末股本变动未对转增、送股、拆并股、回购及增发做公司行动复权，不能直接等同经济稀释。</p></div>
+          </div>
+<div class="note-block risk"><b>财务质量预警</b><ul class="compact"><li>期末股本增加 3.3%（未复权），需核验转增/送股/增发等公司行动</li></ul></div>        </div></details>
+      </section>
+
+      <section id="segments" data-section="segments" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">SEGMENT LEDGER</span><h2>分部底稿：收入集中在哪里</h2><p class="lede">正文只保留头部分部；产品、地区、币种和集中度明细进入底稿。</p></div>
+        <details class="audit-drawer"><summary>查看产品与地区分部明细</summary><div class="drawer-body">
+          <h3>产品分部</h3><div class="table-wrap"><table><caption>产品收入、利润与毛利率</caption><thead><tr><th>报告期</th><th>产品</th><th>收入</th><th>占比</th><th>增速</th><th>分部利润</th><th>毛利率</th><th>币种</th></tr></thead><tbody><tr data-business-segment="true"><td>20251231</td><td>化学业务(产品)</td><td>364.7亿</td><td>80.2%</td><td>+25.5%</td><td>189.2亿</td><td>分部毛利率 51.9%</td><td>CNY</td></tr><tr data-business-segment="true"><td>20251231</td><td>测试业务</td><td>40.4亿</td><td>8.9%</td><td>-28.7%</td><td>11.8亿</td><td>分部毛利率 29.3%</td><td>CNY</td></tr><tr data-business-segment="true"><td>20251231</td><td>生物学业务(产品)</td><td>26.8亿</td><td>5.9%</td><td>+5.2%</td><td>9.3亿</td><td>分部毛利率 34.7%</td><td>CNY</td></tr><tr data-business-segment="true"><td>20251231</td><td>终止经营业务</td><td>20.4亿</td><td>4.5%</td><td>+53.8%</td><td>4.2亿</td><td>分部毛利率 20.6%</td><td>CNY</td></tr><tr data-business-segment="true"><td>20251231</td><td>其他业务</td><td>2.4亿</td><td>0.5%</td><td>-63.7%</td><td>2.0亿</td><td>分部毛利率 85.7%</td><td>CNY</td></tr></tbody></table></div>
+          <h3>地区分部</h3><div class="table-wrap"><table><caption>地区收入与币种暴露</caption><thead><tr><th>报告期</th><th>地区</th><th>收入</th><th>分部利润</th><th>毛利率</th><th>币种</th></tr></thead><tbody><tr><td>20251231</td><td>中国大陆</td><td>54.7亿</td><td>16.0亿</td><td>29.3%</td><td>CNY</td></tr><tr><td>20251231</td><td>其他业务(地区)</td><td>-25.82</td><td>-83.76</td><td>3.2%</td><td>CNY</td></tr><tr><td>20251231</td><td>国外</td><td>379.5亿</td><td>196.3亿</td><td>51.7%</td><td>CNY</td></tr><tr><td>20251231</td><td>终止经营业务(地区)</td><td>20.4亿</td><td>4.2亿</td><td>20.6%</td><td>CNY</td></tr><tr><td>20241231</td><td>中国大陆</td><td>70.5亿</td><td>21.9亿</td><td>31.0%</td><td>CNY</td></tr><tr><td>20241231</td><td>国外</td><td>308.7亿</td><td>143.0亿</td><td>46.3%</td><td>CNY</td></tr><tr><td>20241231</td><td>终止经营业务(地区)</td><td>13.2亿</td><td>-2.1亿</td><td>-16.1%</td><td>CNY</td></tr></tbody></table></div>
+<div class="note-block risk"><b>地区与汇率暴露</b><p>20251231 境外收入占比 83.5%；最大地区为 国外（83.5%）。已披露汇兑损益影响 未披露可量化影响（未提供）；客户集中度、外币净敞口与套保比例仍需单独核验。</p></div>        </div></details>
+      </section>
+
+      <!-- VALUATION AND POSITION -->
+      <section id="valuation" data-section="valuation">
+        <div class="section-head"><span class="eyebrow">PRICE → PROBABILITY → POSITION</span><h2>定价与仓位：好公司是否也是好价格</h2></div>
+        <div class="metrics"><div class="metric"><span class="label">PE TTM</span><strong>18.2759</strong></div><div class="metric"><span class="label">Forward PE 2026</span><strong>21.1</strong></div><div class="metric"><span class="label">Forward PE 2027</span><strong>17.7</strong></div><div class="metric"><span class="label">PB</span><strong>4.3682</strong></div><div class="metric"><span class="label">PS</span><strong>7.6268</strong></div><div class="metric"><span class="label">PEG</span><strong>1.42</strong></div><div class="metric"><span class="label">ROE</span><strong>27.7%</strong></div><div class="metric"><span class="label">毛利率</span><strong>47.6%</strong></div><div class="metric"><span class="label">净利率</span><strong>42.5%</strong></div></div>
+        <div class="grid-2">
+          <div class="note-block"><h3>Reverse DCF：当前价格在押注什么</h3><p><b>隐含收入增速 16.7%</b> / 5.0 年；状态 solved</p><p>WACC 10.0% · 永续增长 3.0% · 税率 15.0% · 再投资率 35.0%</p><p class="table-note">重建企业价值 3,405.7亿；这是市场价格的隐含假设，不是预测。</p></div>
+          <div class="note-block"><h3>历史估值分位</h3><p><b>PE TTM 18.2759 / 分位 27.1%</b><br><small>样本 1231，最低 11.4449 / 中位 22.078 / 最高 119.2013</small></p><p><b>PB 4.3682 / 分位 50.9%</b><br><small>样本 1231，最低 1.9846 / 中位 4.3091 / 最高 14.3745</small></p><p><b>PS 7.6268 / 分位 72.5%</b><br><small>样本 1231，最低 2.7278 / 中位 6.3031 / 最高 27.08</small></p></div>
+        </div>
+        <div class="scenario-cards"><article class="scenario-card bear"><span class="label">悲观 · 38.0%</span><strong>73.00</strong><p>收益 -40.8% · EV 贡献 -15.5%<br>美国客户在法律正式生效前启动供应商替换，新签和订单转化明显放缓；TIDES 后续三个季度未能补足 Q1 仅 +6.1% 的增速缺口；持续经营调整后净利率回落至 29%，市场对结构性地缘折价给 FY2027 约 13.5 倍 PE。</p></article><article class="scenario-card base"><span class="label">基准 · 47.0%</span><strong>126.00</strong><p>收益 2.2% · EV 贡献 1.0%<br>2026 年总收入落在 513-530 亿元指引附近，597.7 亿元订单正常转化；1260H 争议继续形成估值折价，但主要商业客户没有大规模取消存量项目；FY2027 收入增长约 18%、调整后净利率维持 33%，估值维持约 18.5 倍。</p></article><article class="scenario-card bull"><span class="label">乐观 · 15.0%</span><strong>187.00</strong><p>收益 51.7% · EV 贡献 7.7%<br>D&amp;M 和 TIDES 同时超预期、FY2027 收入达到约 675 亿元且调整后净利率升至 36%；1260H 复议、OMB 识别或 FAR 范围出现实质性正面进展，客户去风险没有演变为订单流失；市场给予约 23 倍 FY2027 PE。</p></article></div>
+        <details class="audit-drawer"><summary>查看同业、卖方、敏感性与情景重放</summary><div class="drawer-body">
+          <h3>同业横向比较</h3><div class="table-wrap"><table><caption>估值与经营质量同业表</caption><thead><tr><th>公司</th><th>PE</th><th>PB</th><th>PEG</th><th>ROE</th><th>毛利率</th><th>净利率</th><th>营收增速</th><th>利润增速</th><th>负债率</th><th>市值</th></tr></thead><tbody><tr><td>未提供<br><small>603259.SH</small></td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td><td>未提供</td></tr><tr><td>康龙化成<br><small>300759.SZ</small></td><td>未提供</td><td>未提供</td><td>未提供</td><td>2.1%</td><td>32.5%</td><td>8.7%</td><td>+15.5%</td><td>+9.8%</td><td>40.1%</td><td>未提供</td></tr><tr><td>泰格医药<br><small>300347.SZ</small></td><td>未提供</td><td>未提供</td><td>未提供</td><td>23.0%</td><td>26.6%</td><td>18.3%</td><td>+15.2%</td><td>-70.4%</td><td>14.7%</td><td>未提供</td></tr><tr><td>凯莱英<br><small>002821.SZ</small></td><td>未提供</td><td>未提供</td><td>未提供</td><td>171.0%</td><td>43.0%</td><td>16.7%</td><td>+16.9%</td><td>-6.8%</td><td>13.2%</td><td>未提供</td></tr></tbody></table></div>
+          <h3>卖方一致预期与分歧</h3><div class="note-block"><p><b>覆盖 27 家 / 新鲜 8 家 / 质量 ok</b></p><p>买入 19 / 增持 4 / 未知 4</p><p>低置信隐含目标 147.49（6 个 EPS 样本）。常数倍数口径：现价 × EPS(Y+1)/EPS(Y) 中位数；假设前瞻 PE 不变，偏激进，只作低置信参考，不等于 sellside 明确目标价</p></div>
+          <div class="table-wrap"><table><caption>卖方逐家预测</caption><thead><tr><th>机构</th><th>评级</th><th>日期</th><th>2026 EPS / PE</th><th>2027 EPS / PE</th><th>2028 EPS / PE</th><th>新鲜度</th></tr></thead><tbody><tr><td>华鑫证券</td><td>买入</td><td>2026-06-30</td><td>5.93 / 19.9</td><td>7.15 / 16.5</td><td>8.53 / 13.9</td><td>有效</td></tr><tr><td>国金证券</td><td>买入</td><td>2026-06-29</td><td>5.84 / 20.1</td><td>7.02 / 16.7</td><td>8.44 / 13.9</td><td>有效</td></tr><tr><td>中邮证券</td><td>买入</td><td>2026-05-20</td><td>5.81 / 17.6</td><td>6.88 / 14.8</td><td>7.98 / 12.8</td><td>有效</td></tr><tr><td>东方证券</td><td>买入</td><td>2026-04-30</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>有效</td></tr><tr><td>招银国际</td><td>买入</td><td>2026-04-29</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>有效</td></tr><tr><td>国信证券</td><td>增持</td><td>2026-04-26</td><td>5.6 / 17.8</td><td>6.6 / 15.1</td><td>7.47 / 13.3</td><td>有效</td></tr><tr><td>华源证券</td><td>买入</td><td>2026-04-04</td><td>5.83 / 17.1</td><td>6.94 / 14.4</td><td>8.38 / 11.9</td><td>有效</td></tr><tr><td>高盛</td><td>买入</td><td>2026-04</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>有效</td></tr><tr><td>中金公司</td><td>跑赢行业</td><td>2026-04</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>未提供 / 未提供</td><td>有效</td></tr><tr><td>开源证券</td><td>买入</td><td>2026-03-25</td><td>6.14 / 14.3</td><td>7.6 / 11.6</td><td>9.35 / 9.4</td><td>有效</td></tr><tr><td>浦银国际证券</td><td>买入</td><td>2025-10-28</td><td>5.56 / 16.6</td><td>6.35 / 14.6</td><td>未提供 / 未提供</td><td>过期</td></tr><tr><td>信达证券</td><td>未知</td><td>2025-10-28</td><td>4.72 / 22.6</td><td>5.45 / 19.6</td><td>未提供 / 未提供</td><td>过期</td></tr></tbody></table></div>
+          <h3>Reverse DCF 敏感性：经营利润率 × WACC</h3><div class="table-wrap"><table><thead><tr><th>经营利润率 \ WACC</th><th>8.0%</th><th>10.0%</th><th>12.0%</th></tr></thead><tbody><tr><td>42.1%</td><td>13.5%</td><td>22.5%</td><td>30.1%</td></tr><tr><td>52.6%</td><td>8.1%</td><td>16.7%</td><td>23.9%</td></tr><tr><td>63.2%</td><td>3.9%</td><td>12.1%</td><td>18.9%</td></tr></tbody></table></div><p class="table-note">在本次利润率与折现率网格下，市场隐含的五年收入复合增速区间为 3.9% – 30.1%；单点结果不是唯一答案。</p>
+          <h3>EPS × PE 敏感性</h3><div class="table-wrap"><table><thead><tr><th>EPS \ PE</th><th>20.0x</th><th>30.0x</th><th>40.0x</th></tr></thead><tbody><tr><td>5.4</td><td>108.0</td><td>162.0</td><td>216.0</td></tr><tr><td>6.8</td><td>136.0</td><td>204.0</td><td>272.0</td></tr><tr><td>8.14</td><td>162.8</td><td>244.2</td><td>325.6</td></tr></tbody></table></div>
+          <p class="table-note">最敏感假设：收入增速、经营利润率、WACC、永续增长、再投资率。</p>
+          <h3>卖方 EPS 修订方向</h3><div class="table-wrap"><table><thead><tr><th>机构</th><th>预测年</th><th>前次 / 最新</th><th>EPS 变化</th><th>修订</th><th>方向</th></tr></thead><tbody><tr><td colspan="6">数据源未保留同机构同预测年历史截面，本项仅标注为缺口，不伪造修订。</td></tr></tbody></table></div>
+          <h3>V3 三情景：可重算目标、概率与 EV 贡献</h3><p class="table-note">每档目标必须通过 收入×净利率→净利润÷股本→EPS×PE 的版本化舍入链；replay PASS 才能进入决策。</p><div class="table-wrap"><table class="scenario-table"><thead><tr><th>情景</th><th>目标</th><th>概率</th><th>收益</th><th>EV贡献</th><th class="wrap">机器复算</th><th class="wrap">假设 / 证据</th><th class="wrap">成立条件</th></tr></thead><tbody><tr><td>bear</td><td>73.00</td><td>38.0%</td><td>-40.8%</td><td>-15.5%</td><td class="wrap"><b>PASS</b> · 5.40 × 13.50 = 72.90 → 73.00<br><small>aihf_scenario_math.1.0.0 · 收入 556.0 亿 · 净利率 29.0% · 股本 29.83757155 亿股</small></td><td class="wrap"><small>assumptions scenario.bear.revenue_yi、scenario.bear.net_margin、capital.shares_yi、scenario.bear.target_pe、scenario.bear.probability<br>evidence E01、E02、E08、E09、E10、E03、E09、E13、E19、E06、E07、E09、E10、E15、E09、E10、E11、E17、E18</small></td><td class="wrap">美国客户在法律正式生效前启动供应商替换，新签和订单转化明显放缓；TIDES 后续三个季度未能补足 Q1 仅 +6.1% 的增速缺口；持续经营调整后净利率回落至 29%，市场对结构性地缘折价给 FY2027 约 13.5 倍 PE。<br><small>FY2027 收入 556 亿元 × 调整后净利率 29% ÷ PIT 股本 29.8376 亿股，EPS 约 5.40 元。 · 5.40 元 × 13.5 倍 = 72.9 元，按统一舍入策略为 73 元。该情景同时下修增长、利润率与估值倍数，不把政策风险仅处理成情绪波动。</small></td></tr><tr><td>base</td><td>126.00</td><td>47.0%</td><td>2.2%</td><td>1.0%</td><td class="wrap"><b>PASS</b> · 6.80 × 18.50 = 125.80 → 126.00<br><small>aihf_scenario_math.1.0.0 · 收入 615.0 亿 · 净利率 33.0% · 股本 29.83757155 亿股</small></td><td class="wrap"><small>assumptions scenario.base.revenue_yi、scenario.base.net_margin、capital.shares_yi、scenario.base.target_pe、scenario.base.probability<br>evidence E01、E02、E08、E14、E01、E02、E04、E14、E19、E04、E06、E07、E14、E15、E01、E02、E08、E14、E18</small></td><td class="wrap">2026 年总收入落在 513-530 亿元指引附近，597.7 亿元订单正常转化；1260H 争议继续形成估值折价，但主要商业客户没有大规模取消存量项目；FY2027 收入增长约 18%、调整后净利率维持 33%，估值维持约 18.5 倍。<br><small>FY2027 收入 615 亿元 × 调整后净利率 33% ÷ PIT 股本 29.8376 亿股，EPS 约 6.80 元。 · 6.80 元 × 18.5 倍 = 125.8 元，按统一舍入策略为 126 元。目标只比现价高约 2%，意味着基本面增长大部分已被当前价格计入。</small></td></tr><tr><td>bull</td><td>187.00</td><td>15.0%</td><td>51.7%</td><td>7.7%</td><td class="wrap"><b>PASS</b> · 8.14 × 23.00 = 187.22 → 187.00<br><small>aihf_scenario_math.1.0.0 · 收入 675.0 亿 · 净利率 36.0% · 股本 29.83757155 亿股</small></td><td class="wrap"><small>assumptions scenario.bull.revenue_yi、scenario.bull.net_margin、capital.shares_yi、scenario.bull.target_pe、scenario.bull.probability<br>evidence E01、E02、E08、E12、E02、E05、E12、E19、E05、E06、E07、E12、E15、E02、E12、E15、E18</small></td><td class="wrap">D&amp;M 和 TIDES 同时超预期、FY2027 收入达到约 675 亿元且调整后净利率升至 36%；1260H 复议、OMB 识别或 FAR 范围出现实质性正面进展，客户去风险没有演变为订单流失；市场给予约 23 倍 FY2027 PE。<br><small>FY2027 收入 675 亿元 × 调整后净利率 36% ÷ PIT 股本 29.8376 亿股，EPS 约 8.14 元。 · 8.14 元 × 23 倍 = 187.22 元，按统一舍入策略为 187 元。该估值要求增长、利润率和政策三项同时兑现，不能仅凭当前动量成立。</small></td></tr></tbody></table></div>
+        </div></details>
+      </section>
+
+      <section id="market-dimensions" data-section="market-dimensions" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">QUANT TIMING GATE</span><h2>量化与市场：只修正时点和新增仓位</h2><p class="lede">技术、资金和舆情不能替代基本面；它们用于判断拥挤度、时点与仓位上限。</p></div>
+        <div class="quant-panel" data-quant-overlay="true">
+          <div class="quant-panel-head"><div><span class="label">quant gate / complete</span><h3>量化闸门：支持 · 仅观察，未应用</h3><p>量化层不能升级非开仓的基本面动作；本次只保留观察信号</p><p>主要推力 趋势与中期动量 +37.50 · 主要拖累 不可用 不可用 · 高于支持阈值 21.25 分</p></div><div><span class="label">score / coverage</span><div class="quant-score">91.25 / 100</div><p>100.0% · 仓位 ×1.00</p></div></div>
+          <div class="position-waterfall">
+            <div><span class="label">当前仓位</span><strong>0.0%</strong></div>
+            <div><span class="label">基本面目标</span><strong>0.0%</strong></div>
+            <div><span class="label">量化后目标</span><strong>0.0%</strong></div>
+            <div><span class="label">订单变化</span><strong>+0.0% → +0.0%</strong></div>
+          </div>
+          <details class="audit-drawer"><summary>展开量化归因、风险约束与审计身份</summary><div class="drawer-body">
+            <div class="quant-layer" data-quant-layer="timing"><h3>Timing 归因：哪些因子把分数推离 50</h3><div class="table-wrap"><table><thead><tr><th>因子族</th><th>分数</th><th>策略权重</th><th>有效权重</th><th>相对 50 分贡献</th><th>输入覆盖</th><th class="wrap">真实输入</th><th class="wrap">解释</th></tr></thead><tbody><tr><td>趋势与中期动量</td><td>100.00</td><td>75.0%</td><td>75.0%</td><td>+37.50</td><td>100.0%</td><td class="wrap">现价 123.30 · MA20 114.22 · MA60 105.78 · MA120 100.91 · 3月收益 +18.5% · 6月收益 +27.6% · 正信号 5 · 信号数 5</td><td class="wrap">5/5 个趋势或动量信号为正；同族信号合并，避免重复计权</td></tr><tr><td>量能确认</td><td>65.00</td><td>25.0%</td><td>25.0%</td><td>+3.75</td><td>100.0%</td><td class="wrap">量比 0.99x · trend_score 100.00</td><td class="wrap">上行趋势中的放量视为确认，缩量只降低确认度</td></tr></tbody></table></div><p class="table-note">中心化贡献合计 +41.25 · 高于支持阈值 21.25 分。</p></div>
+<div class="quant-layer" data-quant-layer="risk"><h3>Risk constraints：只管仓位上限，不进入 timing score</h3><div class="table-wrap"><table><thead><tr><th>约束</th><th>当前值</th><th>职责</th><th class="wrap">边界说明</th></tr></thead><tbody><tr><td>实现波动率</td><td>年化波动 42.8%</td><td>单票风险仓位帽</td><td class="wrap">只进入单票风险仓位帽，不进入择时分，避免重复惩罚</td></tr><tr><td>持仓相关性</td><td>最大相关性不可用</td><td>组合风险仓位帽</td><td class="wrap">没有已确认组合对照或样本不足；未知不等于低相关</td></tr></tbody></table></div></div><div class="quant-audit-grid"><div class="quant-audit-card"><span class="label">policy identity</span><strong>aihf_quant_timing_policy.2.0.0</strong><small>hash 2021c7d63f9136f27232f58f</small></div><div class="quant-audit-card"><span class="label">position / order audit</span><strong>当前 0.0% → 量化前目标 0.0% → 量化后目标 0.0%</strong><small>订单变化 +0.0% → +0.0%</small></div><div class="quant-audit-card"><span class="label">observation boundary</span><strong>observation_id 6fc89f74910d81adeac916ed</strong><small>特征截止 2026-07-10 · 组合身份未确认</small></div></div>            <p class="quant-boundary"><b>No-alpha 边界：</b>这是确定性择时与风险策略，不是 alpha 模型，不代表预测收益或超额收益。</p><p class="table-note">择时分只含趋势/中期动量与量能确认；实现波动率和已确认组合相关性只进入风险仓位帽，避免重复计权。量化仅缩放正的新增订单，不修改情景概率、目标价、EV 或赔率。校准状态：policy_guardrail_not_alpha_model。</p>
+          </div></details>
+        </div>
+        <details class="audit-drawer"><summary>展开技术、资金、舆情与治理底稿</summary><div class="drawer-body">
+          <h3>技术与位置</h3><div class="metrics"><div class="metric"><span class="label">1个月收益</span><strong>+27.0%</strong></div><div class="metric"><span class="label">3个月收益</span><strong>+18.5%</strong></div><div class="metric"><span class="label">6个月收益</span><strong>+27.6%</strong></div><div class="metric"><span class="label">1年收益</span><strong>+59.9%</strong></div><div class="metric"><span class="label">MA5</span><strong>120.21</strong></div><div class="metric"><span class="label">MA20</span><strong>114.22</strong></div><div class="metric"><span class="label">MA60</span><strong>105.78</strong></div><div class="metric"><span class="label">MA120</span><strong>100.91</strong></div><div class="metric"><span class="label">BBI</span><strong>118.36</strong></div><div class="metric"><span class="label">RSI14</span><strong>64.01</strong></div><div class="metric"><span class="label">MACD</span><strong>0.26</strong></div><div class="metric"><span class="label">KDJ-K</span><strong>48.93</strong></div><div class="metric"><span class="label">BOLL上轨</span><strong>134.03</strong></div><div class="metric"><span class="label">CCI</span><strong>62.84</strong></div><div class="metric"><span class="label">52周高点</span><strong>129.15</strong></div><div class="metric"><span class="label">距52周高点</span><strong>-4.5%</strong></div><div class="metric"><span class="label">量比</span><strong>0.99</strong></div></div>
+          <div class="grid-3"><div class="note-block"><h3>融资与资金</h3><p>融资余额 未提供 / mixed</p><p>5日主力 -1.7亿 / mixed</p><p>北向：stale，数据日 2024-08-16</p></div><div class="note-block"><h3>舆情与拥挤</h3><p>7日提及量 0，增长 未提供，平台 未提供，温度 50.0，置信 0.0</p><ul class="compact"><li>未提供平台声量源文件；微博/微信/小红书/抖音/雪球/公众号讨论量按 missing 处理，sentiment 只能中性降级。</li></ul></div><div class="note-block risk"><h3>治理与股东</h3><p>控制人 HKSCCNOMINEESLIMITED / 16.1%</p><p>质押 0.0% · 内部人净减持 7,660.7万 · 回购 21.0亿</p><p>分红率 0.0% · 审计意见未结构化</p><p><small>软字段缺失：[&#39;audit_opinion&#39;]；缺失项按中性或低分处理，分数可参考。建议主线补全：股权结构 / 审计意见 / 分红率</small></p></div></div>
+          <div class="grid-3"><div class="note-block"><h3>大宗交易</h3><p>180日 11 笔 / 机构席位 3 / 金额 533.4亿 / 截至 20260626</p></div><div class="note-block"><h3>筹码分布</h3><p>成本中位 117.0 / 15-85分位 97.5-124.5 / 盈利盘 83.5% / 截至 20260710</p></div><div class="note-block"><h3>行业资金与卖方</h3><p>光学光电子 -70.3亿；电力设备 -79.2亿；数字芯片设计 -155.9亿</p><p>12月研报 322 篇 / 最新 20260702《月度掘金丨方正2026·7月金股》</p></div></div>
+          <h3>舆情样本口径</h3><ul class="compact"><li>平台级样本口径未提供，声量只作观察。</li></ul>
+          <div class="grid-2"><div><h3>股东户数趋势</h3><div class="table-wrap"><table><thead><tr><th>报告期</th><th>公告日</th><th>户数</th></tr></thead><tbody><tr><td>20251231</td><td>20260324</td><td>297705.0</td></tr><tr><td>20250930</td><td>20251027</td><td>274117.0</td></tr><tr><td>20250630</td><td>20250729</td><td>235515.0</td></tr><tr><td>20250331</td><td>20250429</td><td>243477.0</td></tr><tr><td>20241231</td><td>20250318</td><td>300597.0</td></tr><tr><td>20240930</td><td>20241029</td><td>385041.0</td></tr></tbody></table></div></div><div><h3>已实施分红</h3><div class="table-wrap"><table><thead><tr><th>报告期</th><th>每股现金</th><th>登记日</th><th>派息日</th></tr></thead><tbody><tr><td>20251231</td><td>1.57927</td><td>20260528</td><td>20260529</td></tr><tr><td>20250630</td><td>0.35</td><td>20250925</td><td>20250926</td></tr><tr><td>20250318</td><td>0.35</td><td>20250520</td><td>20250521</td></tr><tr><td>20241231</td><td>0.98169</td><td>20250520</td><td>20250521</td></tr></tbody></table></div></div></div>
+          <h3>治理与重大公告</h3><ul class="compact"><li><b>20260704</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-07-04/1225408662.PDF" target="_blank" rel="noreferrer">H股公告</a></li><li><b>20260702</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-07-02/1225403740.PDF" target="_blank" rel="noreferrer">第四届董事会第四次会议决议公告</a></li><li><b>20260627</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-27/1225390037.PDF" target="_blank" rel="noreferrer">关于2026年股份回购实施结果暨股份变动的公告</a></li><li><b>20260626</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-26/1225387588.PDF" target="_blank" rel="noreferrer">H股公告</a></li><li><b>20260625</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-25/1225385409.PDF" target="_blank" rel="noreferrer">H股公告</a></li><li><b>20260624</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-24/1225382801.PDF" target="_blank" rel="noreferrer">H股公告</a></li><li><b>20260623</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-23/1225380464.PDF" target="_blank" rel="noreferrer">H股公告</a></li><li><b>20260619</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-19/1225377966.PDF" target="_blank" rel="noreferrer">H股公告</a></li></ul>
+        </div></details>
+      </section>
+
+      <section id="decision" data-section="decision">
+        <div class="section-head"><span class="eyebrow">DECISION MATH</span><h2>赔率与仓位结果</h2><p class="lede">这里解释结果如何由三情景、EV、Kelly、稳健性和量化缩放共同形成，不重复首屏动作和核心命题。</p></div>
+        <p class="table-note">三情景目标、概率与公式只保留在<a href="#valuation">上方定价模块</a>；本节仅展示由它们推导出的 EV、赔率、压力门禁与仓位结果。</p>
+        <div class="grid-2">
+          <div><div class="metrics"><div class="metric"><span class="label">EV net</span><strong>-7.1%</strong></div><div class="metric"><span class="label">EV gross</span><strong>-6.7%</strong></div><div class="metric"><span class="label">Odds</span><strong>0.57</strong></div></div></div>
+          <div><div class="robustness-callout stable"><b>稳健性 · 稳定</b><p>初始动作不是开仓/加仓，无需做开仓稳健性降级</p></div><div class="quant-callout supportive" data-quant-overlay="true"><b>量化闸门 · 支持 · 91.25 / 100</b><p>量化层不能升级非开仓的基本面动作；本次只保留观察信号</p></div></div>
+        </div>
+<div class="decision-math-audit" data-decision-math="true" data-policy-hash="47d424aabfa714168727bdb3" data-input-hash="5c1483d17002e0c2e9799f7b" data-output-hash="873ab958aa7192ccd20ca135"><span class="label">可重放决策数学</span><h3>ev-kelly-robustness.1.0.0</h3><p class="table-note">schema aihf_decision_math.v1 · policy 47d424aabfa714168727bdb3 · input 5c1483d17002e0c2e9799f7b · output 873ab958aa7192ccd20ca135</p><div class="decision-math-grid"><div><small>交易成本</small><strong>0.4%</strong></div><div><small>Kelly raw / used</small><strong>0.0% / 0.0%</strong></div><div><small>稳健性前</small><strong>avoid / 0.0%</strong></div><div><small>最终动作 / 仓位</small><strong>avoid / 0.0%</strong></div></div></div>      </section>
+
+      <!-- FALSIFICATION AND TRACKING -->
+      <section id="interrogation-risk" data-section="interrogation-risk">
+        <div class="section-head"><span class="eyebrow">WHAT CHANGES THE MIND</span><h2>证伪与监控：什么会让我改变判断</h2></div>
+        <div class="grid-3"><div class="note-block"><span class="label">bear</span><h3>25.0% → 38.0%</h3><p>delta +13.0%</p></div><div class="note-block"><span class="label">base</span><h3>50.0% → 47.0%</h3><p>delta -3.0%</p></div><div class="note-block"><span class="label">bull</span><h3>25.0% → 15.0%</h3><p>delta -10.0%</p></div></div>
+        <h3>最近到期的验证节点</h3><div data-primary-claims="true"><article class="claim" data-claim="true"><div><span class="tag">base</span><span class="label">base.claim.3</span></div><div><strong>2026 中报在手订单同比仍保持中双位数增长</strong>阈值 backlog_yoy &gt;= 0.15</div><div><span class="label">截止</span>2026-08-31</div><div><span class="label">验证源</span>2026 中报/公司业绩演示</div></article><article class="claim" data-claim="true"><div><span class="tag">bear</span><span class="label">bear.claim.1</span></div><div><strong>2026 中报持续经营在手订单同比增速显著低于 Q1 的 +23.6%</strong>阈值 backlog_yoy &lt;= 0.10</div><div><span class="label">截止</span>2026-08-31</div><div><span class="label">验证源</span>2026 中报/公司业绩演示</div></article><article class="claim" data-claim="true"><div><span class="tag">bear</span><span class="label">bear.claim.2</span></div><div><strong>2026Q3 持续经营收入增长降至低双位数或以下</strong>阈值 continuing_revenue_yoy &lt;= 0.12</div><div><span class="label">截止</span>2026-10-31</div><div><span class="label">验证源</span>2026 三季报</div></article></div>
+        <details class="audit-drawer" data-remaining-claims="true"><summary>按到期日展开其余 6 条断言</summary><div class="drawer-body"><article class="claim" data-claim="true"><div><span class="tag">bull</span><span class="label">bull.claim.2</span></div><div><strong>公司在 2026 年内上调全年收入指引上限</strong>阈值 2026_revenue_guidance_high &gt; 530</div><div><span class="label">截止</span>2026-10-31</div><div><span class="label">验证源</span>2026 中报或三季报业绩演示</div></article><article class="claim" data-claim="true"><div><span class="tag">bear</span><span class="label">bear.claim.3</span></div><div><strong>OMB/FAR 实施文件明确覆盖药明康德且出现可核验的美国客户新增项目转移</strong>阈值 formal_biococ_identification == true and verified_customer_transfer_count &gt;= 1</div><div><span class="label">截止</span>2026-12-31</div><div><span class="label">验证源</span>OMB/Federal Register/FAR 与客户或公司公告</div></article><article class="claim" data-claim="true"><div><span class="tag">bull</span><span class="label">bull.claim.1</span></div><div><strong>公司被移出 1260H 或 OMB/FAR 最终识别范围明确不覆盖公司核心商业服务</strong>阈值 designation_removed_or_scope_relief == true</div><div><span class="label">截止</span>2026-12-31</div><div><span class="label">验证源</span>Federal Register/OMB/FAR/法院或公司公告</div></article><article class="claim" data-claim="true"><div><span class="tag">base</span><span class="label">base.claim.1</span></div><div><strong>2026 年总收入基本落在公司 513-530 亿元指引内</strong>阈值 total_revenue_yi in [505, 535]</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>2026 年报</div></article><article class="claim" data-claim="true"><div><span class="tag">base</span><span class="label">base.claim.2</span></div><div><strong>2026 年 TIDES 收入保持至少约 30% 增长并在下半年明显加速</strong>阈值 tides_revenue_yoy &gt;= 0.30</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>2026 年报/业绩演示</div></article><article class="claim" data-claim="true"><div><span class="tag">bull</span><span class="label">bull.claim.3</span></div><div><strong>2026 年 TIDES 收入增长达到约 45% 且持续经营调整后净利率不低于 34%</strong>阈值 tides_revenue_yoy &gt;= 0.45 and adjusted_npm &gt;= 0.34</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>2026 年报/业绩演示</div></article></div></details>
+<h3>复盘节点</h3><div class="review-grid"><article class="review-card"><span class="label">7 天</span><strong>2026-07-19</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1-H4 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article><article class="review-card"><span class="label">30 天</span><strong>2026-08-11</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1-H4 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article><article class="review-card"><span class="label">90 天</span><strong>2026-10-10</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1-H4 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article></div>        <details class="audit-drawer"><summary>展开完整质询日志与失败预演</summary><div class="drawer-body">
+<article class="challenge"><div class="challenge-meta">C1 / legal-policy / fatal / base</div><p>旧论点仍把 BIOSECURE 当未来尾部风险；第 851 节已经成法且 WuXi AppTec 已在 1260H 清单。必须把已发生的法律状态、尚待 FAR 的生效边界与客户提前去风险分开。</p><div class="response"><b>revise</b> · 重写三情景政策前提：已成法与已列名作为事实，FAR/OMB 时点和旧合同排除作为实施边界，客户提前去风险作为独立行为风险。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C2 / taleb / major / base</div><p>法定阶段性安排不等于商业缓冲期；客户合规委员会可能在正式禁止前迁移新增项目，而单一大客户已超过集团收入 10%。</p><div class="response"><b>accept</b> · 提高 bear、降低 base/bull；新增订单与客户转移成为可证伪指标。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C3 / fisher-accounting / fatal / bull</div><p>2025 报告归母净利润被资产与股权处置放大，若继续用表观利润或 PE 外推，会把一次性收益误作经营质量。</p><div class="response"><b>revise</b> · 三情景统一使用调整后持续经营净利率和 FY2027 EPS，不使用 191.51 亿元一次性利润推 PE。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C4 / operations / major / bull</div><p>TIDES Q1 收入仅同比 +6.1%，要完成全年约 +40% 需要后续季度显著加速；bull 不能仅按 2025 年 +96% 线性外推。</p><div class="response"><b>accept</b> · bull 概率下调，并将 TIDES 全年增长和利润率同时达标设为必要条件。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C5 / damodaran / fatal / base</div><p>当前约 18.1 倍 FY2027 base PE 已计入大部分经营改善；政策折价存在时，base 不应无依据回到 25-30 倍景气乘数。</p><div class="response"><b>revise</b> · base 目标 PE 设为 18.5 倍、目标价 126 元；不使用景气期倍数机械均值回归。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C6 / druckenmiller / major / bull</div><p>近一个月 +27.1%、价格接近 52 周高点，强动量同时意味着赔率被快速消耗；缺少新的盈利上修时不应追涨。</p><div class="response"><b>accept</b> · 强技术面只影响订单节奏和风险帽，不升级基本面动作；bull 概率继续收缩。<br>证据引用：未引用证据编号</div></article><article class="challenge"><div class="challenge-meta">C7 / industry-peer / minor / base</div><p>全球 CRO 同行增长并不一致，药明康德的高增可能来自组合和交付节奏，不应直接上升为全行业高景气。</p><div class="response"><b>rebut</b> · 不把药明高增写成行业普涨；base 只依赖自身订单和分部转化，同时保留同行分化折价。<br>证据引用：E02、E08、E15</div></article><article class="challenge"><div class="challenge-meta">C8 / capital-allocation / minor / bull</div><p>67.8 亿元可转债支持全球扩产但存在潜在 H 股稀释，新增资本只有在订单与利用率兑现时才创造价值。</p><div class="response"><b>rebut</b> · 融资完成是资金来源事实，不单独进入 bull；只有订单、利用率与利润率共振才进入上行情景。<br>证据引用：E16、E02、E08</div></article>          <article class="premortem"><h3>Bear pre-mortem</h3><p><b>失败路径</b></p><ol><li>未提供</li></ol><p><b>可能误读</b></p><ul></ul><p><b>最早预警：</b>未提供最早预警断言</p></article>
+          <div class="grid-2"><div class="note-block risk"><h3>仓位与风险</h3><p>仓位上限 15.0% · 止损 -12.0% · 年化波动 42.8%</p><ul class="compact"><li>政策风险已经从抽象的 BIOSECURE 尾部情景升级为已发生事项：FY2026 NDAA 第 851 节已经成法，2026-06-10 美国国防部 Federal Register 的 1260H 清单明确列入 WuXi AppTec；公司已公告反对并拟申请复议。实际联邦采购禁令仍取决于 OMB 识别流程、FAR 修订与法定生效期，不能把“已列名”误写成“所有美国商业客户立即禁用”。</li><li>客户地缘与声誉传导：即使直接规则首先约束美国政府采购、贷款和拨款，商业客户也可能提前做供应链去风险，影响新签订单、项目转移、估值折价和海外扩产回报。</li><li>2026Q1 小分子 D&amp;M 同比增长 80.1% 含高基数与项目交付节奏，若大额商业化项目推迟，季度增长和产能利用率可能显著波动。</li></ul></div><div class="note-block"><h3>组合约束</h3><p><b>相关性不可计算</b>：未提供有效持仓样本，不能用 0.0% 代替。</p><p>底层押注 医药CXO/CRDMO：0.0% → 0.0% / 上限 20.0%</p></div></div>
+        </div></details>
+      </section>
+
+      <section id="tracking" data-section="tracking" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">WHAT CHANGED</span><h2>与上一份报告相比，真正变了什么</h2><p class="lede">同一可比时点复核：价格、动作、仓位、情景目标与期限评分等核心决策未变化。</p></div>
+        <div class="grid-3"><p>本轮没有结构化实质变化。</p></div>
+        <details class="audit-drawer"><summary>查看全部变化与未变化字段</summary><div class="drawer-body"><div class="table-wrap"><table><thead><tr><th>字段</th><th>上次</th><th>本次</th><th>delta</th><th>状态</th></tr></thead><tbody><tr><td>价格</td><td>123.30</td><td>123.30</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>动作</td><td>avoid</td><td>avoid</td><td>不适用</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>仓位</td><td>0.0%</td><td>0.0%</td><td>+0.0%</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>Bear 目标</td><td>73.00</td><td>73.00</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>Base 目标</td><td>126.00</td><td>126.00</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>Bull 目标</td><td>187.00</td><td>187.00</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>短期分</td><td>56.1</td><td>56.1</td><td>+0.0</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>中期分</td><td>62.3</td><td>62.3</td><td>+0.0</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>长期分</td><td>72.4</td><td>72.4</td><td>+0.0</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>最大仓位</td><td>15.0%</td><td>15.0%</td><td>+0.0%</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>EV</td><td>-7.1%</td><td>-7.1%</td><td>+0.0%</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>Odds</td><td>0.57</td><td>0.57</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>稳健性</td><td>stable</td><td>stable</td><td>不适用</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>量化分</td><td>91.2</td><td>91.2</td><td>+0.0</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>量化信号</td><td>supportive</td><td>supportive</td><td>不适用</td><td class="tracking-unchanged">unchanged</td></tr><tr><td>量化仓位乘数</td><td>×1.00</td><td>×1.00</td><td>+0.00</td><td class="tracking-unchanged">unchanged</td></tr></tbody></table></div></div></details>
+      </section>
+
+      <!-- EVIDENCE ROOM -->
+      <section id="research-intel" data-section="research-intel" data-evidence-room="true">
+        <div class="section-head"><span class="eyebrow">EVIDENCE ROOM</span><h2>证据室：30 分钟尽调与机器复核</h2><p class="lede">证据账本共 31 条；事实、观点、来源、新鲜度、置信度与模型资格仍完整保留，但不再与投资结论争夺同一视觉层级。</p></div>
+        <div class="evidence-room-summary"><div><span class="label">有效证据</span><h3>31</h3></div><div><span class="label">正文样本</span><h3>31</h3></div><div><span class="label">基本面覆盖</span><h3>85%</h3></div><div><span class="label">增强缺口</span><h3>5</h3></div></div>
+        <article class="evidence-group" data-research-dimension="pricing">
+          <details class="evidence-drawer">
+            <summary><span>定价与 ASP</span><small>3 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>以 2026-07-10 A 股收盘价 123.30 元和自有 FY2027 base EPS 6.80 元计算，前瞻 PE 约 18.1 倍；这是基于官方经营数据的分析模型，不是公司或卖方明确目标价。</p><div class="evidence-meta">2026-07-10 / websearch:官方年报与Q1披露约束的自有模型 / 研究样本 / confidence medium / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026 年 A 股回购已完成：9,701,231 股，最高 118.48 元、最低 95.11 元、均价 103.08 元，总金额约 10.00 亿元。它是管理层资本配置与员工激励证据，不应被当成内在价值下限。</p><div class="evidence-meta">2026-06-26 / websearch:WuXi AppTec 回购完成公告 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>67.8 亿元零息可转债的初始转股价为 153 港元/H 股；该价格对应 H 股、不同币种与转股条款，只能作为融资定价旁证，不能直接套用为 A 股目标价。</p><div class="evidence-meta">2026-05-15 / websearch:WuXi AppTec 可转债发行公告 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="volume">
+          <details class="evidence-drawer">
+            <summary><span>出货与产能</span><small>4 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026Q1 总收入 124.36 亿元，持续经营收入同比 +39.4%；调整后净利润 46.0 亿元，同比 +71.7%，调整后净利率 37.0%。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026Q1 Chemistry 收入 106.20 亿元同比 +43.7%，其中小分子 D&amp;M 收入 69.3 亿元同比 +80.1%；高增长集中在 Chemistry，Testing 与 Biology 体量较小。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年末持续经营未完成订单 580.05 亿元，同比 +28.8%；其中 422.07 亿元预计在 2026 年确认，订单覆盖提供收入可见度但不排除延期或取消。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 年报 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年总收入 454.56 亿元；持续经营收入 434.21 亿元，同比 +21.4%。调整后净利润 149.6 亿元，同比 +41.3%，调整后净利率 32.9%。</p><div class="evidence-meta">2026-03-23 / websearch:WuXi AppTec 2025 年业绩 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="customers">
+          <details class="evidence-drawer">
+            <summary><span>客户与需求</span><small>3 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>公司称其服务覆盖 30 多个国家的数千家合作伙伴，并在 2025 年通过 50 多次美欧等监管检查；这是公司的自述，应与监管与客户流失数据交叉验证。</p><div class="evidence-meta">2026-06-09 / websearch:WuXi AppTec 1260H 自愿公告 / 研究样本 / confidence medium / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026Q1 TIDES D&amp;M 客户数同比 +28%，分子数同比 +59%；客户与分子漏斗仍扩张，但当季 TIDES 收入仅同比 +6.1%，表明收入确认存在明显时序差。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年报披露单一客户对 Chemistry 及其他分部合计贡献超过集团收入 10%；客户集中度不是极端但已达到需持续跟踪的披露阈值。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 年报 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="supply_chain">
+          <details class="evidence-drawer">
+            <summary><span>供应链</span><small>4 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>零息可转债净募集资金约 10.23 亿美元，其中约 90% 计划用于全球能力和产能扩张、10% 用于一般公司用途；资本回报取决于订单转化和海外设施利用率。</p><div class="evidence-meta">2026-05-21 / websearch:WuXi AppTec 可转债完成公告 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>FDA PreCheck 计划通过建设前设施准备和申报阶段互动支持美国药品制造回流；这会提高本地化产能的政策权重，也可能改变全球 CDMO 资本开支分布。</p><div class="evidence-meta">2025-08-07 / websearch:U.S. FDA PreCheck / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>FDA 表示美国分发药品超过一半在海外制造，FDA 批准药品所用 API 制造商中仅约 11% 位于美国；供应链本地化是政策长期方向，不只是单一公司事件。</p><div class="evidence-meta">2025-08-07 / websearch:U.S. FDA PreCheck / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>FDA 合同制造质量协议指南明确委托方与受托方需界定 CGMP 制造责任；客户转移项目并非简单采购切换，技术转移、验证和质量体系形成迁移摩擦。</p><div class="evidence-meta">2016-11-01 / websearch:U.S. FDA Quality Agreements Guidance / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="technology">
+          <details class="evidence-drawer">
+            <summary><span>技术路线</span><small>4 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026Q1 公司计划提前启动常州新基地；小分子 D&amp;M 新增 328 个分子，含 83 个由研究端转入开发端，商业化及三期项目净增 9 个。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>WuXi Chemistry 覆盖发现、临床前、临床到商业化制造，并覆盖小分子、寡核苷酸、多肽及相关化学偶联物；平台协同是 CRDMO 下游导流的核心机制。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 年报 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年 TIDES 收入 113.7 亿元同比 +96.0%，年末在手订单同比 +20.2%；客户数 +25%、分子数 +45%，新模态已从技术储备进入规模收入阶段。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 年报 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年接受 741 次质量审计和 60 次客户信息安全审计；审计次数说明平台处于高强度外部验证环境，但次数本身不等同于未来零合规事故。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 可持续发展报告 / 研究样本 / confidence medium / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="competition">
+          <details class="evidence-drawer">
+            <summary><span>竞争格局</span><small>4 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>Charles River 2025 年收入约 40 亿美元，并计划未来两年关闭或整合约 12 个站点以适应当前需求；非临床 CRO 景气并非全行业同步繁荣。</p><div class="evidence-meta">2026-02-18 / websearch:Charles River 2025 Form 10-K / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>Labcorp 2025 年 Biopharma Laboratory Services 占公司收入约 22%，并扩建细胞与基因治疗实验室；全球实验服务竞争来自诊断龙头、专门 CRO 和制药企业内部能力。</p><div class="evidence-meta">2026-02-17 / websearch:Labcorp 2025 Form 10-K / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>IQVIA 2025 年 R&amp;D Solutions 收入 88.96 亿美元同比 +4.3%，合约在手订单从 311 亿升至 327 亿美元；全球 CRO 需求仍增长，但速度显著低于药明康德当前持续经营增速。</p><div class="evidence-meta">2026-02-12 / websearch:IQVIA 2025 Form 10-K / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>Samsung Biologics 2025 年收入 4.557 万亿韩元、经营利润 2.069 万亿韩元，强劲客户需求与 Plant 4 爬坡推动增长；其大型生物药 CDMO 路线与药明康德以化学业务为主的组合不同。</p><div class="evidence-meta">2026-01-21 / websearch:Samsung Biologics FY2025 results / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="risks">
+          <details class="evidence-drawer">
+            <summary><span>风险反证</span><small>5 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026-06-10 Federal Register 更新明确列入 WuXi AppTec，并给出复议通道；公司则否认被指控的所有权与军方关联。报告必须同时展示政府认定与公司反驳，不能把任何一方陈述直接当成终局事实。</p><div class="evidence-meta">2026-06-10 / websearch:Federal Register 1260H update / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2026Q1 TIDES 收入同比仅 +6.1%，但公司仍预计全年约 +40%；若后续三个季度未加速，FY2027 模型的高利润率与扩产回报需要下调。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>2025 年中国会计准则归母净利润 191.51 亿元受到出售部分 WuXi XDC 权益和中国临床研究服务业务等非经常事项影响；估值外推应使用调整后或扣非口径。</p><div class="evidence-meta">2026-04-01 / websearch:WuXi AppTec 2025 年报 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>FY2026 NDAA 第 851 节已经成法，禁止联邦机构采购被认定的关注生物技术公司服务，并约束相关联邦合同、贷款和拨款；它不是尚未通过的草案。</p><div class="evidence-meta">2025-12-18 / websearch:Public Law 119-60 Section 851 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>第 851 节对 1260H 路径实体的禁止在 FAR 依该节修订后 60 天生效；对生效日前签订的合同或协议设有最长五年的阶段性排除。因而“已列名”不等于所有美国商业收入已在 2026-06-10 当日归零。</p><div class="evidence-meta">2025-12-18 / websearch:Public Law 119-60 Section 851 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="financial_forecast">
+          <details class="evidence-drawer">
+            <summary><span>财务预测</span><small>4 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>自有 FY2027 三情景收入为 556/615/675 亿元、调整后净利率 29%/33%/36%，对应 EPS 5.40/6.80/8.14 元；base EPS 比新鲜卖方 2027 EPS 中位数 6.98 元低 2.6%。</p><div class="evidence-meta">2026-07-10 / websearch:官方年报和Q1披露约束的自有模型 / 研究样本 / confidence medium / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>模型 bear/base/bull 相对 2026 指引中值的 FY2027 增长约 7%/18%/29%；bull 必须同时满足小分子 D&amp;M、TIDES、产能利用率和政策影响受控，不能仅靠当前季度同比增速外推。</p><div class="evidence-meta">2026-07-10 / websearch:WuXi AppTec Q1 演示约束的场景模型 / 研究样本 / confidence medium / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>公司在 2026Q1 重申全年经营指引；持续经营在手订单 597.7 亿元同比 +23.6%，为全年兑现提供覆盖但不能消除政策与交付风险。</p><div class="evidence-meta">2026-04-29 / websearch:WuXi AppTec 2026Q1 演示 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>公司 2026 年指引为总收入 513-530 亿元、持续经营收入同比 +18% 至 +22%；调整后自由现金流 105-115 亿元、资本开支 65-75 亿元。指引依赖全球制药、贸易与监管环境稳定。</p><div class="evidence-meta">2026-03-23 / websearch:WuXi AppTec 2025 年业绩 / 研究样本 / confidence high / freshness 未标注 / weight 未标注 / model 未标注</div></div></div>
+          </details>
+        </article>
+      </section>
+
+      <section id="appendix" data-section="appendix" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">AUDIT & METHODS</span><h2>数据质量、方法与审计底稿</h2></div>
+        <div class="grid-3"><div class="note-block"><span class="label">process status</span><h3>complete</h3><p>仅表示契约、流程和发布完成。</p></div><div class="note-block"><span class="label">fundamental coverage / investment readiness</span><h3>广覆盖 / 85%</h3><p>investment readiness conditional；核心 17/20 组；增强缺口 5 项。</p><progress value="0.85" max="1">85%</progress></div><div class="note-block"><span class="label">data quality</span><h3>current</h3><p>行情截至最近可用交易日 2026-07-10。</p></div></div>
+        <h3>尚未结构化的研究缺口</h3><ul class="compact"><li>客户集中度与外币敞口/套保敏感性</li><li>终端与上游价格链（同口径、同截止日）</li><li>可比公司标准化估值（至少3家同截面、可重算PE）</li><li>同机构同预测年EPS修订序列</li><li>决策校准样本未成熟</li></ul>
+        <details class="audit-drawer"><summary>S0-S6 流程证据</summary><div class="drawer-body"><div class="stage-grid"><div class="stage" data-stage="S0" data-stage-status="pass"><b>S0 · 预热与 Gate</b><small>2/2 Gate 通过</small></div><div class="stage" data-stage="S1" data-stage-status="pass"><b>S1 · 证据账本</b><small>schema=evidence_ledger.v1</small></div><div class="stage" data-stage="S2" data-stage-status="pass"><b>S2 · 论点构建</b><small>3 个情景 · scenario math PASS</small></div><div class="stage" data-stage="S3" data-stage-status="pass"><b>S3 · 质讯</b><small>8 条挑战 / 8 条回应</small></div><div class="stage" data-stage="S4" data-stage-status="pass"><b>S4 · EV 定价</b><small>净 EV -7.1% / 赔率 0.5662864915768548</small></div><div class="stage" data-stage="S5" data-stage-status="pass"><b>S5 · 组合覆盖</b><small>仓位 0.0% / 波动 42.8%</small></div><div class="stage" data-stage="S6" data-stage-status="pass"><b>S6 · 决策记录</b><small>schema=decision_record.v1 / tracking=present</small></div></div></div></details>
+        <details class="audit-drawer"><summary>研究 Gate 与清单</summary><div class="drawer-body"><p><b>研究深度 / 通过</b><br>research_intel_runner 0 · research_intel_real 31 · company_notes 14 · industry_notes 12 · supply_chain_notes 0 · path_verified 26</p><p><b>流程完整性 / 通过</b><br>company_type quality_value · master_count 5 · master_expected 6 · strong_move True · fresh_drivers 2 · annual_years [&#39;2021&#39;, &#39;2022&#39;, &#39;2023&#39;, &#39;2024&#39;, &#39;2025&#39;]</p><p>证据 schema evidence_ledger.v1 · 研究证据数 31</p><ul class="compact"><li>公司：2025 Annual Report</li><li>公司：WuXi AppTec Beat Full-Year Guidance and Achieved Record Performance in 2025</li><li>公司：2026 First Quarterly Report</li><li>公司：2026 First Quarterly Results Presentation</li><li>公司：WuXi AppTec Delivers Strong Revenue and Profit Growth in Q1 2026</li><li>公司：Voluntary Announcement on Section 1260H Designation</li><li>公司：Announcement on the Plan of Repurchase of A Shares Through Bidding in 2026</li><li>公司：Completion of the Repurchase of A Shares</li><li>公司：Proposed Issue of RMB6.78bn USD-Settled Zero-Coupon Convertible Bonds Due 2027</li><li>公司：Completion of RMB6.78bn USD-Settled Zero-Coupon Convertible Bonds Due 2027</li><li>公司：2025 Investor Day - WuXi Chemistry CRDMO</li><li>公司：2025 Investor Day - Research Enabling Platforms</li><li>公司：2025 Investor Day - Financial Performance</li><li>公司：2025 Sustainability Report</li><li>行业：FY2026 National Defense Authorization Act - Public Law 119-60, Section 851</li><li>行业：Federal Register Section 1260H List Update</li><li>行业：FDA Announces New PreCheck Program to Boost U.S. Drug Manufacturing</li><li>行业：FDA Actions to Support and Strengthen Domestic Drug Manufacturing</li><li>行业：Contract Manufacturing Arrangements for Drugs: Quality Agreements Guidance</li><li>行业：IQVIA Holdings 2025 Form 10-K</li><li>行业：Charles River Laboratories 2025 Form 10-K</li><li>行业：Labcorp Holdings 2025 Form 10-K</li><li>行业：Lonza Annual Report 2025</li><li>行业：Samsung Biologics FY2025 Financial Results</li><li>行业：Samsung Biologics 2025 Business Report</li><li>行业：Samsung Biologics 2025 Year in Review</li><li>警告：大师数 5 ≠ company_type=quality_value 预期 6（A/港股含 Ricky）</li></ul></div></details>
+        <details class="audit-drawer"><summary>Research OS 身份与数据系谱</summary><div class="drawer-body"><p><b>run 2c1863125565101f90496da0</b> / status complete / reused False</p><p>snapshot 790c3d7e589c09ab5245c761</p><div class="table-wrap"><table><thead><tr><th>Dataset</th><th>Status</th><th>Source</th><th>Confidence</th><th>Decision use</th><th>Fallback</th></tr></thead><tbody><tr><td>balancesheet</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>cashflow</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>fina_indicator</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>income</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>valuation_history</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr></tbody></table></div><ul class="compact"><li>缺少同机构同预测年历史样本，无法计算卖方预测修订</li></ul></div></details>
+        <details class="audit-drawer"><summary>决策校准与样本成熟度</summary><div class="drawer-body"><p class="table-note">eval 565a968215f41b00f41b1932 / 截至 2026-07-10。未到期、未决或缺基准的数据保持“样本未成熟”，不按 0 分处理。</p><div class="grid-2"><div class="note-block"><span class="label">Brier score</span><h3>样本未成熟</h3><p>unavailable · no resolved valid scenario observations</p></div><div class="note-block"><span class="label">方向命中率</span><h3>样本未成熟</h3><p>unavailable · 命中 0 / 已决 0</p></div><div class="note-block"><span class="label">可证伪断言</span><h3>样本未成熟</h3><p>unavailable · 已决 0 / 未到期 9</p></div><div class="note-block"><span class="label">相对基准收益</span><h3>样本未成熟</h3><p>unavailable · benchmark return unavailable</p></div></div></div></details>
+        <details class="audit-drawer"><summary>可重算假设台账</summary><div class="drawer-body"><p class="table-note">假设哈希 ea097ed67dd21f69b5b7d4bf。决策驱动输入必须有 source_ref 与 evidence_refs；净利润、EPS、目标价是派生值，不冒充假设。</p><div class="table-wrap"><table><thead><tr><th>ID</th><th>指标</th><th>值</th><th>期间</th><th>来源 / 指针</th><th>证据</th><th>敏感度序</th><th>可证伪断言</th></tr></thead><tbody><tr><td>reverse_dcf.implied_revenue_growth</td><td>implied_revenue_growth</td><td>16.7% </td><td>5Y</td><td>market-implied<br><small>未提供</small></td><td>未绑定</td><td>1</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.wacc</td><td>wacc</td><td>10.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>3</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.terminal_growth</td><td>terminal_growth</td><td>3.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>4</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.reinvestment_rate</td><td>reinvestment_rate</td><td>35.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>5</td><td>模型参数（非情景命题）</td></tr><tr><td>capital.shares_yi</td><td>shares_yi</td><td>29.83757155 100m shares</td><td>20260331</td><td>fundamental_snapshot.json<br><small>fundamental_snapshot.json#/quarterly/0/shares</small></td><td>E19</td><td>5</td><td>待绑定情景命题</td></tr><tr><td>scenario.bear.revenue_yi</td><td>revenue_yi</td><td>556.0 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bear/model/revenue_yi</small></td><td>E01、E02、E08、E09、E10</td><td>1</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.net_margin</td><td>net_margin</td><td>0.29 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bear/model/net_margin</small></td><td>E03、E09、E13</td><td>2</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.target_pe</td><td>target_pe</td><td>13.5 x</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bear/model/target_pe</small></td><td>E06、E07、E09、E10、E15</td><td>3</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.probability</td><td>probability</td><td>0.38 probability</td><td>2026-07-10</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/bear</small></td><td>E09、E10、E11、E17、E18</td><td>4</td><td>bear.claim.1</td></tr><tr><td>scenario.base.revenue_yi</td><td>revenue_yi</td><td>615.0 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/base/model/revenue_yi</small></td><td>E01、E02、E08、E14</td><td>1</td><td>base.claim.1</td></tr><tr><td>scenario.base.net_margin</td><td>net_margin</td><td>0.33 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/base/model/net_margin</small></td><td>E01、E02、E04、E14</td><td>2</td><td>base.claim.1</td></tr><tr><td>scenario.base.target_pe</td><td>target_pe</td><td>18.5 x</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/base/model/target_pe</small></td><td>E04、E06、E07、E14、E15</td><td>3</td><td>base.claim.1</td></tr><tr><td>scenario.base.probability</td><td>probability</td><td>0.47 probability</td><td>2026-07-10</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/base</small></td><td>E01、E02、E08、E14、E18</td><td>4</td><td>base.claim.1</td></tr><tr><td>scenario.bull.revenue_yi</td><td>revenue_yi</td><td>675.0 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bull/model/revenue_yi</small></td><td>E01、E02、E08、E12</td><td>1</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.net_margin</td><td>net_margin</td><td>0.36 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bull/model/net_margin</small></td><td>E02、E05、E12</td><td>2</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.target_pe</td><td>target_pe</td><td>23.0 x</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bull/model/target_pe</small></td><td>E05、E06、E07、E12、E15</td><td>3</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.probability</td><td>probability</td><td>0.15 probability</td><td>2026-07-10</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/bull</small></td><td>E02、E12、E15、E18</td><td>4</td><td>bull.claim.1</td></tr></tbody></table></div></div></details>
+        <details class="audit-drawer"><summary>八维评分与大师信号</summary><div class="drawer-body"><div class="grid-2"><div><h3>维度评分</h3><ul class="compact"><li>sentiment：23.9</li><li>china_market：55.8</li><li>macro：58.0</li><li>capital_flow：49.8</li><li>news：70.5</li><li>governance：49.0</li><li>technical：76.5</li><li>fundamental：84.5</li></ul></div><div><h3>大师信号</h3><ul class="compact"><li>阿斯沃斯·达摩达兰 / bullish / 72</li><li>莫尼什·帕布莱 / bullish / 70</li><li>纳西姆·塔勒布 / neutral / 56</li><li>菲利普·费雪 / bullish / 76</li><li>巴菲特-芒格 / bullish / 74</li></ul></div></div></div></details>
+      </section>
+    </article>
+  </div>
+</main>
+</body>
+</html>
