@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="aihf-report-schema" content="aihf-v3-decision-report.v1">
+  <link rel="icon" href="data:,">
+  <title>寒武纪 · 基本面研究报告</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --ink-2: #2b3540;
+      --soft: #6f746f;
+      --muted: #5f655f;
+      --paper: #f4f1e9;
+      --sheet: #fffefb;
+      --navy: #101820;
+      --navy-2: #1a2836;
+      --accent: #9b7a46;
+      --accent-text: #765a31;
+      --accent-pale: #f2eadc;
+      --cobalt: #7a5d2f;
+      --cobalt-pale: #f3ede3;
+      --gain: #08705c;
+      --gain-pale: #eaf4f0;
+      --amber: #a9792d;
+      --amber-pale: #f8efdf;
+      --critical: #a13d43;
+      --critical-pale: #f8e9e8;
+      --line: #d9d3c7;
+      --line-strong: #aaa397;
+      --shadow: 0 1px 3px rgba(16, 24, 32, .08);
+      --sans: "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+      --serif: "Songti SC", "Noto Serif CJK SC", STSong, SimSun, serif;
+      --mono: "DIN Alternate", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { max-width: 100%; overflow-x: clip; scroll-behavior: smooth; background: var(--paper); }
+    body { max-width: 100%; overflow-x: clip; margin: 0; color: var(--ink); background: var(--paper); font: 15.5px/1.75 var(--sans); font-feature-settings: "tnum", "kern"; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    p { margin: 0 0 14px; }
+    ul, ol { margin: 10px 0 0; }
+    small { color: var(--soft); }
+    :focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
+    .skip-link { position: fixed; z-index: 50; top: 8px; left: 8px; padding: 10px 14px; color: #fff; background: var(--cobalt); transform: translateY(-150%); }
+    .skip-link:focus { transform: translateY(0); }
+    .kicker, .label, th, .audit-key, .eyebrow { font: 700 10px/1.35 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .kicker { color: var(--accent-text); }
+    .label, .eyebrow { color: var(--soft); }
+    h1 { margin: 8px 0 7px; font: 700 clamp(42px, 4.2vw, 52px)/1.08 var(--serif); letter-spacing: -.02em; }
+    h2 { margin: 0; font: 650 clamp(24px, 2.4vw, 29px)/1.28 var(--serif); letter-spacing: -.015em; }
+    h3 { margin: 0 0 12px; font: 650 18px/1.42 var(--serif); }
+    .identity { color: var(--soft); font: 650 12px/1.55 var(--mono); }
+    .lede { max-width: 72ch; color: var(--soft); font: 500 15px/1.82 var(--sans); }
+    .compact { padding-left: 19px; }
+    .compact li + li { margin-top: 7px; }
+
+    /* Institutional research-note masthead and investment snapshot. */
+    .cover {
+      color: var(--ink);
+      background: var(--sheet);
+      border-bottom: 1px solid var(--line);
+    }
+    .report-masthead { color: #fff; background: var(--navy); border-bottom: 3px solid var(--accent); }
+    .report-masthead-inner { width: min(1060px, calc(100vw - 48px)); margin: auto; padding: 26px 0 24px; }
+    .report-masthead .kicker { color: #d5b97e; }
+    .report-masthead h1 { color: #fff; }
+    .report-kind { margin-left: 12px; color: rgba(255,255,255,.68); font: 500 clamp(17px, 2vw, 23px)/1.2 var(--serif); letter-spacing: .02em; }
+    .report-masthead .identity { color: rgba(255,255,255,.64); }
+    .cover-inner {
+      width: min(1060px, calc(100vw - 48px));
+      min-height: 0;
+      margin: auto;
+      padding: 28px 0 30px;
+      display: grid;
+      grid-template-columns: minmax(290px, .72fr) minmax(0, 1.45fr);
+      grid-template-areas: "decision thesis";
+      gap: 38px;
+      align-content: start;
+      align-items: start;
+    }
+    .cover-decision { grid-area: decision; min-width: 0; }
+    .thesis-block { grid-area: thesis; max-width: 720px; padding-top: 1px; scroll-margin-top: 64px; }
+    .thesis {
+      max-width: 720px;
+      margin: 8px 0 0;
+      padding-top: 13px;
+      border-top: 2px solid var(--ink);
+      font: 600 19px/1.72 var(--serif);
+    }
+    .thesis-details { margin-top: 10px; border-top: 1px solid var(--line); }
+    .thesis-details summary { min-height: 44px; padding: 11px 0; color: var(--soft); font: 700 11px/1.6 var(--mono); }
+    .thesis-details p { margin: 0; padding: 0 0 12px; color: var(--soft); font: 500 14px/1.75 var(--sans); }
+    .canonical-spine-label { display: block; margin-top: 1px; color: var(--accent-text); }
+    .canonical-hypotheses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin: 24px 0 4px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .canonical-hypothesis { position: relative; padding: 18px 0 16px 34px; border-right: 1px solid var(--line); scroll-margin-top: 64px; }
+    .canonical-hypothesis:last-child { border-right: 0; }
+    .canonical-hypothesis::before { content: attr(data-decision-hypothesis); position: absolute; top: 19px; left: 0; color: var(--accent-text); font: 750 10px/1.2 var(--mono); }
+    .canonical-hypothesis b { display: block; margin-bottom: 4px; }
+    .canonical-hypothesis p { margin: 0 0 5px; color: var(--ink-2); font-size: 13px; line-height: 1.66; }
+    .audit-footnote { margin-top: 7px; border: 0; }
+    .audit-footnote summary { min-height: 32px; padding: 5px 0; color: var(--soft); font: 650 10px/1.55 var(--mono); }
+    .audit-footnote > p, .audit-footnote > small { display: block; margin: 0; padding: 0 0 7px; color: var(--soft); font-size: 10px; line-height: 1.55; overflow-wrap: anywhere; }
+    .decision-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 3px double var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      background: transparent;
+    }
+    .decision-primary { padding: 14px 0 15px; border-bottom: 1px solid var(--line); }
+    .decision-primary > span, .decision-stat > span { display: block; color: var(--soft); font: 700 10px/1.4 var(--mono); text-transform: uppercase; }
+    .decision-primary strong { display: block; margin-top: 7px; color: var(--accent); font: 700 32px/1.08 var(--serif); letter-spacing: -.02em; }
+    main[data-action="build"] .decision-primary strong,
+    main[data-action="add"] .decision-primary strong { color: var(--gain); }
+    main[data-action="trim"] .decision-primary strong,
+    main[data-action="exit"] .decision-primary strong,
+    main[data-action="avoid"] .decision-primary strong { color: var(--critical); }
+    .decision-primary b { display: block; margin-top: 7px; font: 700 15px/1.2 var(--mono); }
+    .decision-primary .position-value { display: inline; color: inherit; font: inherit; letter-spacing: 0; text-transform: none; }
+    .decision-stats { display: grid; grid-template-columns: 1fr 1fr; }
+    .decision-stat { min-width: 0; padding: 10px 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .decision-stat:nth-child(odd) { padding-left: 0; }
+    .decision-stat:nth-child(2n) { border-right: 0; }
+    .decision-stat:nth-last-child(-n+2) { border-bottom: 0; }
+    .decision-stat strong { display: block; margin-top: 5px; font: 700 17px/1.2 var(--mono); }
+    .target-pe-calibration { display: block; margin-top: 5px; color: var(--soft); font: 700 9px/1.35 var(--mono); }
+    .target-pe-calibration.calibrated { color: var(--gain); }
+    .target-pe-calibration.uncalibrated { color: var(--critical); }
+    .signal-row { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+    .signal-chip { min-width: 0; padding: 11px 13px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .signal-chip.cautious, .signal-chip.fragile { border-color: var(--amber); background: var(--amber-pale); }
+    .signal-chip.adverse { border-color: var(--critical); background: var(--critical-pale); }
+    .signal-chip.inactive { border-color: var(--muted); background: #f2f4f7; }
+    .signal-chip b { display: block; font: 700 12px/1.4 var(--mono); }
+    .signal-chip p { margin: 4px 0 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+    .decision-waterfall { margin-top: 10px; border: 1px solid var(--line); background: rgba(255, 255, 255, .96); }
+    .decision-waterfall-head { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.8fr); gap: 16px; padding: 11px 13px; border-bottom: 1px solid var(--line); }
+    .decision-waterfall-head b { font: 750 12px/1.45 var(--mono); }
+    .decision-waterfall-head p { margin: 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+    .decision-waterfall-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .decision-step { position: relative; min-width: 0; padding: 10px 13px; border-right: 1px solid var(--line); }
+    .decision-step:last-child { border-right: 0; }
+    .decision-step::after { content: "→"; position: absolute; z-index: 1; top: 50%; right: -8px; width: 16px; color: var(--muted); background: var(--sheet); text-align: center; transform: translateY(-50%); }
+    .decision-step:last-child::after { display: none; }
+    .decision-step span, .decision-step strong, .decision-step small { display: block; overflow-wrap: anywhere; }
+    .decision-step span { color: var(--muted); font: 700 9px/1.35 var(--mono); text-transform: uppercase; }
+    .decision-step strong { margin-top: 3px; font: 750 15px/1.25 var(--mono); }
+    .decision-step small { margin-top: 4px; color: var(--soft); font-size: 10px; }
+    .decision-step.block { border-top: 3px solid var(--amber); }
+    .decision-step.pass { border-top: 3px solid var(--gain); }
+
+    /* The signature: one honest scale for bear/current/base/bull. */
+    .price-rail { margin-top: 28px; padding: 16px 0 10px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); background: transparent; }
+    .price-rail-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .price-rail-head p { color: var(--soft); font-size: 11px; }
+    .price-rail-track { position: relative; min-height: 144px; margin-top: 4px; }
+    .price-rail-line { position: absolute; top: 66px; right: 4%; left: 4%; height: 3px; background: linear-gradient(90deg, var(--critical), var(--amber) 45%, var(--cobalt)); }
+    .price-node {
+      position: absolute;
+      top: 8px;
+      width: 104px;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .price-node::after { content: ""; display: block; width: 2px; height: 22px; margin: 7px auto 0; background: var(--ink); }
+    .price-node.current { top: 74px; }
+    .price-node.current::before { content: ""; display: block; width: 2px; height: 18px; margin: -8px auto 6px; background: var(--cobalt); }
+    .price-node.current::after { display: none; }
+    .price-node span { display: block; color: var(--soft); font: 700 9px/1.35 var(--mono); text-transform: uppercase; }
+    .price-node strong { display: block; margin-top: 3px; font: 760 17px/1.2 var(--mono); }
+    .price-node em { display: block; color: var(--soft); font: normal 650 10px/1.4 var(--mono); }
+    .price-node-card { min-width: 0; }
+    .price-node[data-price-coordinate="4.00"] { left: 4.00%; }
+    .price-node[data-price-coordinate="39.74"] { left: 39.74%; }
+    .price-node[data-price-coordinate="96.00"] { left: 96.00%; }
+    .price-node.current[data-price-coordinate="53.09"] { left: 53.09%; }
+    .decision-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 18px; }
+    .decision-overview article { min-width: 0; padding: 14px 0; border-top: 1px solid var(--line); background: transparent; }
+    .decision-overview li { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .hypothesis-ref, .scenario-audit-link { color: var(--cobalt); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+    /* Audit remains available, but lives in the appendix reading tier. */
+    .audit-strip { border-bottom: 1px solid var(--line); background: #eef1f6; }
+    .audit-inner { width: min(1060px, calc(100vw - 48px)); margin: auto; }
+    .audit-status-drawer { margin: 0 0 28px; padding: 0 18px; border: 1px solid var(--line); background: var(--sheet); }
+    .audit-status-drawer .audit-inner { width: 100%; }
+    .audit-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .audit-cell { min-width: 0; padding: 10px 14px; border-right: 1px solid var(--line); }
+    .audit-cell:first-child { padding-left: 0; }
+    .audit-cell:last-child { border-right: 0; }
+    .audit-key { display: block; color: var(--soft); font-size: 10px; }
+    .audit-cell strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 11px/1.5 var(--mono); }
+    .freshness-drawer { margin: 0; border-top: 1px solid var(--line); }
+    .freshness-drawer summary { min-height: 44px; padding: 12px 0; }
+    .freshness-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 12px; }
+
+    .decision-nav {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      min-width: 0;
+      padding: 6px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 254, 251, .96);
+      backdrop-filter: blur(14px);
+    }
+    .decision-nav a { padding: 8px 15px; color: var(--soft); text-decoration: none; font-size: 12px; font-weight: 700; }
+    .decision-nav a:hover { color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
+
+    .layout { width: min(1060px, calc(100vw - 48px)); margin: 24px auto 70px; }
+    .content { min-width: 0; overflow: hidden; padding: 0 54px; background: var(--sheet); box-shadow: var(--shadow); counter-reset: chapter; }
+    section { padding: 54px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; counter-increment: chapter; }
+    section:last-child { border-bottom: 0; }
+    .section-head { position: relative; display: grid; gap: 7px; margin-bottom: 28px; padding: 0 0 14px 44px; border-bottom: 2px solid var(--ink); }
+    .section-head::before { content: counter(chapter, upper-roman); position: absolute; top: 1px; left: 0; color: var(--accent-text); font: italic 600 16px/1.2 var(--serif); }
+    .section-head .eyebrow { color: var(--accent-text); }
+    .section-secondary { background: transparent; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .quality-split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 20px; }
+    .quality-split > * { min-width: 0; }
+    .note-block { min-width: 0; padding: 16px 0; border: 0; border-top: 2px solid var(--accent); background: transparent; }
+    .note-block.risk { border-top-color: var(--critical); background: transparent; }
+    .note-block.gain { border-top-color: var(--gain); background: transparent; }
+    .degraded { padding: 13px 15px; color: #714714; border-left: 3px solid var(--amber); background: var(--amber-pale); }
+
+    .decision-chain { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-top: 28px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line-strong); }
+    .decision-node { position: relative; min-width: 0; padding: 18px 18px 20px; border-right: 1px solid var(--line); }
+    .decision-node:last-child { border-right: 0; }
+    .decision-node:not(:last-child)::after { content: "→"; position: absolute; z-index: 2; top: 50%; right: -11px; width: 21px; color: var(--cobalt); background: var(--sheet); text-align: center; font-weight: 800; }
+    .decision-node strong { display: block; margin: 7px 0 5px; font: 750 16px/1.3 var(--sans); }
+    .decision-node p { margin: 0; color: var(--soft); font-size: 12px; }
+    .hypothesis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .hypothesis { padding: 17px 18px; border-left: 3px solid var(--cobalt); background: #f7f9fe; }
+    .hypothesis p { margin: 6px 0; }
+    .catalyst-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .catalyst-strip article { min-width: 0; padding: 14px 0; border-top: 1px solid var(--line); }
+    .catalyst-strip p { margin: 5px 0 0; color: var(--soft); font-size: 12px; }
+
+    .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 20px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .metric { min-width: 0; min-height: 78px; padding: 14px 15px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .metric:nth-child(3n) { border-right: 0; }
+    .metric:nth-last-child(-n+3) { border-bottom: 0; }
+    .metric strong { display: block; margin-top: 7px; overflow-wrap: anywhere; font: 750 18px/1.2 var(--mono); }
+    .exposure-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 20px 0 24px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .exposure-card { min-width: 0; padding: 17px 18px 16px; border-right: 1px solid var(--line); }
+    .exposure-card:last-child { border-right: 0; }
+    .exposure-card strong { display: block; margin: 6px 0 7px; color: var(--ink); font: 750 23px/1.08 var(--mono); overflow-wrap: anywhere; }
+    .exposure-card p { margin: 0; color: var(--soft); font-size: 12px; }
+    .exposure-card small { display: block; margin-top: 8px; color: var(--muted); line-height: 1.5; }
+    .exposure-gap { display: block; margin-top: 8px; color: var(--critical); font-size: 11px; font-weight: 750; }
+    .market-ask { display: grid; grid-template-columns: 1.05fr .8fr 1.15fr; margin-top: 20px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .market-ask article { min-width: 0; padding: 17px 18px; border-right: 1px solid var(--line); }
+    .market-ask article:last-child { border-right: 0; }
+    .market-ask strong { display: block; margin-top: 6px; font: 750 19px/1.25 var(--mono); overflow-wrap: anywhere; }
+    .market-ask p { margin: 6px 0 0; color: var(--soft); font-size: 11px; }
+
+    .scenario-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .scenario-card { min-width: 0; padding: 17px 16px; border: 1px solid var(--line); border-top: 3px solid var(--line-strong); background: var(--sheet); }
+    .scenario-card.base { border-top-color: var(--accent); background: var(--accent-pale); }
+    .scenario-card.bear { border-top-color: var(--critical); }
+    .scenario-card.bull { border-top-color: var(--amber); }
+    .scenario-card strong { display: block; margin: 5px 0; font: 750 24px/1.1 var(--mono); }
+    .scenario-card p { color: var(--soft); font-size: 12px; }
+
+    /* Investment signal rails: each graphic answers one IC question. */
+    .signal-rail { margin: 24px 0; padding: 17px 0 15px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .signal-rail-head { display: grid; grid-template-columns: minmax(190px, .72fr) minmax(0, 1.28fr); gap: 22px; align-items: end; margin-bottom: 16px; }
+    .signal-rail-head h3 { margin: 3px 0 0; }
+    .signal-rail-head p { margin: 0; color: var(--soft); font-size: 12px; }
+    .chart-question { display: block; color: var(--accent-text); font: 750 10px/1.45 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .chart-legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--soft); font: 650 10px/1.4 var(--mono); }
+    .chart-legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 6px; background: var(--navy-2); }
+    .chart-legend .profit::before { background: var(--accent); }
+    .financial-signal-plot { display: flex; min-height: 232px; align-items: stretch; border-bottom: 1px solid var(--line-strong); background: repeating-linear-gradient(to top, transparent 0, transparent 55px, rgba(170, 163, 151, .26) 56px); }
+    .financial-period { display: grid; min-width: 0; flex: 1 1 0; grid-template-rows: 174px auto; align-items: end; border-right: 1px solid rgba(217, 211, 199, .68); }
+    .financial-period:last-child { border-right: 0; }
+    .financial-bars { display: flex; height: 168px; padding: 0 8px; align-items: end; justify-content: center; gap: 6px; }
+    .financial-bar { display: block; width: min(28px, 34%); min-height: 0; background: var(--navy-2); }
+    .financial-bar.profit { background: var(--accent); }
+    .financial-period-meta { min-width: 0; padding: 8px 5px 0; text-align: center; }
+    .financial-period-meta b, .financial-period-meta small { display: block; }
+    .financial-period-meta b { font: 750 11px/1.3 var(--mono); }
+    .financial-period-meta small { margin-top: 3px; overflow-wrap: anywhere; font-size: 9px; line-height: 1.4; }
+    .financial-bar[data-period-index="0"][data-series="revenue"] { height: 11.10%; }
+    .financial-bar[data-period-index="0"][data-series="profit"] { height: 0.00%; }
+    .financial-bar[data-period-index="1"][data-series="revenue"] { height: 11.22%; }
+    .financial-bar[data-period-index="1"][data-series="profit"] { height: 0.00%; }
+    .financial-bar[data-period-index="2"][data-series="revenue"] { height: 10.92%; }
+    .financial-bar[data-period-index="2"][data-series="profit"] { height: 0.00%; }
+    .financial-bar[data-period-index="3"][data-series="revenue"] { height: 18.08%; }
+    .financial-bar[data-period-index="3"][data-series="profit"] { height: 0.00%; }
+    .financial-bar[data-period-index="4"][data-series="revenue"] { height: 100.00%; }
+    .financial-bar[data-period-index="4"][data-series="profit"] { height: 27.24%; }
+
+    .valuation-signal-rows { display: grid; gap: 15px; }
+    .valuation-signal-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 86px; gap: 14px; align-items: center; }
+    .valuation-signal-label b, .valuation-signal-label small { display: block; }
+    .valuation-signal-label b { font: 750 13px/1.3 var(--mono); }
+    .valuation-signal-track { position: relative; height: 12px; background: #e5e1d8; }
+    .valuation-signal-track::after { content: "历史中位"; position: absolute; top: 16px; left: 50%; color: var(--muted); font: 650 8px/1.2 var(--mono); transform: translateX(-50%); white-space: nowrap; }
+    .valuation-signal-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--gain), var(--amber) 65%, var(--critical)); }
+    .valuation-signal-marker { position: absolute; top: -5px; width: 2px; height: 22px; background: var(--ink); transform: translateX(-1px); }
+    .valuation-signal-value { text-align: right; }
+    .valuation-signal-value b, .valuation-signal-value small { display: block; }
+    .valuation-signal-value b { font: 750 14px/1.25 var(--mono); }
+    .valuation-signal-fill[data-valuation-index="0"] { width: 44.00%; }
+    .valuation-signal-marker[data-valuation-index="0"] { left: 44.00%; }
+    .valuation-signal-fill[data-valuation-index="1"] { width: 94.16%; }
+    .valuation-signal-marker[data-valuation-index="1"] { left: 94.16%; }
+    .valuation-signal-fill[data-valuation-index="2"] { width: 57.55%; }
+    .valuation-signal-marker[data-valuation-index="2"] { left: 57.55%; }
+
+    .scenario-ev-rail { margin-top: 18px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .scenario-ev-head { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(0, 1.3fr); gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: end; }
+    .scenario-ev-head h3 { margin: 3px 0 0; }
+    .scenario-ev-head p { margin: 0; color: var(--soft); font-size: 12px; }
+    .scenario-contribution-row { display: grid; grid-template-columns: 132px minmax(240px, 1fr) minmax(180px, .8fr); gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: center; }
+    .scenario-contribution-row:last-child { border-bottom: 0; }
+    .scenario-contribution-label strong, .scenario-contribution-label small { display: block; }
+    .scenario-contribution-label strong { margin-top: 4px; font: 750 17px/1.25 var(--mono); }
+    .scenario-contribution-track { position: relative; height: 18px; background: #ece8df; }
+    .scenario-contribution-track::after { content: ""; position: absolute; top: -3px; bottom: -3px; left: 50%; width: 1px; background: var(--line-strong); }
+    .scenario-contribution-bar { position: absolute; top: 4px; bottom: 4px; z-index: 1; }
+    .scenario-contribution-bar.positive { left: 50%; background: var(--gain); }
+    .scenario-contribution-bar.negative { right: 50%; background: var(--critical); }
+    .scenario-contribution-bar.neutral { left: 50%; background: var(--muted); }
+    .scenario-contribution-value { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; color: var(--soft); font: 650 9px/1.4 var(--mono); }
+    .scenario-contribution-driver { min-width: 0; color: var(--soft); font-size: 11px; line-height: 1.55; }
+    .scenario-contribution-driver a { display: inline-block; margin-top: 4px; }
+    .scenario-contribution-bar[data-scenario="bear"] { width: 48.00%; }
+    .scenario-contribution-bar[data-scenario="base"] { width: 14.68%; }
+    .scenario-contribution-bar[data-scenario="bull"] { width: 15.73%; }
+
+    details { margin-top: 14px; border-top: 1px solid var(--line); }
+    summary { display: flex; min-height: 44px; cursor: pointer; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; font-weight: 700; }
+    summary::after { content: "＋"; color: var(--cobalt); font: 700 17px/1 var(--mono); }
+    details[open] > summary::after { content: "－"; }
+    .drawer-body { padding: 4px 0 22px; }
+    .drawer-body > h3:not(:first-child) { margin-top: 28px; }
+    .table-wrap { position: relative; width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; scrollbar-color: var(--line-strong) transparent; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); }
+    .peer-table-print { display: none; }
+    .scroll-hint { display: none; }
+    table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    caption { padding: 9px 0; color: var(--soft); text-align: left; font-weight: 700; }
+    th, td { padding: 10px 9px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    th { color: var(--soft); background: #f0eee8; }
+    td { font-size: 14px; }
+    td.wrap, th.wrap { min-width: 240px; white-space: normal; }
+    .table-note { margin-top: 9px; color: var(--soft); font-size: 11px; }
+
+    .quant-panel { padding: 21px 22px; border: 1px solid var(--line); border-top: 4px solid var(--cobalt); background: #f8faff; }
+    .quant-panel.inactive { border-top-color: var(--muted); background: #f7f8fa; }
+    .quant-panel-head { display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: end; }
+    .quant-score { font: 760 30px/1 var(--mono); }
+    .position-waterfall { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 16px; background: var(--line); border: 1px solid var(--line); }
+    .position-waterfall div { min-width: 0; padding: 13px 14px; background: var(--sheet); }
+    .position-waterfall strong { display: block; margin-top: 5px; font: 750 14px/1.35 var(--mono); overflow-wrap: anywhere; }
+    .quant-layer { margin-top: 22px; }
+    .quant-audit-grid, .decision-math-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+    .quant-audit-card, .decision-math-grid div { min-width: 0; padding: 12px 13px; border: 1px solid var(--line); background: var(--sheet); }
+    .quant-audit-card strong, .quant-audit-card small, .decision-math-grid strong { display: block; overflow-wrap: anywhere; }
+    .quant-boundary { margin: 16px 0 0; padding: 11px 13px; border-left: 3px solid var(--amber); background: var(--amber-pale); }
+    .decision-math-audit { margin-top: 18px; padding: 18px 20px; border: 1px solid var(--line); background: #f7f8fb; }
+    .decision-brief { margin-top: 22px; padding: 22px; border: 1px solid var(--line-strong); background: #fbfcfe; }
+    .decision-brief-head { display: flex; justify-content: space-between; gap: 18px; align-items: start; margin-bottom: 16px; }
+    .decision-brief-head p { max-width: 66ch; color: var(--soft); font-size: 12px; }
+    .decision-brief-hash { max-width: 34ch; color: var(--muted); font: 650 9px/1.55 var(--mono); overflow-wrap: anywhere; text-align: right; }
+    .decision-brief-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .brief-group { min-width: 0; padding: 16px; border: 1px solid var(--line); border-top: 4px solid var(--cobalt); background: var(--sheet); }
+    .brief-group.blockers { border-top-color: var(--critical); }
+    .brief-group.unlocks { border-top-color: var(--amber); }
+    .brief-group > h3 { margin-bottom: 4px; }
+    .brief-group > p { color: var(--soft); font-size: 11px; }
+    .brief-item { padding: 13px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+    .brief-item:first-of-type { margin-top: 12px; }
+    .brief-item strong, .brief-item small { display: block; }
+    .brief-item strong { margin: 4px 0 5px; font-size: 14px; line-height: 1.55; }
+    .brief-item .brief-summary { margin: 0 0 6px; color: var(--ink-2); font-size: 13px; line-height: 1.55; }
+    .brief-item small { color: var(--soft); font-size: 10px; line-height: 1.55; }
+    .brief-policy { margin: 14px 0 0; padding: 11px 13px; border-left: 3px solid var(--amber); background: var(--amber-pale); font-size: 12px; }
+    .robustness-callout, .quant-callout { margin-top: 12px; padding: 12px 14px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .robustness-callout.fragile, .quant-callout.cautious { border-color: var(--amber); background: var(--amber-pale); }
+    .quant-callout.adverse { border-color: var(--critical); background: var(--critical-pale); }
+    .quant-callout.inactive { border-color: var(--muted); background: #f2f4f7; }
+    .robustness-callout p, .quant-callout p { margin: 4px 0 0; color: var(--soft); font-size: 11px; }
+
+    .claim { display: grid; grid-template-columns: 100px 1.4fr .7fr 1fr; gap: 14px; padding: 15px 0; border-top: 1px solid var(--line); }
+    .claim strong { display: block; }
+    .tag { display: inline-block; padding: 2px 7px; color: var(--cobalt); background: var(--cobalt-pale); font: 700 9px/1.5 var(--mono); }
+    .challenge { padding: 18px 0; border-top: 1px solid var(--line); }
+    .challenge-meta { color: var(--critical); font: 700 10px/1.45 var(--mono); }
+    .response { margin-top: 10px; padding: 12px 14px; background: #f2f4f7; }
+    .premortem { padding: 21px 22px; color: #fff; background: var(--ink-2); }
+    .review-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+    .review-card { padding: 16px 17px; border: 1px solid var(--line); }
+    .review-card strong { display: block; font: 750 18px/1.25 var(--mono); }
+    .tracking-change { padding: 15px 16px; border-left: 3px solid var(--cobalt); background: var(--cobalt-pale); }
+    .tracking-changed { color: var(--cobalt); font-weight: 700; }
+    .tracking-unchanged { color: var(--soft); }
+
+    .evidence-room-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+    .evidence-room-summary div { padding: 14px 0; border-top: 1px solid var(--line); }
+    .evidence-group { border: 0; }
+    .evidence-drawer { margin-top: 8px; border: 1px solid var(--line); }
+    .evidence-drawer summary { padding: 13px 15px; background: #fafbfc; }
+    .evidence-stack { padding: 0 15px 15px; }
+    .evidence { padding: 14px 0; border-top: 1px solid var(--line); }
+    .evidence p { margin: 6px 0; }
+    .evidence-meta { color: var(--soft); font: 600 9px/1.55 var(--mono); overflow-wrap: anywhere; }
+    .evidence-ref { position: relative; display: inline-flex; min-width: 26px; min-height: 28px; padding: 0 3px; color: var(--cobalt); border: 0; background: transparent; align-items: center; justify-content: center; font: 750 9px/1 var(--mono); text-decoration: none; vertical-align: super; }
+    .evidence-ref:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .evidence-ref + .evidence-ref { margin-left: 0; }
+    .evidence-ref.unresolved { color: var(--critical); border-color: var(--critical); background: var(--critical-pale); }
+    .evidence-index { display: grid; grid-template-columns: 1fr; gap: 0; margin: 22px 0 26px; border-top: 2px solid var(--ink); }
+    .evidence-ledger-entry { min-width: 0; padding: 15px 0 13px; border-bottom: 1px solid var(--line); background: transparent; scroll-margin-top: 64px; }
+    .evidence-ledger-entry:target { margin: 0 -12px; padding-right: 12px; padding-left: 12px; background: var(--accent-pale); box-shadow: inset 3px 0 0 var(--accent); }
+    .evidence-ledger-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .evidence-ledger-entry p { margin: 9px 0 6px; }
+    .evidence-backlink { color: var(--cobalt); font: 750 11px/1.5 var(--mono); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .evidence-entry-audit { margin-top: 6px; border-top: 0; }
+    .evidence-entry-audit summary { min-height: 34px; padding: 5px 0; color: var(--soft); font-size: 11px; }
+    .evidence-entry-audit .drawer-body { padding-bottom: 8px; }
+    .evidence-backlinks { display: flex; flex-wrap: wrap; gap: 5px 10px; margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--line); }
+    .evidence-backlinks a { color: var(--soft); font-size: 10px; }
+    .stage-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .stage { min-width: 0; padding: 11px; background: var(--sheet); }
+    .stage b, .stage small { display: block; overflow-wrap: anywhere; }
+    .stage b { color: var(--cobalt); font-family: var(--mono); }
+    progress { width: 100%; height: 7px; accent-color: var(--cobalt); }
+
+    @media (max-width: 1050px) {
+      .cover-inner { grid-template-columns: minmax(250px, .72fr) minmax(0, 1.28fr); grid-template-areas: "decision thesis"; min-height: 0; }
+      .cover-decision { width: 100%; }
+      .decision-chain { grid-template-columns: 1fr 1fr; }
+      .decision-node { border-bottom: 1px solid var(--line); }
+      .decision-node:not(:last-child)::after { display: none; }
+      .decision-node:last-child { grid-column: 1 / -1; }
+      .stage-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .report-masthead-inner, .cover-inner, .audit-inner { width: min(100% - 28px, 1060px); }
+      .report-masthead-inner { padding: 17px 0 15px; }
+      .cover-inner { min-height: 0; padding: 16px 0 18px; grid-template-columns: 1fr; grid-template-areas: "decision" "thesis"; gap: 14px; }
+      h1 { font-size: 36px; }
+      .report-kind { display: block; margin: 5px 0 0; font-size: 15px; }
+      .identity { font-size: 10px; }
+      .thesis { margin-top: 0; padding-top: 10px; font-size: 15.5px; line-height: 1.66; }
+      .thesis-details { margin-top: 7px; }
+      .decision-primary { padding: 10px 0 11px; }
+      .decision-primary strong { font-size: 28px; }
+      .decision-primary b { margin-top: 5px; font-size: 12px; }
+      .decision-stat { padding: 8px 7px; }
+      .decision-stat:nth-child(odd) { padding-left: 0; }
+      .decision-stat strong { font-size: 14px; }
+      .signal-row { grid-template-columns: 1fr; gap: 7px; margin-top: 7px; }
+      .signal-chip { padding: 9px 10px; }
+      .signal-chip p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+      .decision-waterfall-head { grid-template-columns: 1fr; gap: 4px; padding: 9px 10px; }
+      .decision-waterfall-head p { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+      .decision-step { padding: 9px 8px; }
+      .decision-step strong { font-size: 12px; }
+      .decision-step small { font-size: 9px; }
+      .decision-overview { grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
+      .decision-overview article { padding: 12px 0; }
+      .decision-overview li { font-size: 12px; }
+      .canonical-hypotheses { grid-template-columns: 1fr; gap: 0; margin-top: 18px; }
+      .canonical-hypothesis { padding: 14px 0 14px 32px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .canonical-hypothesis:last-child { border-bottom: 0; }
+      .canonical-hypothesis::before { top: 16px; }
+      .price-rail { margin-top: 22px; padding: 12px 0 8px; }
+      .price-rail-head p { display: none; }
+      .price-rail-track { min-height: 156px; margin-top: 4px; }
+      .price-rail-line { top: 64px; right: 3%; left: 3%; }
+      .price-node { top: 8px; width: 74px; }
+      .price-node.current { top: 74px; }
+      .price-node span { font-size: 8px; }
+      .price-node strong { font-size: 14px; }
+      .price-node em { font-size: 9px; }
+      .price-node-card.offset-up { transform: translateY(-22px); }
+      .price-node-card.offset-down { transform: translateY(22px); }
+      .price-node-card.offset-up-far { transform: translateY(-32px); }
+      .price-node-card.offset-down-far { transform: translateY(32px); }
+      .audit-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .audit-cell { padding: 9px 10px; border-bottom: 1px solid var(--line); }
+      .audit-cell:first-child { padding-left: 10px; }
+      .freshness-grid { grid-template-columns: 1fr; }
+      .decision-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 0; }
+      .decision-nav a { display: flex; min-height: 44px; padding: 5px 4px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); align-items: center; justify-content: center; text-align: center; white-space: nowrap; }
+      .layout { width: 100%; margin: 0; }
+      .content { padding: 0; border: 0; box-shadow: none; }
+      section { padding: 40px 18px; scroll-margin-top: 86px; }
+      .section-head { margin-bottom: 22px; padding-left: 34px; }
+      .grid-2, .grid-3, .hypothesis-grid, .catalyst-strip, .scenario-cards, .review-grid, .evidence-room-summary { grid-template-columns: 1fr; }
+      .evidence-index { grid-template-columns: 1fr; }
+      .exposure-summary { grid-template-columns: 1fr; }
+      .exposure-card { border-right: 0; border-bottom: 1px solid var(--line); }
+      .exposure-card:last-child { border-bottom: 0; }
+      .signal-rail-head, .scenario-ev-head { grid-template-columns: 1fr; gap: 6px; }
+      .financial-signal-plot { min-height: 214px; }
+      .financial-period { grid-template-rows: 158px auto; }
+      .financial-bars { height: 152px; padding-right: 3px; padding-left: 3px; gap: 3px; }
+      .financial-bar { width: min(18px, 40%); }
+      .financial-period-meta small { font-size: 8px; }
+      .valuation-signal-row { grid-template-columns: 92px minmax(0, 1fr) 62px; gap: 8px; }
+      .valuation-signal-label small { display: none; }
+      .scenario-contribution-row { grid-template-columns: 92px minmax(0, 1fr); gap: 8px 12px; }
+      .scenario-contribution-driver { grid-column: 1 / -1; padding-left: 104px; }
+      .market-ask, .quality-split { grid-template-columns: minmax(0, 1fr); }
+      .market-ask article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .market-ask article:last-child { border-bottom: 0; }
+      .decision-chain { grid-template-columns: 1fr; }
+      .decision-node, .decision-node:last-child { grid-column: auto; border-right: 0; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric:nth-child(3n) { border-right: 1px solid var(--line); }
+      .metric:nth-child(2n) { border-right: 0; }
+      .metric:nth-last-child(-n+3) { border-bottom: 1px solid var(--line); }
+      .metric:nth-last-child(-n+2) { border-bottom: 0; }
+      .quant-panel-head { grid-template-columns: 1fr; gap: 12px; }
+      .position-waterfall { grid-template-columns: 1fr 1fr; }
+      .quant-audit-grid, .decision-math-grid, .decision-brief-grid { grid-template-columns: minmax(0, 1fr); }
+      .decision-brief { padding: 18px 14px; }
+      .decision-brief-head { display: block; }
+      .decision-brief-hash { margin-top: 8px; max-width: none; text-align: left; }
+      .claim { grid-template-columns: 1fr; gap: 6px; }
+      .stage-grid { grid-template-columns: repeat(2, 1fr); }
+      .scroll-hint { display: flex; min-height: 36px; margin: 8px 0 0; color: var(--soft); align-items: center; gap: 7px; font-size: 11px; }
+      .scroll-hint::before { content: "↔"; color: var(--cobalt); font: 750 15px/1 var(--mono); }
+      .wide-table th:first-child, .wide-table td:first-child { position: sticky; z-index: 2; left: 0; min-width: 96px; background: var(--sheet); box-shadow: 1px 0 0 var(--line); }
+      .wide-table th:first-child { z-index: 3; background: #f0eee8; }
+      .evidence-ref { min-width: 28px; min-height: 30px; margin: 0; }
+      .canonical-hypothesis, .evidence-ledger-entry { scroll-margin-top: 94px; }
+    }
+    @media (max-width: 480px) {
+      .decision-primary strong { white-space: nowrap; font-size: clamp(25px, 8vw, 28px); }
+    }
+    @media print {
+      @page {
+        size: A4;
+        margin: 13mm 13mm 16mm;
+        @bottom-left {
+          content: "寒武纪 · 688256.SH · 数据截止 2026-07-15";
+          color: #5f655f;
+          font: 7.5pt/1.2 sans-serif;
+        }
+        @bottom-right {
+          content: counter(page) " / " counter(pages);
+          color: #5f655f;
+          font: 7.5pt/1.2 monospace;
+        }
+      }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { background: #fff; }
+      .cover { border: 0; border-bottom: 1px solid #111; background: #fff; }
+      .report-masthead { color: #111; background: #fff; border: 0; border-bottom: 2px solid #111; }
+      .report-masthead .kicker, .report-masthead h1, .report-masthead .identity, .report-kind { color: #111; }
+      .skip-link { display: none !important; }
+      .cover-inner { width: 100%; min-height: 0; padding: 20px; }
+      .decision-nav { display: none; }
+      .layout { width: 100%; margin: 0; }
+      .content { border: 0; box-shadow: none; }
+      section { padding: 26px 0; }
+      details { break-inside: auto; }
+      details:not(.audit-footnote):not([open]) > *:not(summary) { display: block !important; }
+      details > summary { display: none !important; }
+      .audit-footnote { display: none !important; }
+      .table-wrap { overflow: visible; }
+      table { width: 100%; table-layout: fixed; }
+      thead { display: table-header-group; }
+      th, td, .wide-table th:first-child, .wide-table td:first-child { position: static; min-width: 0; white-space: normal; overflow-wrap: anywhere; box-shadow: none; font-size: 8pt; }
+      .quality-split { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .quality-split > div { break-inside: avoid; }
+      .quality-split th, .quality-split td { word-break: keep-all; overflow-wrap: normal; }
+      .quality-split th:first-child, .quality-split td:first-child { width: 16%; }
+      .peer-table-screen { display: none !important; }
+      .peer-table-print { display: block !important; }
+      .peer-table-print th, .peer-table-print td { word-break: keep-all; overflow-wrap: normal; font-size: 7.6pt; line-height: 1.45; }
+      .peer-table-print th:nth-child(1), .peer-table-print td:nth-child(1) { width: 14%; }
+      .peer-table-print th:nth-child(2), .peer-table-print td:nth-child(2) { width: 14%; }
+      .peer-table-print th:nth-child(3), .peer-table-print td:nth-child(3) { width: 17%; }
+      .peer-table-print th:nth-child(4), .peer-table-print td:nth-child(4) { width: 21%; }
+      .peer-table-print th:nth-child(5), .peer-table-print td:nth-child(5) { width: 18%; }
+      .peer-table-print th:nth-child(6), .peer-table-print td:nth-child(6) { width: 16%; }
+      .note-block, .scenario-card, .exposure-card, .signal-rail, .scenario-contribution-row, .claim, tr { break-inside: avoid; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#summary">跳到投资结论</a>
+<main data-schema="aihf-v3-decision-report.v1"
+      data-report-surface="institutional-research-note"
+      data-action="avoid"
+      data-position="0.0"
+      data-reference-price="1347.46"
+      data-target-bear="522.0"
+      data-target-base="1123.0"
+      data-target-bull="2069.0"
+      data-prob-bear="0.4"
+      data-prob-base="0.45"
+      data-prob-bull="0.15"
+      data-quant-signal="supportive"
+      data-quant-score="76.25"
+      data-quant-coverage="1.0"
+      data-quant-policy-version="aihf_quant_timing_policy.2.0.0"
+      data-quant-policy-hash="2021c7d63f9136f27232f58f"
+      data-quant-observation-id="8f1597cf209ee89d2dc133c3"
+      data-target-pe-policy-status="calibrated"
+      data-target-pe-policy-mode="sellside_explicit_forward_pe_quantiles"
+      data-target-pe-policy-hash="fed58954632f916421ef8ba0"
+      data-target-pe-policy-content-hash="556c717d900c454846c2559d"
+      data-target-pe-decision-eligible="true"
+      data-valuation-basis-taxonomy="aihf_valuation_basis_taxonomy.v1"
+      data-valuation-basis-taxonomy-hash="0079bc62b04dc4599715b454"
+      data-run-status="complete"
+      data-process-status="complete"
+      data-snapshot-hash="2697fe3e1c9975c55381331a"
+      data-research-run-id="ed095dabbab8eddf9e32befd"
+      data-fundamental-coverage="broad"
+      data-investment-readiness="conditional"
+      data-data-quality="current"
+      data-report-date="2026-07-16"
+      data-requested-end-date="2026-07-15"
+      data-market-data-as-of="2026-07-15"
+      data-latest-available-trading-day="2026-07-15"
+      data-stale-trading-days="0"
+      data-freshness-status="current"
+      data-freshness-message="行情截至最近可用交易日 2026-07-15。">
+
+  <!-- INSTITUTIONAL RESEARCH NOTE -->
+  <header class="cover" id="top" data-reading-tier="primary">
+    <div class="report-masthead">
+      <div class="report-masthead-inner cover-title">
+        <div class="kicker">AI HEDGE FUND RESEARCH · FUNDAMENTAL NOTE</div>
+        <h1>寒武纪<span class="report-kind">基本面研究报告</span></h1>
+        <div class="identity">688256.SH · AI算力芯片与处理器IP · CNY · 数据截止 2026-07-15</div>
+      </div>
+    </div>
+    <div class="cover-inner">
+      <div class="cover-decision">
+        <div class="decision-strip">
+          <div class="decision-primary">
+            <span>投资建议 / action</span>
+            <strong data-current-field="action" data-decision-action-role="mirror" data-decision-action="avoid">暂不新开仓</strong>
+            <b>建议仓位 <span class="position-value" data-current-field="position">0.0%</span></b>
+          </div>
+          <div class="decision-stats">
+            <div class="decision-stat"><span>现价</span><strong data-current-field="reference-price">1347.46</strong></div>
+            <div class="decision-stat"><span>基准目标</span><strong data-current-field="target-base">1123.00</strong><small class="target-pe-calibration calibrated" data-target-pe-policy-status="calibrated">已校准，可用于决策</small></div>
+            <div class="decision-stat"><span>潜在空间</span><strong>-16.7%</strong></div>
+            <div class="decision-stat"><span>净 EV / 赔率</span><strong>-24.4% / 0.25</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="thesis-block" id="decision-spine" data-canonical-decision-spine="true" data-decision-action-role="canonical" data-decision-action="avoid">
+        <span class="label canonical-spine-label">INVESTMENT VIEW / 核心判断</span>
+        <p class="thesis" data-decision-excerpt="true" data-full-thesis="true">寒武纪的盈利拐点已经由 FY2025 与 2026Q1 正式财报确认，但增长质量仍受客户高度集中、库存与现金转化约束；按同 FY2027、同股本口径的卖方显式目标 PE 校准，base 目标低于现价，当前决策矛盾是业绩继续高增也未必足以消化估值。<a class="evidence-ref" id="evidence-ref-decision-spine-thesis-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">[E01]</a><a class="evidence-ref" id="evidence-ref-decision-spine-thesis-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">[E02]</a><a class="evidence-ref" id="evidence-ref-decision-spine-thesis-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">[E06]</a><a class="evidence-ref" id="evidence-ref-decision-spine-thesis-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">[E13]</a></p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="decision-nav" aria-label="投资决策路径">
+    <a data-decision-nav-item="true" href="#top">结论</a>
+    <a data-decision-nav-item="true" href="#company-industry">盈利逻辑</a>
+    <a data-decision-nav-item="true" href="#financials">财务兑现</a>
+    <a data-decision-nav-item="true" href="#valuation">定价仓位</a>
+    <a data-decision-nav-item="true" href="#interrogation-risk">证伪跟踪</a>
+    <a data-decision-nav-item="true" href="#research-intel">证据审计</a>
+  </nav>
+
+  <div class="layout">
+    <article class="content" id="report-content">
+      <!-- DECISION CAUSAL CHAIN -->
+      <section id="summary" data-section="summary">
+        <div class="section-head"><span class="eyebrow">INVESTMENT SUMMARY</span><h2>投资摘要：判断、依据与反证</h2><p class="lede">先回答为什么是当前动作，再沿“需求—产品—报表—估值—仓位”检查每个环节是否成立。</p></div>
+        <div class="canonical-hypotheses">
+<article class="canonical-hypothesis" id="decision-hypothesis-H1" data-decision-hypothesis="H1" tabindex="-1"><b>经营兑现条件</b><p>云端产品维持规模化交付，现金流逐步跟上利润；FY2027 收入 280 亿元、净利率 36%，目标 PE 采用校准样本中位 70 倍，但不假设客户集中度自然消失。</p><details class="audit-footnote" data-audit-footnote="true"><summary>查看复核指标与证据链</summary><small>复核 thesis.scenarios/base/preconditions · 证据 <a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">E21</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E11" data-evidence-ref="E11" href="#evidence-E11" aria-label="查看证据 E11">E11</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H1-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></small></details></article><article class="canonical-hypothesis" id="decision-hypothesis-H3" data-decision-hypothesis="H3" tabindex="-1"><b>估值兑现锚</b><p>FY2027 EPS 16.04 元 × 70.0 倍 PE，目标价 1123 元。
+【目标 PE 政策】70.0 倍来自 卖方显式远期 PE 分位法 的独立同口径样本与固定分位规则；只作用于估值，不改写收入、利润率或概率假设。<a class="evidence-ref" id="evidence-ref-hypothesis-H3-claim-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">[E21]</a></p><details class="audit-footnote" data-audit-footnote="true"><summary>查看复核指标与证据链</summary><small>复核 thesis.scenarios/base/valuation_anchor · 证据 <a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">E21</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E11" data-evidence-ref="E11" href="#evidence-E11" aria-label="查看证据 E11">E11</a>、<a class="evidence-ref" id="evidence-ref-hypothesis-H3-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></small></details></article>        </div>
+        <div class="decision-overview" data-decision-overview="true">
+          <article><span class="label">核心主线</span><ol class="compact"><li><a class="hypothesis-ref" data-hypothesis-ref="H1" href="#decision-hypothesis-H1"><b>H1</b> · 经营兑现条件</a></li><li><a class="hypothesis-ref" data-hypothesis-ref="H3" href="#decision-hypothesis-H3"><b>H3</b> · 估值兑现锚</a></li></ol></article>
+          <article><span class="label">改变判断的条件</span><ol class="compact"><li><span class="tag">基准验证</span> 2026H1 收入至少 55 亿元且综合毛利率不低于 52%</li><li><span class="tag">利空验证</span> 2026H1 收入低于 55 亿元或综合毛利率低于 50%</li><li><span class="tag">利多验证</span> 2026H1 收入至少 70 亿元且综合毛利率不低于 55%</li></ol></article>
+        </div>
+        <div class="decision-chain" data-decision-chain="true">
+          <article class="decision-node"><span class="label">01 需求证据</span><strong>订单代理向上，终端未验证</strong><p>模型信号 向上 / 强 · 强度分 1.0；先验证真实订单、下游开工与终端需求。</p></article>
+          <article class="decision-node"><span class="label">02 产品量价</span><strong>云端产品线</strong><p>占比 99.69% · 增速 +455.34% · 毛利率 年报分产品表披露毛利率 55.22%；包括云端智能芯片及板卡、智能整机</p></article>
+          <article class="decision-node"><span class="label">03 财务兑现</span><strong>2025</strong><p>营收 65.0亿 · 扣非 17.7亿</p></article>
+          <article class="decision-node"><span class="label">04 估值要求</span><strong>Reverse DCF 135.4%</strong><p>历史 PE TTM 分位 44.0%</p></article>
+          <article class="decision-node"><span class="label">05 概率与仓位</span><strong>EV -24.4% / Odds 0.25</strong><p>量化只修正时点与新增仓位，不改写基本面动作。</p></article>
+        </div>
+        <div class="catalyst-strip"><article><span class="label">未来1-2季 · 利多</span><h3>业绩继续验证</h3><p>若收入和扣非继续高增，估值修复概率提升</p></article><article><span class="label">持续跟踪 · 利空/利多</span><h3>政策/监管风险变化</h3><p>政策缓和提升估值，政策恶化压低目标价</p></article><article><span class="label">未来12个月 · 利多</span><h3>估值向同业折价收敛</h3><p>兑现基准目标价的核心路径</p></article></div>
+        <div class="market-ask">
+          <article><span class="label">现价隐含要求 · Reverse DCF</span><strong>收入增速 135.4%</strong><p>5.0 年 / WACC 10.0%；这是市场要求，不是管理层指引。</p></article>
+          <article><span class="label">历史估值位置</span><strong>44.0%</strong><p>PE TTM / 300 个正估值样本。</p></article>
+          <article><span class="label">最敏感假设</span><strong>收入增速 · 经营利润率 · WACC</strong><p>先验证增长、利润率和折现率，再讨论目标价上修。</p></article>
+        </div>
+      </section>
+
+      <!-- PROFIT LOGIC -->
+      <section id="company-industry" data-section="company-industry">
+        <div class="section-head"><span class="eyebrow">PROFIT LOGIC</span><h2>盈利逻辑：公司如何把需求变成现金</h2></div>
+        <div class="grid-2">
+          <div><h3>公司如何赚钱</h3><p class="lede">国产人工智能芯片与算力系统公司，产品覆盖云端智能芯片及板卡、智能整机、边缘产品、处理器 IP 与基础系统软件。2025 年营业收入 64.97 亿元、同比 +453.21%，归母净利润 20.59 亿元，实现年度扭亏；2026Q1 营业收入 28.85 亿元、同比 +159.56%，归母净利润 10.13 亿元、扣非净利润 9.34 亿元，综合毛利率 54.33%。收入结构高度集中于云端产品线：2025 年云端收入 64.77 亿元，占总收入约 99.69%。公司已经从研发投入期进入规模化盈利阶段，但客户、供应商和应收款集中度很高，库存与自由现金流尚未同步证明增长质量。</p><p><b>研究分类：</b>高成长科技</p><p><b>市值：</b>¥8466亿</p><details class="audit-footnote" data-audit-footnote="true"><summary>查看分类依据</summary><small>company_profiles 人工标注（已核过）；行业=AI算力芯片与处理器IP AI算力芯片与处理器IP 半导体 / 国产AI算力</small></details></div>
+          <div class="note-block"><h3>护城河与失效条件</h3><ul class="compact"><li>①全栈技术闭环：自研智能处理器指令集、微架构、芯片、板卡、服务器及基础系统软件，可降低云边端产品之间的迁移摩擦；②国产替代与客户验证：2025 年云端产品收入放大并实现规模化盈利，说明产品已进入真实商业交付阶段；③软硬件协同和集群交付能力：可从芯片、板卡扩展到智能整机与集群管理软件。护城河仍未被证明为稳定份额：年报未披露主要客户名称，前五大客户收入占比 88.66%，除第三大客户外其余前五大客户均为本期新增，收入持续性必须用后续复购、回款与分散度验证。</li></ul></div>
+        </div>
+        <details class="audit-drawer"><summary>展开宏观传导、近期走势与事件候选</summary><div class="drawer-body">
+          <h3>宏观变量只保留与行业需求、投入成本、折现率和出口风险有关的传导</h3>
+          <div class="metrics"><div class="metric"><span class="label">GDP 同比</span><strong>5.00%</strong></div><div class="metric"><span class="label">CPI 同比</span><strong>1.20%</strong></div><div class="metric"><span class="label">PPI 同比</span><strong>3.90%</strong></div><div class="metric"><span class="label">M2 同比</span><strong>8.60%</strong></div><div class="metric"><span class="label">Shibor 1Y</span><strong>1.47%</strong></div><div class="metric"><span class="label">美债 10Y</span><strong>4.55%</strong></div></div>
+          <div class="grid-2"><div><h3>近期走势</h3><div class="metrics"><div class="metric"><span class="label">1M</span><strong>+3.1%</strong></div><div class="metric"><span class="label">3M</span><strong>+53.7%</strong></div><div class="metric"><span class="label">6M</span><strong>+42.7%</strong></div><div class="metric"><span class="label">量比</span><strong>1.00</strong></div></div></div><div><h3>驱动候选</h3><ul class="compact"><li><b>2026-07-01</b> · 公司发布股票交易风险提示：近期累计涨幅较大，6 月 30 日滚动市盈率 368.97 倍、市净率 77.88 倍，显著高于行业；公司称日常经营正常且无其他应披露未披露重大信息（公司事件，公司公告·巨潮资讯：https://static.cninfo.com.cn/finalpage/2026-07-01/1225401954.PDF）</li></ul><p class="table-note">事件仅是相关候选，不自动认定为股价单一因果。</p></div></div>
+        </div></details>
+      </section>
+
+      <section id="demand-chain" data-section="demand-chain" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">DEMAND → PRODUCT → EPS</span><h2>关键变量：需求、产品量价与盈利桥</h2></div>
+        <div class="grid-2"><div class="note-block gain"><h3>需求证据边界</h3><p><b>订单代理向上，终端未验证</b><br>模型信号 向上 / 强 · 分数 1.0</p><ul class="compact"><li>合同负债同比 +27662%（20260331）<br><small>2026-07-15 / 法定披露（PIT） / 核心输入 / 发行人 目标公司 / 置信度 高</small></li><li>存货同比 +63%（20260331）<br><small>2026-07-15 / 法定披露（PIT） / 核心输入 / 发行人 目标公司 / 置信度 高</small></li></ul></div><div class="note-block risk"><h3>反证纪律</h3><p>合同负债、存货与在建工程只能表示订单能见度、生产排期或扩产信号；同业业绩预告只验证行业经营方向，不等于目标公司的销量、利润或终端需求，也不能直接迁移 EPS 与估值。</p></div></div>
+        <div class="scenario-cards"><article class="scenario-card bear" data-valuation-basis="valuation.price_implied_forward_pe" data-pe-replay-status="verified"><span class="label">bear · 2027</span><strong>EPS 7.45</strong><p>收入 180.00 · 净利润 46.80 · 净利率 26.0% · 现价 / 情景 EPS（非目标 PE） 180.90</p></article><article class="scenario-card base" data-valuation-basis="valuation.price_implied_forward_pe" data-pe-replay-status="verified"><span class="label">base · 2027</span><strong>EPS 16.04</strong><p>收入 280.00 · 净利润 100.80 · 净利率 36.0% · 现价 / 情景 EPS（非目标 PE） 84.00</p></article><article class="scenario-card bull" data-valuation-basis="valuation.price_implied_forward_pe" data-pe-replay-status="verified"><span class="label">bull · 2027</span><strong>EPS 28.74</strong><p>收入 430.00 · 净利润 180.60 · 净利率 42.0% · 现价 / 情景 EPS（非目标 PE） 46.90</p></article></div>
+        <details class="audit-drawer"><summary>展开终端价格、上游投入与分产品假设</summary><div class="drawer-body">
+          <h3>终端价格与上游投入</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-1">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 1：价格链与样本口径" aria-describedby="table-scroll-hint-1"><table><caption>价格链与样本口径</caption><thead><tr><th>环节</th><th>品类</th><th>期间</th><th>当前</th><th>前值</th><th>变化</th><th>经济角色</th><th>决策用途</th><th>单位</th><th>来源</th><th>样本口径</th><th>置信度</th></tr></thead><tbody><tr><td colspan="12">价格链数据缺失，无法计算真实价差。</td></tr></tbody></table></div>
+          <p class="table-note" data-price-chain-status="observation_only"><b>价格链状态：未覆盖，仅作观察</b><br>原始样本信号（不进入 readiness/决策）：仅观察 / 50分。价格链来源未通过文件、JSON Pointer、数值与 PIT 哈希回放；仅作观察项，不能单独改变操作建议。</p>
+          <h3>分产品经营假设</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-2">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 2：Bear / Base / Bull 产品桥" aria-describedby="table-scroll-hint-2"><table><caption>Bear / Base / Bull 产品桥</caption><thead><tr><th>产品</th><th>Bear 假设</th><th>Base 假设</th><th>Bull 假设</th><th>来源</th><th>置信度</th></tr></thead><tbody><tr><td>合并收入情景（云端产品为绝对主体）</td><td>收入 180.00亿元</td><td>收入 280.00亿元</td><td>收入 430.00亿元</td><td>公司 2025 年报、2026Q1 与截至 2026-07-15 的正式个股卖方研报交叉校验；三档收入为可证伪模型假设，不是公司指引或已确认订单</td><td>low</td></tr></tbody></table></div>
+          <div class="note-block"><b>共识校验：</b>卖方 EPS 中位 14.46，自有 Base EPS 16.04，偏差 +10.9%。自有模型与卖方共识基本一致，交叉校验通过。<br><small>自有 bottom-up 模型，只作卖方共识交叉校验与大师分析输入，不直接作为 PM 目标价锚。</small></div>
+        </div></details>
+      </section>
+
+      <!-- FINANCIAL REALIZATION -->
+      <section id="financials" data-section="financials">
+        <div class="section-head"><span class="eyebrow">FINANCIAL REALIZATION</span><h2>财务兑现：增长有没有进入利润与现金</h2></div>
+        <figure class="signal-rail financial-signal-rail" data-analysis-chart="financial-trend" role="img" aria-label="年度营收与扣非净利趋势。2021，营收 7.2亿，扣非净利 -11.1亿；2022，营收 7.3亿，扣非净利 -15.8亿；2023，营收 7.1亿，扣非净利 -10.4亿；2024，营收 11.7亿，扣非净利 -8.6亿；2025，营收 65.0亿，扣非净利 17.7亿">
+          <figcaption class="signal-rail-head"><div><span class="chart-question">决策问题 / 增长是否兑现</span><h3>年度营收与扣非净利</h3></div><div><p>营收从 7.2亿增至 65.0亿；扣非净利从 -11.1亿增至 17.7亿。</p><div class="chart-legend"><span>营收</span><span class="profit">扣非净利</span></div></div></figcaption>
+          <div class="financial-signal-plot"><div class="financial-period"><div class="financial-bars"><span class="financial-bar revenue" data-financial-bar="true" data-period-index="0" data-series="revenue" title="2021 营收 7.2亿"></span><span class="financial-bar profit" data-financial-bar="true" data-period-index="0" data-series="profit" title="2021 扣非净利 -11.1亿"></span></div><div class="financial-period-meta"><b>2021</b><small>7.2亿 / -11.1亿</small></div></div><div class="financial-period"><div class="financial-bars"><span class="financial-bar revenue" data-financial-bar="true" data-period-index="1" data-series="revenue" title="2022 营收 7.3亿"></span><span class="financial-bar profit" data-financial-bar="true" data-period-index="1" data-series="profit" title="2022 扣非净利 -15.8亿"></span></div><div class="financial-period-meta"><b>2022</b><small>7.3亿 / -15.8亿</small></div></div><div class="financial-period"><div class="financial-bars"><span class="financial-bar revenue" data-financial-bar="true" data-period-index="2" data-series="revenue" title="2023 营收 7.1亿"></span><span class="financial-bar profit" data-financial-bar="true" data-period-index="2" data-series="profit" title="2023 扣非净利 -10.4亿"></span></div><div class="financial-period-meta"><b>2023</b><small>7.1亿 / -10.4亿</small></div></div><div class="financial-period"><div class="financial-bars"><span class="financial-bar revenue" data-financial-bar="true" data-period-index="3" data-series="revenue" title="2024 营收 11.7亿"></span><span class="financial-bar profit" data-financial-bar="true" data-period-index="3" data-series="profit" title="2024 扣非净利 -8.6亿"></span></div><div class="financial-period-meta"><b>2024</b><small>11.7亿 / -8.6亿</small></div></div><div class="financial-period"><div class="financial-bars"><span class="financial-bar revenue" data-financial-bar="true" data-period-index="4" data-series="revenue" title="2025 营收 65.0亿"></span><span class="financial-bar profit" data-financial-bar="true" data-period-index="4" data-series="profit" title="2025 扣非净利 17.7亿"></span></div><div class="financial-period-meta"><b>2025</b><small>65.0亿 / 17.7亿</small></div></div></div>
+        </figure>
+        <div class="grid-2">
+          <article class="note-block"><span class="label">最新年度 · 2025</span><h3>营收 65.0亿</h3><p>增速 +453.2% · 扣非 17.7亿 · 毛利率 +55.2% · ROE +23.9%</p></article>
+          <article class="note-block"><span class="label">最新单季 · 26Q1</span><h3>营收 28.8亿</h3><p>同比 +159.6% · 环比 +52.6% · 扣非 9.3亿 · 利润环比 +166.1%</p></article>
+        </div>
+        <details class="audit-drawer"><summary>查看完整年度与单季趋势</summary><div class="drawer-body">
+          <h3>年度趋势</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-3">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 3：年度收入、利润率与 ROE" aria-describedby="table-scroll-hint-3"><table><caption>年度收入、利润率与 ROE</caption><thead><tr><th>期间</th><th>营收</th><th>营收增速</th><th>扣非净利</th><th>利润增速</th><th>毛利率</th><th>净利率</th><th>ROE</th></tr></thead><tbody><tr data-financial-annual="true"><td>2021</td><td>7.2亿</td><td>未提供</td><td>-11.1亿</td><td>未提供</td><td>+62.4%</td><td>-115.1%</td><td>-13.4%</td></tr><tr data-financial-annual="true"><td>2022</td><td>7.3亿</td><td>+1.1%</td><td>-15.8亿</td><td>未提供</td><td>+65.8%</td><td>-181.7%</td><td>-23.4%</td></tr><tr data-financial-annual="true"><td>2023</td><td>7.1亿</td><td>-2.7%</td><td>-10.4亿</td><td>未提供</td><td>+69.2%</td><td>-123.8%</td><td>-16.2%</td></tr><tr data-financial-annual="true"><td>2024</td><td>11.7亿</td><td>+65.6%</td><td>-8.6亿</td><td>未提供</td><td>+56.7%</td><td>-38.9%</td><td>-8.2%</td></tr><tr data-financial-annual="true"><td>2025</td><td>65.0亿</td><td>+453.2%</td><td>17.7亿</td><td>未提供</td><td>+55.2%</td><td>+31.7%</td><td>+23.9%</td></tr></tbody></table></div>
+          <h3>单季边际</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-4">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 4：最近单季同比与环比" aria-describedby="table-scroll-hint-4"><table><caption>最近单季同比与环比</caption><thead><tr><th>期间</th><th>营收</th><th>营收同比</th><th>营收环比</th><th>扣非净利</th><th>利润同比</th><th>利润环比</th><th>毛利率</th><th>净利率</th></tr></thead><tbody><tr data-financial-quarterly="true"><td>24Q2</td><td>3909.9万</td><td>-0.2%</td><td>+52.3%</td><td>-3.5亿</td><td>+2.6%</td><td>+33.2%</td><td>+66.1%</td><td>-889.4%</td></tr><tr data-financial-quarterly="true"><td>24Q3</td><td>1.2亿</td><td>+284.6%</td><td>+208.3%</td><td>-2.5亿</td><td>-17.6%</td><td>-27.1%</td><td>+51.2%</td><td>-210.4%</td></tr><tr data-financial-quarterly="true"><td>24Q4</td><td>9.9亿</td><td>+75.5%</td><td>+720.6%</td><td>-249.8万</td><td>-97.4%</td><td>-99.0%</td><td>+57.0%</td><td>-0.3%</td></tr><tr data-financial-quarterly="true"><td>25Q1</td><td>11.1亿</td><td>+4230.2%</td><td>+12.4%</td><td>2.8亿</td><td>-205.7%</td><td>-11145.9%</td><td>+56.0%</td><td>+24.8%</td></tr><tr data-financial-quarterly="true"><td>25Q2</td><td>17.7亿</td><td>+4425.0%</td><td>+59.2%</td><td>6.4亿</td><td>-283.1%</td><td>+130.7%</td><td>+55.9%</td><td>+36.0%</td></tr><tr data-financial-quarterly="true"><td>25Q3</td><td>17.3亿</td><td>+1332.5%</td><td>-2.4%</td><td>5.1亿</td><td>-299.7%</td><td>-20.5%</td><td>+54.2%</td><td>+29.3%</td></tr><tr data-financial-quarterly="true"><td>25Q4</td><td>18.9亿</td><td>+91.0%</td><td>+9.4%</td><td>3.5亿</td><td>-14151.3%</td><td>-30.7%</td><td>+54.8%</td><td>+18.6%</td></tr><tr data-financial-quarterly="true"><td>26Q1</td><td>28.8亿</td><td>+159.6%</td><td>+52.6%</td><td>9.3亿</td><td>+238.6%</td><td>+166.1%</td><td>+54.3%</td><td>+32.4%</td></tr></tbody></table></div>
+        </div></details>
+        <details class="audit-drawer"><summary>查看经营现金流、自由现金流与再投资质量</summary><div class="drawer-body">
+          <div class="quality-split">
+            <div><h3>现金兑现</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-5">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 5：利润转现金" aria-describedby="table-scroll-hint-5"><table><caption>利润转现金</caption><thead><tr><th>期间 / 披露日</th><th>经营现金流</th><th>资本开支</th><th>自由现金流</th><th>净现金</th><th>现金利润比</th><th>FCF率</th></tr></thead><tbody><tr data-financial-quality="true"><td>20251231<br><small>20260313</small></td><td>-5.0亿</td><td>5.7亿</td><td>-10.7亿</td><td>未提供</td><td>-0.24x</td><td>-16.4%</td></tr><tr data-financial-quality="true"><td>20241231<br><small>20250419</small></td><td>-16.2亿</td><td>3.7亿</td><td>-19.8亿</td><td>18.9亿</td><td>3.58x</td><td>-168.9%</td></tr><tr data-financial-quality="true"><td>20231231<br><small>20240430</small></td><td>-6.0亿</td><td>1.0亿</td><td>-7.0亿</td><td>未提供</td><td>0.70x</td><td>-98.1%</td></tr><tr data-financial-quality="true"><td>20221231<br><small>20230429</small></td><td>-13.3亿</td><td>2.8亿</td><td>-16.1亿</td><td>未提供</td><td>1.06x</td><td>-2.2%</td></tr><tr data-financial-quality="true"><td>20211231<br><small>20220416</small></td><td>-8.7亿</td><td>5.0亿</td><td>-13.8亿</td><td>未提供</td><td>1.06x</td><td>-191.1%</td></tr></tbody></table></div></div>
+            <div><h3>再投资与股本变化</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-6">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 6：资本开支、研发与营运资本" aria-describedby="table-scroll-hint-6"><table><caption>资本开支、研发与营运资本</caption><thead><tr><th>期间</th><th>资本开支强度</th><th>研发强度</th><th>营运资本/收入</th><th>期末股本变动（未复权）</th></tr></thead><tbody><tr><td>20251231</td><td>8.8%</td><td>20.8%</td><td>86.4%</td><td>+1.0%</td></tr><tr><td>20241231</td><td>31.2%</td><td>103.5%</td><td>176.9%</td><td>+0.2%</td></tr><tr><td>20231231</td><td>14.2%</td><td>157.5%</td><td>104.7%</td><td>+3.9%</td></tr><tr><td>20221231</td><td>39.0%</td><td>2.1%</td><td>144.4%</td><td>+0.2%</td></tr><tr><td>20211231</td><td>70.0%</td><td>157.5%</td><td>106.1%</td><td>未提供</td></tr></tbody></table></div><p class="table-note">期末股本变动未对转增、送股、拆并股、回购及增发做公司行动复权，不能直接等同经济稀释。</p></div>
+          </div>
+<div class="note-block risk"><b>财务质量预警</b><ul class="compact"><li>现金利润比 -0.24 低于 0.5，利润含金量偏弱</li><li>自由现金流率 -16.4% 为负</li></ul></div>        </div></details>
+      </section>
+
+      <section id="segments" data-section="segments" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">SEGMENT LEDGER</span><h2>分部底稿：收入集中在哪里</h2><p class="lede">正文先呈现决定性集中度；产品、地区与币种全量明细进入底稿。</p></div>
+        <div class="exposure-summary" data-concentration-summary="true" aria-label="客户、地区与汇率关键暴露">
+          <article class="exposure-card" data-exposure-card="customer">
+            <span class="label">CUSTOMER / 客户集中</span>
+            <strong>88.7%</strong>
+<p>前五大客户收入占比；第一大客户未披露。</p><small>2025 · 前五大应收占比未披露</small>          </article>
+          <article class="exposure-card" data-exposure-card="region">
+            <span class="label">REGION / 境外收入</span>
+            <strong>0.0%</strong>
+<p>最大地区 中国大陆，占比 100.0%。</p><small>20251231 · 财务数据接口</small>          </article>
+          <article class="exposure-card" data-exposure-card="fx">
+            <span class="label">FX / 外币算术净头寸</span>
+            <strong>未披露</strong>
+<p>外币货币性资产负债与汇兑影响尚未结构化。</p><span class="exposure-gap">实际套保头寸/覆盖率未披露</span>          </article>
+        </div>
+        <details class="audit-drawer"><summary>查看产品与地区分部明细</summary><div class="drawer-body">
+          <h3>产品分部</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-7">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 7：产品收入、利润与毛利率" aria-describedby="table-scroll-hint-7"><table><caption>产品收入、利润与毛利率</caption><thead><tr><th>报告期</th><th>产品</th><th>收入</th><th>占比</th><th>增速</th><th>分部利润</th><th>毛利率</th><th>币种</th></tr></thead><tbody><tr data-business-segment="true"><td>2025</td><td>云端产品线</td><td>64.77亿</td><td>99.69%</td><td>+455.34%</td><td>未提供</td><td>年报分产品表披露毛利率 55.22%；包括云端智能芯片及板卡、智能整机</td><td>CNY</td></tr><tr data-business-segment="true"><td>2025</td><td>边缘产品线</td><td>0.034亿</td><td>0.05%</td><td>-48.12%</td><td>未提供</td><td>年报分产品表披露毛利率 44.52%，收入体量很小</td><td>CNY</td></tr><tr data-business-segment="true"><td>2025</td><td>IP 授权及软件与其他</td><td>0.169亿</td><td>0.26%</td><td>分项波动大</td><td>未提供</td><td>IP 授权及软件收入约 0.023 亿元，其他收入约 0.147 亿元；两项均非当前估值主锚</td><td>CNY</td></tr></tbody></table></div>
+          <h3>地区分部</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-8">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 8：地区收入与币种暴露" aria-describedby="table-scroll-hint-8"><table><caption>地区收入与币种暴露</caption><thead><tr><th>报告期</th><th>地区</th><th>收入</th><th>分部利润</th><th>毛利率</th><th>币种</th></tr></thead><tbody><tr><td>20251231</td><td>中国大陆</td><td>65.0亿</td><td>35.8亿</td><td>55.2%</td><td>CNY</td></tr><tr><td>20251231</td><td>国外</td><td>6.7万</td><td>4.8万</td><td>71.1%</td><td>CNY</td></tr><tr><td>20241231</td><td>中国大陆</td><td>11.7亿</td><td>6.7亿</td><td>56.7%</td><td>CNY</td></tr><tr><td>20241231</td><td>国外</td><td>113.4万</td><td>45.2万</td><td>39.9%</td><td>CNY</td></tr></tbody></table></div>
+          <div class="note-block risk" data-concentration-ledger="true">
+            <b>客户、地区与汇率暴露</b>
+<p data-customer-concentration="official">2025 前五大客户销售额 57.6亿、占比 88.7%；<strong>第一大客户销售额/占比未披露</strong>；前五大客户应收账款占比未披露。</p><p data-region-concentration="true">20251231 境外收入占比 0.0%；最大地区为 中国大陆（100.0%），来源 财务数据接口。</p><p data-actual-hedge="missing"><strong>实际套保头寸/覆盖率未披露。</strong></p>          </div>
+        </div></details>
+      </section>
+
+      <!-- VALUATION AND POSITION -->
+      <section id="valuation" data-section="valuation">
+        <div class="section-head"><span class="eyebrow">PRICE → PROBABILITY → POSITION</span><h2>定价与仓位：好公司是否也是好价格</h2></div>
+        <div class="metrics"><div class="metric"><span class="label">PE TTM（报告期后滚动盈利）</span><strong>311.60</strong></div><div class="metric"><span class="label">现价隐含 PE 2026E（卖方 EPS 中位数，非目标 PE）</span><strong>165.10</strong></div><div class="metric"><span class="label">现价隐含 PE 2027E（卖方 EPS 中位数，非目标 PE）</span><strong>93.20</strong></div><div class="metric"><span class="label">PB</span><strong>65.77</strong></div><div class="metric"><span class="label">PS</span><strong>102.36</strong></div><div class="metric"><span class="label">PEG</span><strong>未提供</strong></div><div class="metric"><span class="label">ROE</span><strong>23.9%</strong></div><div class="metric"><span class="label">毛利率</span><strong>55.2%</strong></div><div class="metric"><span class="label">净利率</span><strong>31.7%</strong></div></div>
+        <figure class="signal-rail valuation-signal-rail" data-analysis-chart="valuation-position" role="img" aria-label="历史估值分位。PE TTM 当前 311.60，位于历史 44.0% 分位；PB 当前 65.77，位于历史 94.2% 分位；PS 当前 102.36，位于历史 57.5% 分位">
+          <figcaption class="signal-rail-head"><div><span class="chart-question">决策问题 / 当前估值位于历史何处</span><h3>历史估值分位轨道</h3></div><p>分位越靠右，市场对增长兑现的要求越高；它描述位置，不单独生成买卖结论。</p></figcaption>
+          <div class="valuation-signal-rows"><div class="valuation-signal-row"><div class="valuation-signal-label"><b>PE TTM</b><small>样本 300</small></div><div class="valuation-signal-track"><span class="valuation-signal-fill" data-valuation-index="0" data-valuation-coordinate="44.00"></span><span class="valuation-signal-marker" data-valuation-index="0"></span></div><div class="valuation-signal-value"><b>44.0%</b><small>当前 311.60</small></div></div><div class="valuation-signal-row"><div class="valuation-signal-label"><b>PB</b><small>样本 1232</small></div><div class="valuation-signal-track"><span class="valuation-signal-fill" data-valuation-index="1" data-valuation-coordinate="94.16"></span><span class="valuation-signal-marker" data-valuation-index="1"></span></div><div class="valuation-signal-value"><b>94.2%</b><small>当前 65.77</small></div></div><div class="valuation-signal-row"><div class="valuation-signal-label"><b>PS</b><small>样本 1232</small></div><div class="valuation-signal-track"><span class="valuation-signal-fill" data-valuation-index="2" data-valuation-coordinate="57.55"></span><span class="valuation-signal-marker" data-valuation-index="2"></span></div><div class="valuation-signal-value"><b>57.5%</b><small>当前 102.36</small></div></div></div>
+        </figure>
+        <div class="grid-2">
+          <div class="note-block"><h3>Reverse DCF：当前价格在押注什么</h3><p><b>隐含收入增速 135.4%</b> / 5.0 年；已完成反推</p><p>WACC 10.0% · 永续增长 3.0% · 税率 15.0% · 再投资率 35.0%</p><p class="table-note">重建企业价值 8,452.8亿；这是市场价格的隐含假设，不是预测。</p></div>
+          <div class="note-block"><h3>历史估值分位</h3><p><b>PE TTM 311.60 / 分位 44.0%</b><br><small>样本 300，最低 198.90 / 中位 320.47 / 最高 4,463.55</small></p><p><b>PB 65.77 / 分位 94.2%</b><br><small>样本 1232，最低 3.19 / 中位 12.62 / 最高 98.34</small></p><p><b>PS 102.36 / 分位 57.5%</b><br><small>样本 1232，最低 26.04 / 中位 96.71 / 最高 443.72</small></p></div>
+        </div>
+        <div class="price-rail" data-price-rail="true" data-analysis-chart="scenario-price" role="img" aria-label="价格从低到高：悲观 522.00；基准 1123.00；现价 1347.46；乐观 2069.00">
+          <div class="price-rail-head"><b>三情景定价区间</b><p>价格节点按真实比例定位；概率与关键条件见下方情景摘要</p></div>
+          <div class="price-rail-track">
+            <div class="price-rail-line"></div>
+            <div class="price-node bear" data-price-coordinate="4.00">
+              <div class="price-node-card offset-none"><span>悲观</span><strong data-current-field="target-bear">522.00</strong><em data-current-field="prob-bear">40.0%</em></div>
+            </div>
+            <div class="price-node base" data-price-coordinate="39.74">
+              <div class="price-node-card offset-none"><span>基准</span><strong data-current-field="target-base">1123.00</strong><em data-current-field="prob-base">45.0%</em></div>
+            </div>
+            <div class="price-node bull" data-price-coordinate="96.00">
+              <div class="price-node-card offset-none"><span>乐观</span><strong data-current-field="target-bull">2069.00</strong><em data-current-field="prob-bull">15.0%</em></div>
+            </div>
+            <div class="price-node current" data-price-coordinate="53.09">
+              <div class="price-node-card offset-none"><span>现价</span><strong>1347.46</strong><em>reference</em></div>
+            </div>
+          </div>
+        </div>
+        <figure class="scenario-ev-rail" data-analysis-chart="scenario-ev" role="group" aria-label="悲观、基准、乐观情景对期望收益的贡献">
+          <figcaption class="scenario-ev-head"><div><span class="chart-question">决策问题 / 每个情景如何贡献 EV</span><h3>情景概率加权贡献</h3></div><p>中线为零；向左是负贡献，向右是正贡献。目标价、概率与收益共同决定贡献方向和幅度。</p></figcaption>
+<article class="scenario-contribution-row" data-scenario-contribution="bear"><div class="scenario-contribution-label"><span class="tag">悲观 · 40.0%</span><strong>522.00</strong><small>目标价 / 概率</small></div><div><div class="scenario-contribution-track"><span class="scenario-contribution-bar negative" data-contribution-bar="true" data-scenario="bear" data-contribution-direction="negative"></span></div><div class="scenario-contribution-value"><span>情景收益 -61.3%</span><b>EV -24.5%</b></div></div><div class="scenario-contribution-driver">收入 180.00 亿 · 净利率 26.0% · 目标 PE 70.00 倍<br><a class="scenario-audit-link" href="#scenario-audit-bear">查看完整假设与证据</a></div></article><article class="scenario-contribution-row" data-scenario-contribution="base"><div class="scenario-contribution-label"><span class="tag">基准 · 45.0%</span><strong>1123.00</strong><small>目标价 / 概率</small></div><div><div class="scenario-contribution-track"><span class="scenario-contribution-bar negative" data-contribution-bar="true" data-scenario="base" data-contribution-direction="negative"></span></div><div class="scenario-contribution-value"><span>情景收益 -16.7%</span><b>EV -7.5%</b></div></div><div class="scenario-contribution-driver">收入 280.00 亿 · 净利率 36.0% · 目标 PE 70.00 倍<br><a class="scenario-audit-link" href="#scenario-audit-base">查看完整假设与证据</a></div></article><article class="scenario-contribution-row" data-scenario-contribution="bull"><div class="scenario-contribution-label"><span class="tag">乐观 · 15.0%</span><strong>2069.00</strong><small>目标价 / 概率</small></div><div><div class="scenario-contribution-track"><span class="scenario-contribution-bar positive" data-contribution-bar="true" data-scenario="bull" data-contribution-direction="positive"></span></div><div class="scenario-contribution-value"><span>情景收益 53.5%</span><b>EV 8.0%</b></div></div><div class="scenario-contribution-driver">收入 430.00 亿 · 净利率 42.0% · 目标 PE 72.00 倍<br><a class="scenario-audit-link" href="#scenario-audit-bull">查看完整假设与证据</a></div></article>        </figure>
+        <details class="audit-drawer"><summary>查看同业、卖方、敏感性与情景重放</summary><div class="drawer-body">
+          <h3>同业横向比较</h3>
+<p class="table-note" data-peer-valuation-state="available">仅展示通过标准化同截面与核心输入门禁的估值；PE 为 TTM 口径，相对估值仅作辅助判断。 截面 2026-07-15 · PE TTM / PB 最近披露权益 / 市值 截面价×总股本 · 决策用途 核心输入。</p>          <p class="scroll-hint table-scroll-hint" id="table-scroll-hint-9">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap peer-table-screen wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 9：标准化同截面估值与经营质量同业表" aria-describedby="table-scroll-hint-9"><table><caption>标准化同截面估值与经营质量同业表</caption><thead><tr><th>公司</th><th>估值身份</th><th>PE TTM</th><th>PB</th><th>PEG</th><th>ROE</th><th>毛利率</th><th>净利率</th><th>营收增速</th><th>利润增速</th><th>负债率</th><th>市值</th></tr></thead><tbody><tr data-peer-valuation-state="可用于相对估值"><td>寒武纪<br><small>688256.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>311.60</td><td>65.77</td><td>不纳入</td><td>23.9%</td><td>55.1%</td><td>31.7%</td><td>+453.2%</td><td>+304.6%</td><td>11.9%</td><td>8,466.0亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>海光信息<br><small>688041.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>276.34</td><td>32.06</td><td>不纳入</td><td>11.9%</td><td>57.8%</td><td>25.2%</td><td>+56.9%</td><td>+26.9%</td><td>27.1%</td><td>7,533.4亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>芯原股份<br><small>688521.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>不可用</td><td>42.28</td><td>不纳入</td><td>-19.1%</td><td>34.2%</td><td>-16.7%</td><td>+35.8%</td><td>+4.6%</td><td>55.7%</td><td>1,330.5亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>龙芯中科<br><small>688047.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>不可用</td><td>21.57</td><td>不纳入</td><td>-19.3%</td><td>31.0%</td><td>-124.0%</td><td>-0.3%</td><td>-50.4%</td><td>16.0%</td><td>517.3亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>景嘉微<br><small>300474.SZ</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>不可用</td><td>4.20</td><td>不纳入</td><td>-3.1%</td><td>43.7%</td><td>-35.4%</td><td>-34.6%</td><td>-988.6%</td><td>6.5%</td><td>286.4亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>复旦微电<br><small>688385.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>205.60</td><td>8.00</td><td>不纳入</td><td>3.9%</td><td>56.2%</td><td>5.1%</td><td>+10.9%</td><td>-69.3%</td><td>26.6%</td><td>502.6亿</td></tr><tr data-peer-valuation-state="可用于相对估值"><td>澜起科技<br><small>688008.SH</small></td><td>2026-07-15<br><small>TTM · 财务期 TTM:20260331,20251231,20250930,20250630 · 决策用途 核心输入<br>可用于相对估值</small></td><td>120.58</td><td>14.79</td><td>不纳入</td><td>18.4%</td><td>62.2%</td><td>39.0%</td><td>+49.9%</td><td>+62.0%</td><td>6.4%</td><td>3,084.1亿</td></tr></tbody></table></div>
+          <p class="scroll-hint table-scroll-hint" id="table-scroll-hint-10">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap peer-table-print wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 10：标准化同截面同业表（打印摘要）" aria-describedby="table-scroll-hint-10"><table><caption>标准化同截面同业表（打印摘要）</caption><thead><tr><th>公司</th><th>截面</th><th>估值<br><small>PE / PB / PEG</small></th><th>经营质量<br><small>ROE / 毛利 / 净利</small></th><th>增长<br><small>营收 / 利润</small></th><th>负债 / 市值</th></tr></thead><tbody><tr><td>寒武纪<br><small>688256.SH</small></td><td>2026-07-15</td><td>311.60 / 65.77 / 不纳入</td><td>23.9% / 55.1% / 31.7%</td><td>+453.2% / +304.6%</td><td>11.9%<br>8,466.0亿</td></tr><tr><td>海光信息<br><small>688041.SH</small></td><td>2026-07-15</td><td>276.34 / 32.06 / 不纳入</td><td>11.9% / 57.8% / 25.2%</td><td>+56.9% / +26.9%</td><td>27.1%<br>7,533.4亿</td></tr><tr><td>芯原股份<br><small>688521.SH</small></td><td>2026-07-15</td><td>不可用 / 42.28 / 不纳入</td><td>-19.1% / 34.2% / -16.7%</td><td>+35.8% / +4.6%</td><td>55.7%<br>1,330.5亿</td></tr><tr><td>龙芯中科<br><small>688047.SH</small></td><td>2026-07-15</td><td>不可用 / 21.57 / 不纳入</td><td>-19.3% / 31.0% / -124.0%</td><td>-0.3% / -50.4%</td><td>16.0%<br>517.3亿</td></tr><tr><td>景嘉微<br><small>300474.SZ</small></td><td>2026-07-15</td><td>不可用 / 4.20 / 不纳入</td><td>-3.1% / 43.7% / -35.4%</td><td>-34.6% / -988.6%</td><td>6.5%<br>286.4亿</td></tr><tr><td>复旦微电<br><small>688385.SH</small></td><td>2026-07-15</td><td>205.60 / 8.00 / 不纳入</td><td>3.9% / 56.2% / 5.1%</td><td>+10.9% / -69.3%</td><td>26.6%<br>502.6亿</td></tr><tr><td>澜起科技<br><small>688008.SH</small></td><td>2026-07-15</td><td>120.58 / 14.79 / 不纳入</td><td>18.4% / 62.2% / 39.0%</td><td>+49.9% / +62.0%</td><td>6.4%<br>3,084.1亿</td></tr></tbody></table></div>
+          <h3>卖方研报证据与分歧</h3>
+          <div class="note-block"><p><b>原始 208 行 → 70 份研报 → 57 份个股研报</b></p><p>隔离非个股 13 份；明确目标 18 份 / 5 家机构；证据状态 complete。</p><p><b>当前股本口径目标中位 1,277.18</b>，区间 973.15 – 1,648.46，决策用途 核心输入。目标价已按每家机构最新一份研报去重，并统一到 as-of 股本口径。</p><p>Buy 3 / 买入 35 / 优于大市 1 / 区间操作 1 / 增持 7 / 推荐 8 / 无 2</p></div>
+          <p class="scroll-hint table-scroll-hint" id="table-scroll-hint-11">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 11：明确目标价：每家机构仅保留最新一份，统一到 as-of 股本口径" aria-describedby="table-scroll-hint-11"><table><caption>明确目标价：每家机构仅保留最新一份，统一到 as-of 股本口径</caption><thead><tr><th>机构</th><th>评级</th><th>研报日</th><th>调整后目标</th><th>目标区间</th><th>股本调整</th><th>证据定位</th></tr></thead><tbody><tr><td>华泰证券</td><td>买入</td><td>2026-03-16</td><td>1,116.51</td><td>1,116.51</td><td>÷1.49</td><td><code>capital_extras.json#/report_rc/46</code></td></tr><tr><td>广发证券</td><td>买入</td><td>2026-05-31</td><td>1,648.46</td><td>1,648.46</td><td>无需调整</td><td><code>capital_extras.json#/report_rc/7</code></td></tr><tr><td>第一上海证券</td><td>买入</td><td>2026-04-27</td><td>1,277.18</td><td>1,277.18</td><td>÷1.49</td><td><code>capital_extras.json#/report_rc/26</code></td></tr><tr><td>群益证券</td><td>买入</td><td>2026-02-27</td><td>973.15</td><td>973.15</td><td>÷1.49</td><td><code>capital_extras.json#/report_rc/67</code></td></tr><tr><td>高盛集团(GoldmanSachs)</td><td>Buy</td><td>2026-05-04</td><td>1,614.77</td><td>1,614.77</td><td>÷1.49</td><td><code>capital_extras.json#/report_rc/16</code></td></tr></tbody></table></div>
+          <h3>Reverse DCF 敏感性：经营利润率 × WACC</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-12">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 12" aria-describedby="table-scroll-hint-12"><table><thead><tr><th>经营利润率 \ WACC</th><th>8.0%</th><th>10.0%</th><th>12.0%</th></tr></thead><tbody><tr><td>25.4%</td><td>127.3%</td><td>146.3%</td><td>162.3%</td></tr><tr><td>31.7%</td><td>117.3%</td><td>135.4%</td><td>150.7%</td></tr><tr><td>38.1%</td><td>109.4%</td><td>126.8%</td><td>141.5%</td></tr></tbody></table></div><p class="table-note">在本次利润率与折现率网格下，市场隐含的五年收入复合增速区间为 109.4% – 162.3%；单点结果不是唯一答案。</p>
+          <h3>EPS × PE 敏感性</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-13">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 13：政策绑定情景 PE × EPS 的交叉敏感性（非卖方目标 PE，不新增独立估值锚）" aria-describedby="table-scroll-hint-13"><table data-valuation-basis="valuation.scenario_target_pe"><caption>政策绑定情景 PE × EPS 的交叉敏感性（非卖方目标 PE，不新增独立估值锚）</caption><thead><tr><th>EPS \ PE 假设</th><th>70.00x</th><th>70.00x</th><th>72.00x</th></tr></thead><tbody><tr><td>7.45</td><td>521.50</td><td>521.50</td><td>536.40</td></tr><tr><td>16.04</td><td>1,122.80</td><td>1,122.80</td><td>1,154.88</td></tr><tr><td>28.74</td><td>2,011.80</td><td>2,011.80</td><td>2,069.28</td></tr></tbody></table></div>
+          <p class="table-note">最敏感假设：收入增速、经营利润率、WACC、永续增长、再投资率。</p>
+          <h3>卖方 EPS 修订方向</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-14">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 14：同机构、同预测年、同股本口径的 EPS 修订" aria-describedby="table-scroll-hint-14"><table><caption>同机构、同预测年、同股本口径的 EPS 修订</caption><thead><tr><th>机构</th><th>预测年</th><th>前次 / 最新</th><th>调整后 EPS</th><th>修订</th><th>方向</th><th>股本口径</th></tr></thead><tbody><tr><td>东吴证券</td><td>2026</td><td>2025-08-31 / 2025-10-19</td><td>6.46 → 7.81</td><td>+21.0%</td><td>up</td><td>同股本口径</td></tr><tr><td>东吴证券</td><td>2027</td><td>2025-08-31 / 2025-10-19</td><td>9.91 → 14.01</td><td>+41.5%</td><td>up</td><td>同股本口径</td></tr><tr><td>东海证券</td><td>2026</td><td>2025-10-20 / 2026-03-18</td><td>7.77 → 7.83</td><td>+0.9%</td><td>up</td><td>同股本口径</td></tr><tr><td>东海证券</td><td>2027</td><td>2025-10-20 / 2026-03-18</td><td>12.50 → 13.95</td><td>+11.7%</td><td>up</td><td>同股本口径</td></tr><tr><td>中信证券</td><td>2026</td><td>2025-11-20 / 2025-12-09</td><td>7.86 → 7.90</td><td>+0.5%</td><td>up</td><td>同股本口径</td></tr><tr><td>中信证券</td><td>2027</td><td>2025-11-20 / 2025-12-09</td><td>17.26 → 17.30</td><td>+0.2%</td><td>up</td><td>同股本口径</td></tr><tr><td>华创证券</td><td>2026</td><td>2025-12-12 / 2026-03-16</td><td>7.79 → 7.62</td><td>-2.2%</td><td>down</td><td>同股本口径</td></tr><tr><td>华创证券</td><td>2027</td><td>2025-12-12 / 2026-03-16</td><td>12.41 → 12.94</td><td>+4.3%</td><td>up</td><td>同股本口径</td></tr><tr><td>华泰证券</td><td>2026</td><td>2026-02-08 / 2026-03-16</td><td>9.59 → 9.49</td><td>-1.0%</td><td>down</td><td>同股本口径</td></tr><tr><td>华泰证券</td><td>2027</td><td>2026-02-08 / 2026-03-16</td><td>27.97 → 27.91</td><td>-0.2%</td><td>down</td><td>同股本口径</td></tr><tr><td>国泰海通</td><td>2026</td><td>2025-09-09 / 2025-10-18</td><td>5.36 → 10.48</td><td>+95.6%</td><td>up</td><td>同股本口径</td></tr><tr><td>国泰海通</td><td>2027</td><td>2025-09-09 / 2025-10-18</td><td>6.85 → 15.36</td><td>+124.1%</td><td>up</td><td>同股本口径</td></tr><tr><td>国海证券</td><td>2026</td><td>2025-10-18 / 2026-03-03</td><td>12.46 → 10.89</td><td>-12.6%</td><td>down</td><td>同股本口径</td></tr><tr><td>国海证券</td><td>2027</td><td>2025-10-18 / 2026-03-03</td><td>17.73 → 14.97</td><td>-15.6%</td><td>down</td><td>同股本口径</td></tr><tr><td>国盛证券</td><td>2026</td><td>2026-02-03 / 2026-04-30</td><td>6.95 → 8.17</td><td>+17.7%</td><td>up</td><td>同股本口径</td></tr><tr><td>国盛证券</td><td>2027</td><td>2026-02-03 / 2026-04-30</td><td>11.17 → 13.38</td><td>+19.8%</td><td>up</td><td>同股本口径</td></tr><tr><td>国联民生证券</td><td>2026</td><td>2026-03-15 / 2026-05-05</td><td>7.18 → 8.32</td><td>+15.9%</td><td>up</td><td>同股本口径</td></tr><tr><td>国联民生证券</td><td>2027</td><td>2026-03-15 / 2026-05-05</td><td>11.99 → 15.63</td><td>+30.4%</td><td>up</td><td>同股本口径</td></tr><tr><td>国联民生证券</td><td>2028</td><td>2026-03-15 / 2026-05-05</td><td>18.99 → 24.85</td><td>+30.8%</td><td>up</td><td>同股本口径</td></tr><tr><td>广发证券</td><td>2026</td><td>2026-04-30 / 2026-05-31</td><td>8.13 → 8.15</td><td>+0.3%</td><td>up</td><td>跨公司行动已复权</td></tr><tr><td>广发证券</td><td>2027</td><td>2026-04-30 / 2026-05-31</td><td>14.40 → 23.55</td><td>+63.5%</td><td>up</td><td>跨公司行动已复权</td></tr><tr><td>广发证券</td><td>2028</td><td>2026-04-30 / 2026-05-31</td><td>23.86 → 47.01</td><td>+97.0%</td><td>up</td><td>跨公司行动已复权</td></tr><tr><td>民生证券</td><td>2026</td><td>2025-08-28 / 2025-10-19</td><td>5.71 → 5.72</td><td>+0.1%</td><td>up</td><td>同股本口径</td></tr><tr><td>民生证券</td><td>2027</td><td>2025-08-28 / 2025-10-19</td><td>8.10 → 8.09</td><td>-0.1%</td><td>down</td><td>同股本口径</td></tr><tr><td>浙商证券</td><td>2026</td><td>2025-10-19 / 2026-03-23</td><td>4.52 → 7.68</td><td>+69.9%</td><td>up</td><td>同股本口径</td></tr><tr><td>浙商证券</td><td>2027</td><td>2025-10-19 / 2026-03-23</td><td>7.46 → 12.11</td><td>+62.3%</td><td>up</td><td>同股本口径</td></tr><tr><td>第一上海证券</td><td>2026</td><td>2025-12-03 / 2026-04-27</td><td>8.19 → 10.81</td><td>+32.0%</td><td>up</td><td>同股本口径</td></tr><tr><td>第一上海证券</td><td>2027</td><td>2025-12-03 / 2026-04-27</td><td>14.16 → 18.26</td><td>+28.9%</td><td>up</td><td>同股本口径</td></tr><tr><td>群益证券</td><td>2026</td><td>2025-10-20 / 2026-02-27</td><td>8.36 → 7.97</td><td>-4.7%</td><td>down</td><td>同股本口径</td></tr><tr><td>群益证券</td><td>2027</td><td>2025-10-20 / 2026-02-27</td><td>11.36 → 13.52</td><td>+19.0%</td><td>up</td><td>同股本口径</td></tr><tr><td>西部证券</td><td>2026</td><td>2025-10-21 / 2026-05-05</td><td>8.03 → 8.85</td><td>+10.3%</td><td>up</td><td>同股本口径</td></tr><tr><td>西部证券</td><td>2027</td><td>2025-10-21 / 2026-05-05</td><td>12.39 → 20.13</td><td>+62.5%</td><td>up</td><td>同股本口径</td></tr><tr><td>长江证券</td><td>2026</td><td>2025-10-21 / 2026-04-08</td><td>7.21 → 7.65</td><td>+6.0%</td><td>up</td><td>同股本口径</td></tr><tr><td>长江证券</td><td>2027</td><td>2025-10-21 / 2026-04-08</td><td>11.47 → 13.14</td><td>+14.5%</td><td>up</td><td>同股本口径</td></tr><tr><td>高盛集团(GoldmanSachs)</td><td>2026</td><td>2025-10-18 / 2026-05-04</td><td>5.83 → 9.78</td><td>+67.7%</td><td>up</td><td>同股本口径</td></tr><tr><td>高盛集团(GoldmanSachs)</td><td>2027</td><td>2025-10-18 / 2026-05-04</td><td>12.26 → 15.90</td><td>+29.7%</td><td>up</td><td>同股本口径</td></tr></tbody></table></div>
+          <h3>V3 三情景：可重算目标、概率与 EV 贡献</h3><p class="table-note">每档目标必须通过 收入×净利率→净利润÷股本→EPS×PE 的版本化舍入链；机器复算通过后才能进入决策。</p><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-15">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 15：悲观、基准、乐观三情景的目标价与决策贡献" aria-describedby="table-scroll-hint-15"><table class="scenario-table" data-audit-scenario-assumptions="true"><caption>悲观、基准、乐观三情景的目标价与决策贡献</caption><thead><tr><th>情景</th><th>目标</th><th>概率</th><th>收益</th><th>EV贡献</th><th class="wrap">机器复算</th><th class="wrap">假设 / 证据</th><th class="wrap">成立条件</th></tr></thead><tbody><tr id="scenario-audit-bear" data-replay-status="PASS" data-policy-version="aihf_scenario_math.1.0.0" data-assumption-refs="scenario.bear.revenue_yi、scenario.bear.net_margin、capital.shares_yi、scenario.bear.target_pe、scenario.bear.probability"><td>bear</td><td>522.00</td><td>40.0%</td><td>-61.3%</td><td>-24.5%</td><td class="wrap"><b>复算通过</b> · 7.45 × 70.00 = 521.50 → 522.00<br><small>情景数学政策 1.0.0 · 收入 180.00 亿 · 净利率 26.0% · 股本 6.28 亿股</small></td><td class="wrap"><small>5 项已绑定假设<br>证据 <a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E20" data-evidence-ref="E20" href="#evidence-E20" aria-label="查看证据 E20">E20</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-scenario-bear-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></small><details class="audit-footnote"><summary>查看精确假设引用</summary><small>scenario.bear.revenue_yi、scenario.bear.net_margin、capital.shares_yi、scenario.bear.target_pe、scenario.bear.probability</small></details></td><td class="wrap">新增客户复购不及预期，FY2026 收入与现金流未形成同步增长；FY2027 收入仅 180 亿元、净利率降至 26%，估值回落到校准样本低分位 70 倍。<br><small>未提供 · FY2027 EPS 7.45 元 × 70.0 倍 PE，目标价 522 元。
+【目标 PE 政策】70.0 倍来自 卖方显式远期 PE 分位法 的独立同口径样本与固定分位规则；只作用于估值，不改写收入、利润率或概率假设。<a class="evidence-ref" id="evidence-ref-scenario-bear-valuation-E20" data-evidence-ref="E20" href="#evidence-E20" aria-label="查看证据 E20">[E20]</a></small></td></tr><tr id="scenario-audit-base" data-replay-status="PASS" data-policy-version="aihf_scenario_math.1.0.0" data-assumption-refs="scenario.base.revenue_yi、scenario.base.net_margin、capital.shares_yi、scenario.base.target_pe、scenario.base.probability"><td>base</td><td>1123.00</td><td>45.0%</td><td>-16.7%</td><td>-7.5%</td><td class="wrap"><b>复算通过</b> · 16.04 × 70.00 = 1122.80 → 1123.00<br><small>情景数学政策 1.0.0 · 收入 280.00 亿 · 净利率 36.0% · 股本 6.28 亿股</small></td><td class="wrap"><small>5 项已绑定假设<br>证据 <a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">E21</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E11" data-evidence-ref="E11" href="#evidence-E11" aria-label="查看证据 E11">E11</a>、<a class="evidence-ref" id="evidence-ref-scenario-base-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></small><details class="audit-footnote"><summary>查看精确假设引用</summary><small>scenario.base.revenue_yi、scenario.base.net_margin、capital.shares_yi、scenario.base.target_pe、scenario.base.probability</small></details></td><td class="wrap">云端产品维持规模化交付，现金流逐步跟上利润；FY2027 收入 280 亿元、净利率 36%，目标 PE 采用校准样本中位 70 倍，但不假设客户集中度自然消失。<br><small>未提供 · FY2027 EPS 16.04 元 × 70.0 倍 PE，目标价 1123 元。
+【目标 PE 政策】70.0 倍来自 卖方显式远期 PE 分位法 的独立同口径样本与固定分位规则；只作用于估值，不改写收入、利润率或概率假设。<a class="evidence-ref" id="evidence-ref-scenario-base-valuation-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">[E21]</a></small></td></tr><tr id="scenario-audit-bull" data-replay-status="PASS" data-policy-version="aihf_scenario_math.1.0.0" data-assumption-refs="scenario.bull.revenue_yi、scenario.bull.net_margin、capital.shares_yi、scenario.bull.target_pe、scenario.bull.probability"><td>bull</td><td>2069.00</td><td>15.0%</td><td>53.5%</td><td>8.0%</td><td class="wrap"><b>复算通过</b> · 28.74 × 72.00 = 2069.28 → 2069.00<br><small>情景数学政策 1.0.0 · 收入 430.00 亿 · 净利率 42.0% · 股本 6.28 亿股</small></td><td class="wrap"><small>5 项已绑定假设<br>证据 <a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E22" data-evidence-ref="E22" href="#evidence-E22" aria-label="查看证据 E22">E22</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-scenario-bull-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></small><details class="audit-footnote"><summary>查看精确假设引用</summary><small>scenario.bull.revenue_yi、scenario.bull.net_margin、capital.shares_yi、scenario.bull.target_pe、scenario.bull.probability</small></details></td><td class="wrap">云端产品与智能整机持续超预期放量，复购、回款和供应链同步改善；FY2027 收入 430 亿元、净利率 42%，目标 PE 采用校准样本 75% 分位 72 倍。<br><small>未提供 · FY2027 EPS 28.74 元 × 72.0 倍 PE，目标价 2069 元。
+【目标 PE 政策】72.0 倍来自 卖方显式远期 PE 分位法 的独立同口径样本与固定分位规则；只作用于估值，不改写收入、利润率或概率假设。<a class="evidence-ref" id="evidence-ref-scenario-bull-valuation-E22" data-evidence-ref="E22" href="#evidence-E22" aria-label="查看证据 E22">[E22]</a></small></td></tr></tbody></table></div>
+        </div></details>
+      </section>
+
+      <section id="market-dimensions" data-section="market-dimensions" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">QUANT TIMING GATE</span><h2>量化与市场：只修正时点和新增仓位</h2><p class="lede">技术、资金和舆情不能替代基本面；它们用于判断拥挤度、时点与仓位上限。</p></div>
+        <div class="quant-panel inactive" data-quant-overlay="true">
+          <div class="quant-panel-head"><div><span class="label">quant gate / complete</span><h3>量化闸门：支持但未生效 · 仅择时，未生效</h3><p>仅择时；基本面动作仍为暂不新开仓。</p><p>主要推力 趋势与中期动量 +22.50 · 主要拖累 不可用 不可用 · 高于支持阈值 6.25 分</p></div><div><span class="label">score / coverage</span><div class="quant-score">76.25 / 100</div><p>100.0% · 仓位 ×1.00</p></div></div>
+          <div class="position-waterfall">
+            <div><span class="label">当前仓位</span><strong>0.0%</strong></div>
+            <div><span class="label">基本面目标</span><strong>0.0%</strong></div>
+            <div><span class="label">量化后目标</span><strong>0.0%</strong></div>
+            <div><span class="label">订单变化</span><strong>+0.0% → +0.0%</strong></div>
+          </div>
+          <details class="audit-drawer"><summary>展开量化归因、风险约束与审计身份</summary><div class="drawer-body">
+            <div class="quant-layer" data-quant-layer="timing"><h3>Timing 归因：哪些因子把分数推离 50</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-16">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 16" aria-describedby="table-scroll-hint-16"><table><thead><tr><th>因子族</th><th>分数</th><th>策略权重</th><th>有效权重</th><th>相对 50 分贡献</th><th>输入覆盖</th><th class="wrap">真实输入</th><th class="wrap">解释</th></tr></thead><tbody><tr><td>趋势与中期动量</td><td>80.00</td><td>75.0%</td><td>75.0%</td><td>+22.50</td><td>100.0%</td><td class="wrap">现价 1,347.46 · MA20 1,432.80 · MA60 1,277.73 · MA120 1,027.44 · 3月收益 +53.7% · 6月收益 +42.7% · 正信号 4 · 信号数 5</td><td class="wrap">4/5 个趋势或动量信号为正；同族信号合并，避免重复计权</td></tr><tr><td>量能确认</td><td>65.00</td><td>25.0%</td><td>25.0%</td><td>+3.75</td><td>100.0%</td><td class="wrap">量比 1.00x · trend_score 80.00</td><td class="wrap">上行趋势中的放量视为确认，缩量只降低确认度</td></tr></tbody></table></div><p class="table-note">中心化贡献合计 +26.25 · 高于支持阈值 6.25 分。</p></div>
+<div class="quant-layer" data-quant-layer="risk"><h3>Risk constraints：只管仓位上限，不进入 timing score</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-17">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 17" aria-describedby="table-scroll-hint-17"><table><thead><tr><th>约束</th><th>当前值</th><th>职责</th><th class="wrap">边界说明</th></tr></thead><tbody><tr><td>实现波动率</td><td>年化波动 70.5%</td><td>单票风险仓位帽</td><td class="wrap">只进入单票风险仓位帽，不进入择时分，避免重复惩罚</td></tr><tr><td>持仓相关性</td><td>最大相关性不可用</td><td>组合风险仓位帽</td><td class="wrap">没有已确认组合对照或样本不足；未知不等于低相关</td></tr></tbody></table></div></div><div class="quant-audit-grid"><div class="quant-audit-card"><span class="label">policy identity</span><strong>aihf_quant_timing_policy.2.0.0</strong><small>hash 2021c7d63f9136f27232f58f</small></div><div class="quant-audit-card"><span class="label">position / order audit</span><strong>当前 0.0% → 量化前目标 0.0% → 量化后目标 0.0%</strong><small>订单变化 +0.0% → +0.0%</small></div><div class="quant-audit-card"><span class="label">observation boundary</span><strong>observation_id 8f1597cf209ee89d2dc133c3</strong><small>特征截止 2026-07-15 · 组合身份未确认</small></div></div>            <p class="quant-boundary"><b>No-alpha 边界：</b>这是确定性择时与风险策略，不是 alpha 模型，不代表预测收益或超额收益。</p><p class="table-note">择时分只含趋势/中期动量与量能确认；实现波动率和已确认组合相关性只进入风险仓位帽，避免重复计权。量化仅缩放正的新增订单，不修改情景概率、目标价、EV 或赔率。校准状态：policy_guardrail_not_alpha_model。</p>
+          </div></details>
+        </div>
+        <details class="audit-drawer"><summary>展开技术、资金、舆情与治理底稿</summary><div class="drawer-body">
+          <h3>技术与位置</h3><div class="metrics"><div class="metric"><span class="label">1个月收益</span><strong>+3.1%</strong></div><div class="metric"><span class="label">3个月收益</span><strong>+53.7%</strong></div><div class="metric"><span class="label">6个月收益</span><strong>+42.7%</strong></div><div class="metric"><span class="label">1年收益</span><strong>+245.0%</strong></div><div class="metric"><span class="label">MA5</span><strong>1,416.69</strong></div><div class="metric"><span class="label">MA20</span><strong>1,432.80</strong></div><div class="metric"><span class="label">MA60</span><strong>1,277.73</strong></div><div class="metric"><span class="label">MA120</span><strong>1,027.44</strong></div><div class="metric"><span class="label">BBI</span><strong>1,406.82</strong></div><div class="metric"><span class="label">RSI14</span><strong>47.54</strong></div><div class="metric"><span class="label">MACD</span><strong>-32.73</strong></div><div class="metric"><span class="label">KDJ-K</span><strong>33.75</strong></div><div class="metric"><span class="label">BOLL上轨</span><strong>1,570.45</strong></div><div class="metric"><span class="label">CCI</span><strong>-82.21</strong></div><div class="metric"><span class="label">52周高点</span><strong>1,620.00</strong></div><div class="metric"><span class="label">距52周高点</span><strong>-16.8%</strong></div><div class="metric"><span class="label">量比</span><strong>1.00</strong></div></div>
+          <div class="grid-3"><div class="note-block"><h3>融资与资金</h3><p>融资余额 未提供 / mixed</p><p>5日主力 5.1亿 / continuous_inflow</p><p>北向：stale，数据日 2024-08-16</p></div><div class="note-block" data-sentiment-state="unavailable"><h3>舆情与拥挤</h3><p class="degraded">截至研究日无可用多平台样本，舆情不参与决策。</p></div><div class="note-block risk"><h3>治理与股东</h3><p>控制人 陈天石 / 28.3%</p><p>质押 0.0% · 内部人净减持 1,739.0万 · 回购 0.00</p><p>分红率 0.0% · standard_clean</p><p><small>官方披露已补齐审计意见；股东回报、管理层交易与质押等字段仍按现有数据质量解释。</small></p></div></div>
+          <div class="grid-3"><div class="note-block"><h3>大宗交易</h3><p>180日 24 笔 / 机构席位 6 / 金额 1,010.3亿 / 截至 20260709</p></div><div class="note-block"><h3>筹码分布</h3><p>成本中位 1,447.50 / 15-85分位 1,312.40-1,563.30 / 盈利盘 18.5% / 截至 20260715</p></div><div class="note-block"><h3>行业资金与卖方</h3><p>光学光电子 -45.2亿；集成电路封测 -84.2亿；数字芯片设计 -112.8亿</p><p>12月研报 208 篇 / 最新 20260630《七月策略和十大金股—7月十大金股》</p></div></div>
+          <div class="grid-2"><div><h3>股东户数趋势</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-18">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 18" aria-describedby="table-scroll-hint-18"><table><thead><tr><th>报告期</th><th>公告日</th><th>户数</th></tr></thead><tbody><tr><td>20251231</td><td>20260313</td><td>52818.0</td></tr><tr><td>20250930</td><td>20251018</td><td>61993.0</td></tr><tr><td>20250630</td><td>20250827</td><td>40750.0</td></tr><tr><td>20250331</td><td>20250419</td><td>35127.0</td></tr><tr><td>20241231</td><td>20250419</td><td>30150.0</td></tr><tr><td>20240930</td><td>20241031</td><td>26469.0</td></tr></tbody></table></div></div><div><h3>已实施分红</h3><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-19">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 19" aria-describedby="table-scroll-hint-19"><table><thead><tr><th>报告期</th><th>每股现金</th><th>登记日</th><th>派息日</th></tr></thead><tbody><tr><td>20251231</td><td>1.50</td><td>20260507</td><td>20260508</td></tr></tbody></table></div></div></div>
+          <h3>治理与重大公告</h3><ul class="compact"><li><b>20260701</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-07-01/1225401954.PDF" target="_blank" rel="noreferrer">股票交易风险提示公告</a></li><li><b>20260612</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-06-12/1225365351.PDF" target="_blank" rel="noreferrer">关于注销部分募集资金理财产品专用结算账户的公告</a></li><li><b>20260523</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-05-23/1225327201.PDF" target="_blank" rel="noreferrer">关于申请综合授信额度的公告</a></li><li><b>20260523</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-05-23/1225327207.PDF" target="_blank" rel="noreferrer">关于2022年度向特定对象发行A股股票募投项目结项并将节余募集资金永久补充流动资金的公告</a></li><li><b>20260523</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-05-23/1225327195.PDF" target="_blank" rel="noreferrer">中信证券股份有限公司关于中科寒武纪科技股份有限公司2022年度向特定对象发行A股股票募投项目结项并将节余募集资金永久补充流动资金的核查意见</a></li><li><b>20260430</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-04-30/1225264337.PDF" target="_blank" rel="noreferrer">2026年第一季度报告</a></li><li><b>20260430</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-04-30/1225264288.PDF" target="_blank" rel="noreferrer">关于2026年第一季度计提资产减值准备的公告</a></li><li><b>20260429</b> · <a href="https://static.cninfo.com.cn/finalpage/2026-04-29/1225239002.PDF" target="_blank" rel="noreferrer">中信证券股份有限公司关于中科寒武纪科技股份有限公司差异化权益分派特殊除权除息事项的核查意见</a></li></ul>
+        </div></details>
+      </section>
+
+      <section id="decision" data-section="decision">
+        <div class="section-head"><span class="eyebrow">DECISION MATH</span><h2>赔率与仓位结果</h2><p class="lede">这里解释结果如何由三情景、EV、Kelly、稳健性和量化缩放共同形成，不重复首屏动作和核心命题。</p></div>
+        <p class="table-note">三情景目标、概率与公式只保留在<a href="#valuation">上方定价模块</a>；本节仅展示由它们推导出的 EV、赔率、压力门禁与仓位结果。</p>
+        <div class="grid-2">
+          <div><div class="metrics"><div class="metric"><span class="label">EV net</span><strong>-24.4%</strong></div><div class="metric"><span class="label">EV gross</span><strong>-24.0%</strong></div><div class="metric"><span class="label">Odds</span><strong>0.25</strong></div></div></div>
+          <div><div class="robustness-callout stable"><b>稳健性 · 稳定</b><p>初始动作不是开仓/加仓，无需做开仓稳健性降级</p></div><div class="quant-callout inactive" data-quant-overlay="true"><b>量化闸门 · 支持但未生效 · 76.25 / 100</b><p>仅择时；基本面动作仍为暂不新开仓。</p></div></div>
+        </div>
+<div class="decision-math-audit target-pe-policy-audit" data-target-pe-policy-audit="true"><span class="label">目标 PE 政策</span><h3>已校准，可用于决策</h3><p class="table-note">校准方法：卖方显式远期 PE 分位法</p><details class="audit-footnote"><summary>查看目标 PE 政策审计身份</summary><p class="table-note">mode sellside_explicit_forward_pe_quantiles · policy fed58954632f916421ef8ba0 · artifact 556c717d900c454846c2559d</p></details></div><div class="decision-math-audit valuation-basis-taxonomy-audit" data-valuation-basis-taxonomy-audit="true"><span class="label">估值口径</span><h3>TTM / 现价隐含 / 卖方目标 / 情景目标已分离</h3><details class="audit-footnote"><summary>查看估值口径审计身份</summary><p class="table-note">schema aihf_valuation_basis_taxonomy.v1 · artifact 0079bc62b04dc4599715b454</p></details></div><div class="decision-math-audit" data-decision-math="true" data-policy-hash="47d424aabfa714168727bdb3" data-input-hash="e265979771ac07192a0b37f9" data-output-hash="9f5b5654cbc80e22c219420e" data-decision-math-action="avoid" data-decision-math-position="0.0"><span class="label">可重放决策数学</span><h3>EV、Kelly 与稳健性重放</h3><details class="audit-footnote"><summary>查看决策数学审计身份</summary><p class="table-note">formula ev-kelly-robustness.1.0.0 · schema aihf_decision_math.v1 · policy 47d424aabfa714168727bdb3 · input e265979771ac07192a0b37f9 · output 9f5b5654cbc80e22c219420e</p></details><div class="decision-math-grid"><div><small>交易成本</small><strong>0.4%</strong></div><div><small>Kelly raw / used</small><strong>0.0% / 0.0%</strong></div><div><small>稳健性前</small><strong>回避 / 0.0%</strong></div><div><small>稳健性后 / 量化前</small><strong>回避 / 0.0%</strong></div></div></div>      </section>
+
+      <!-- FALSIFICATION AND TRACKING -->
+      <section id="interrogation-risk" data-section="interrogation-risk">
+        <div class="section-head"><span class="eyebrow">WHAT CHANGES THE MIND</span><h2>证伪与监控：什么会让我改变判断</h2></div>
+        <div class="grid-3"><div class="note-block"><span class="label">bear</span><h3>30.0% → 40.0%</h3><p>delta +10.0%</p></div><div class="note-block"><span class="label">base</span><h3>50.0% → 45.0%</h3><p>delta -5.0%</p></div><div class="note-block"><span class="label">bull</span><h3>20.0% → 15.0%</h3><p>delta -5.0%</p></div></div>
+        <h3>最近到期的验证节点</h3><div data-primary-claims="true"><article class="claim" data-claim="true" data-claim-id="base.claim.1" data-raw-threshold="h1_revenue &gt;= 55e8 AND gross_margin &gt;= 0.52"><div><span class="tag">基准</span><span class="label">验证节点 01</span></div><div><strong>2026H1 收入至少 55 亿元且综合毛利率不低于 52%</strong>阈值 h1_revenue 不低于 55e8 AND gross_margin 不低于 0.52</div><div><span class="label">截止</span>2026-08-31</div><div><span class="label">验证源</span>公司 2026 年半年度报告</div></article><article class="claim" data-claim="true" data-claim-id="bear.claim.1" data-raw-threshold="h1_revenue &lt; 55e8 OR gross_margin &lt; 0.50"><div><span class="tag">悲观</span><span class="label">验证节点 02</span></div><div><strong>2026H1 收入低于 55 亿元或综合毛利率低于 50%</strong>阈值 h1_revenue 低于 55e8 OR gross_margin 低于 0.50</div><div><span class="label">截止</span>2026-08-31</div><div><span class="label">验证源</span>公司 2026 年半年度报告</div></article><article class="claim" data-claim="true" data-claim-id="bull.claim.1" data-raw-threshold="h1_revenue &gt;= 70e8 AND gross_margin &gt;= 0.55"><div><span class="tag">乐观</span><span class="label">验证节点 03</span></div><div><strong>2026H1 收入至少 70 亿元且综合毛利率不低于 55%</strong>阈值 h1_revenue 不低于 70e8 AND gross_margin 不低于 0.55</div><div><span class="label">截止</span>2026-08-31</div><div><span class="label">验证源</span>公司 2026 年半年度报告</div></article></div>
+        <details class="audit-drawer" data-remaining-claims="true"><summary>按到期日展开其余 5 条断言</summary><div class="drawer-body"><article class="claim" data-claim="true" data-claim-id="base.claim.2"><div><span class="tag">基准</span><span class="label">验证节点 04</span></div><div><strong>FY2026 收入达到 140 至 180 亿元且归母净利率不低于 32%</strong>阈值 140e8 不高于 revenue 不高于 180e8 AND net_margin 不低于 0.32</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>公司 2026 年年度报告</div></article><article class="claim" data-claim="true" data-claim-id="bear.claim.2"><div><span class="tag">悲观</span><span class="label">验证节点 05</span></div><div><strong>FY2026 经营现金流不为正，或应收账款与存货合计继续显著高于年度收入</strong>阈值 operating_cash_flow 不高于 0 OR (accounts_receivable + inventories) / revenue 高于 1.0</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>公司 2026 年年度报告</div></article><article class="claim" data-claim="true" data-claim-id="bull.claim.2"><div><span class="tag">乐观</span><span class="label">验证节点 06</span></div><div><strong>FY2026 前五大客户集中度低于 85%且经营现金流为正</strong>阈值 top5_customer_pct 低于 85 AND operating_cash_flow 高于 0</div><div><span class="label">截止</span>2027-04-30</div><div><span class="label">验证源</span>公司 2026 年年度报告</div></article><article class="claim" data-claim="true" data-claim-id="base.claim.3"><div><span class="tag">基准</span><span class="label">验证节点 07</span></div><div><strong>FY2027 收入达到 280 亿元且归母净利率达到 36%</strong>阈值 revenue 不低于 280e8 AND net_margin 不低于 0.36</div><div><span class="label">截止</span>2028-04-30</div><div><span class="label">验证源</span>公司 2027 年年度报告</div></article><article class="claim" data-claim="true" data-claim-id="bull.claim.3"><div><span class="tag">乐观</span><span class="label">验证节点 08</span></div><div><strong>FY2027 收入达到 430 亿元且归母净利率达到 42%</strong>阈值 revenue 不低于 430e8 AND net_margin 不低于 0.42</div><div><span class="label">截止</span>2028-04-30</div><div><span class="label">验证源</span>公司 2027 年年度报告</div></article></div></details>
+<h3>复盘节点</h3><div class="review-grid"><article class="review-card"><span class="label">7 天</span><strong>2026-07-23</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1/H3 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article><article class="review-card"><span class="label">30 天</span><strong>2026-08-15</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1/H3 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article><article class="review-card"><span class="label">90 天</span><strong>2026-10-14</strong><ul class="compact"><li>最新价相对记录日价格的涨跌幅</li><li>是否触发止损/加仓/减仓条件</li><li>核心假设 H1/H3 是否仍成立</li><li>最新事件/研报/资金流是否改变原判断</li><li>若判断错误，归因到数据缺失、估值假设、事件识别或仓位纪律</li></ul></article></div>        <details class="audit-drawer"><summary>展开完整质询日志与失败预演</summary><div class="drawer-body">
+<article class="challenge"><div class="challenge-meta">C1 / taleb / fatal / bull</div><p>2025 年报明确披露客户类别为有一定技术基础的商业客户群体；云服务器、数据中心、云计算、智能制造、智能零售、智能教育、智能家居和智能电网仅为应用场景，不得改写为客户身份；前五大客户收入占比 88.66%，但未据此推断客户名称。 客户类别和应用场景必须分开；前五大客户高度集中且未披露名称，新增客户收入不能直接外推为稳定复购。</p><div class="response"><b>revise</b> · 下调 bull 概率，并把客户复购、回款和集中度下降设为硬验证条件。<br>证据引用：<a class="evidence-ref" id="evidence-ref-challenge-C1-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></div></article><article class="challenge"><div class="challenge-meta">C2 / pabrai / major / base</div><p>FY2025 FCF margin 约 -16.42%、经营现金流/净利润约 -0.24；营运资本/收入约 86.40%，存货/收入约 76.09%。 库存、经营现金流与自由现金流必须共同验证增长质量，利润高增不能替代现金转化。</p><div class="response"><b>accept</b> · 接受质讯；base 净利率和概率均以现金流修复为前提。<br>证据引用：<a class="evidence-ref" id="evidence-ref-challenge-C2-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a></div></article><article class="challenge"><div class="challenge-meta">C3 / damodaran / major / base</div><p>截至 2026-07-15，Tushare 同日收盘价 1347.46 元、市值 8466.00 亿元；PE TTM 311.60 倍，位于历史正值样本 44.0% 分位（n=300，中位数 320.47 倍）；PB 65.77 倍位于 94.2% 分位（n=1,232，中位数 12.62 倍）；PS 102.36 倍位于 57.5% 分位（n=1,232，中位数 96.71 倍）。 当前估值只提供市场上下文，不可反推目标 PE；倍数必须由独立卖方显式 forward PE 政策校准。</p><div class="response"><b>accept</b> · 接受质讯；不使用现价或目标价反推倍数，并提高 bear 权重。<br>证据引用：<a class="evidence-ref" id="evidence-ref-challenge-C3-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a></div></article><article class="challenge"><div class="challenge-meta">C4 / ricky / minor / base</div><p>截至 2026-07-15，qfq 一个月收益约 +3.10%，三个月约 +53.74%；现价低于 MA20 但高于 MA60，量比约 1.00。 技术面只影响入场节奏和仓位，不改写收入、利润率或基本面概率。</p><div class="response"><b>accept</b> · 技术面验证只进入量化闸门，不升级基本面动作。<br>证据引用：<a class="evidence-ref" id="evidence-ref-challenge-C4-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a></div></article>          <article class="premortem"><h3>Bear pre-mortem</h3><p><b>失败路径</b></p><ol><li>未提供</li></ol><p><b>可能误读</b></p><ul></ul><p><b>最早预警：</b>未提供最早预警断言</p></article>
+          <div class="grid-2"><div class="note-block risk"><h3>仓位与风险</h3><p>仓位上限 10.0% · 止损 -12.0% · 年化波动 70.5%</p><ul class="compact"><li>极高估值与预期拥挤：公司 2026-07-01 风险提示披露，6 月 30 日收盘价 1595.55 元、滚动市盈率 368.97 倍、市净率 77.88 倍，显著高于行业水平；即使随后股价回落，估值仍要求多年高增长兑现</li><li>客户集中与持续性：2025 年前五大客户销售额占比 88.66%，其中第三大客户为长期合作伙伴，其余前五大客户均为本期新增；应收账款和合同资产前五名集中度升至 94.09%</li><li>供应链集中与限制：2025 年前五大供应商采购额占比 75.23%，第一大供应商占比 55.34%；Fabless 模式、上游供给与实体清单约束使交付和成本对少数环节敏感</li></ul></div><div class="note-block"><h3>组合约束</h3><p><b>相关性不可计算</b>：未提供有效持仓样本，不能用 0.0% 代替。</p><p>底层押注 未分类：0.0% → 0.0% / 上限 20.0%</p></div></div>
+        </div></details>
+      </section>
+
+      <section id="tracking" data-section="tracking" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">WHAT CHANGED</span><h2>与上一份报告相比，真正变了什么</h2><p class="lede">首次记录，暂无上一期可比。</p></div>
+        <div class="grid-3"><article class="tracking-change"><span class="label">价格</span><h3>未提供 → 1347.46</h3><p>delta 未提供</p></article><article class="tracking-change"><span class="label">动作</span><h3>未提供 → avoid</h3><p>delta 不适用</p></article><article class="tracking-change"><span class="label">仓位</span><h3>未提供 → 0.0%</h3><p>delta 未提供</p></article><article class="tracking-change"><span class="label">Bear 目标</span><h3>未提供 → 522.00</h3><p>delta 未提供</p></article><article class="tracking-change"><span class="label">Base 目标</span><h3>未提供 → 1123.00</h3><p>delta 未提供</p></article><article class="tracking-change"><span class="label">Bull 目标</span><h3>未提供 → 2069.00</h3><p>delta 未提供</p></article></div>
+        <details class="audit-drawer"><summary>查看全部变化与未变化字段</summary><div class="drawer-body"><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-20">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 20" aria-describedby="table-scroll-hint-20"><table><thead><tr><th>字段</th><th>上次</th><th>本次</th><th>delta</th><th>状态</th></tr></thead><tbody><tr><td>价格</td><td>未提供</td><td>1347.46</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>动作</td><td>未提供</td><td>avoid</td><td>不适用</td><td class="tracking-changed">changed</td></tr><tr><td>仓位</td><td>未提供</td><td>0.0%</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>Bear 目标</td><td>未提供</td><td>522.00</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>Base 目标</td><td>未提供</td><td>1123.00</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>Bull 目标</td><td>未提供</td><td>2069.00</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>短期分</td><td>未提供</td><td>47.6</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>中期分</td><td>未提供</td><td>56.3</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>长期分</td><td>未提供</td><td>67.7</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>最大仓位</td><td>未提供</td><td>10.0%</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>EV</td><td>未提供</td><td>-24.4%</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>Odds</td><td>未提供</td><td>0.25</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>稳健性</td><td>未提供</td><td>stable</td><td>不适用</td><td class="tracking-changed">changed</td></tr><tr><td>量化分</td><td>未提供</td><td>76.2</td><td>未提供</td><td class="tracking-changed">changed</td></tr><tr><td>量化信号</td><td>未提供</td><td>supportive</td><td>不适用</td><td class="tracking-changed">changed</td></tr><tr><td>量化仓位乘数</td><td>未提供</td><td>×1.00</td><td>未提供</td><td class="tracking-changed">changed</td></tr></tbody></table></div></div></details>
+      </section>
+
+      <!-- EVIDENCE ROOM -->
+      <section id="research-intel" data-section="research-intel" data-evidence-room="true">
+        <div class="section-head"><span class="eyebrow">EVIDENCE ROOM</span><h2>证据室：30 分钟尽调与机器复核</h2><p class="lede">原始 164 条，质量门后核心合格 64 条，隔离 100 条；问句、残句、重复和范围未核材料不进入核心排序，原始材料仍完整保留。</p></div>
+        <div class="evidence-room-summary"><div><span class="label">原始证据</span><h3>164</h3></div><div><span class="label">核心合格</span><h3>64</h3></div><div><span class="label">正文样本</span><h3>40</h3></div><div><span class="label">基本面覆盖</span><h3>95%</h3></div></div>
+        <h3>关键决策证据</h3>
+        <p class="table-note">正文先列最关键的 5 条；其余决策证据、来源路径与完整回链保留在折叠审计层，正文脚注仍可直接定位。</p>
+        <div class="evidence-index" data-evidence-catalog="true"><article class="evidence-ledger-entry" id="evidence-E01" data-evidence-id="E01" data-evidence-entry="E01" data-primary-evidence="true" tabindex="-1" aria-labelledby="evidence-E01-label" aria-describedby="evidence-E01-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E01-label" href="#decision-spine" aria-label="返回核心决策主线">E01</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E01-statement">FY2025 收入 64.97 亿元、归母净利润 20.59 亿元、经营现金流 -4.98 亿元；数据来自 as-of 前已披露的年度 PIT 快照。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 15 处</summary><div class="drawer-body"><div class="evidence-meta">official_filing_pit_snapshot / fundamental_snapshot.json#/annual/0</div><nav class="evidence-backlinks" aria-label="E01 引用回链"><a data-evidence-backlink="E01" href="#evidence-ref-decision-spine-thesis-E01">返回 核心投资命题</a><a data-evidence-backlink="E01" href="#evidence-ref-hypothesis-H1-evidence-E01">返回 H1 证据</a><a data-evidence-backlink="E01" href="#evidence-ref-hypothesis-H3-evidence-E01">返回 H3 证据</a><a data-evidence-backlink="E01" href="#evidence-ref-scenario-bear-evidence-E01">返回 悲观情景证据</a><a data-evidence-backlink="E01" href="#evidence-ref-scenario-base-evidence-E01">返回 基准情景证据</a><a data-evidence-backlink="E01" href="#evidence-ref-scenario-bull-evidence-E01">返回 乐观情景证据</a><small>另有 9 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E02" data-evidence-id="E02" data-evidence-entry="E02" data-primary-evidence="true" tabindex="-1" aria-labelledby="evidence-E02-label" aria-describedby="evidence-E02-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E02-label" href="#decision-spine" aria-label="返回核心决策主线">E02</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E02-statement">2026Q1 收入 28.85 亿元、归母净利润 10.13 亿元、单季净利率约 35.12%，自由现金流约 6.35 亿元。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 15 处</summary><div class="drawer-body"><div class="evidence-meta">official_filing_pit_snapshot / fundamental_snapshot.json#/quarterly/0</div><nav class="evidence-backlinks" aria-label="E02 引用回链"><a data-evidence-backlink="E02" href="#evidence-ref-decision-spine-thesis-E02">返回 核心投资命题</a><a data-evidence-backlink="E02" href="#evidence-ref-hypothesis-H1-evidence-E02">返回 H1 证据</a><a data-evidence-backlink="E02" href="#evidence-ref-hypothesis-H3-evidence-E02">返回 H3 证据</a><a data-evidence-backlink="E02" href="#evidence-ref-scenario-bear-evidence-E02">返回 悲观情景证据</a><a data-evidence-backlink="E02" href="#evidence-ref-scenario-base-evidence-E02">返回 基准情景证据</a><a data-evidence-backlink="E02" href="#evidence-ref-scenario-bull-evidence-E02">返回 乐观情景证据</a><small>另有 9 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E03" data-evidence-id="E03" data-evidence-entry="E03" data-primary-evidence="true" tabindex="-1" aria-labelledby="evidence-E03-label" aria-describedby="evidence-E03-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E03-label" href="#decision-spine" aria-label="返回核心决策主线">E03</a><span class="tag">仅观察 · low</span></div>
+  <p id="evidence-E03-statement">待动态绑定：bear 假设定义</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 0 处</summary><div class="drawer-body"><div class="evidence-meta">top_down_scenario_assumption / earnings_model.json#/scenarios/bear</div><nav class="evidence-backlinks" aria-label="E03 引用回链"><a data-evidence-backlink="E03" href="#decision-spine">返回核心决策主线</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E04" data-evidence-id="E04" data-evidence-entry="E04" data-primary-evidence="true" tabindex="-1" aria-labelledby="evidence-E04-label" aria-describedby="evidence-E04-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E04-label" href="#decision-spine" aria-label="返回核心决策主线">E04</a><span class="tag">仅观察 · low</span></div>
+  <p id="evidence-E04-statement">待动态绑定：base 假设定义</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 0 处</summary><div class="drawer-body"><div class="evidence-meta">top_down_scenario_assumption / earnings_model.json#/scenarios/base</div><nav class="evidence-backlinks" aria-label="E04 引用回链"><a data-evidence-backlink="E04" href="#decision-spine">返回核心决策主线</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E05" data-evidence-id="E05" data-evidence-entry="E05" data-primary-evidence="true" tabindex="-1" aria-labelledby="evidence-E05-label" aria-describedby="evidence-E05-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E05-label" href="#decision-spine" aria-label="返回核心决策主线">E05</a><span class="tag">仅观察 · low</span></div>
+  <p id="evidence-E05-statement">待动态绑定：bull 假设定义</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 0 处</summary><div class="drawer-body"><div class="evidence-meta">top_down_scenario_assumption / earnings_model.json#/scenarios/bull</div><nav class="evidence-backlinks" aria-label="E05 引用回链"><a data-evidence-backlink="E05" href="#decision-spine">返回核心决策主线</a></nav></div></details>
+</article></div>
+        <details class="evidence-drawer evidence-catalog-more" data-evidence-catalog-more="true">
+          <summary><span>其余决策证据</span><small>11 条</small></summary>
+          <div class="evidence-index"><article class="evidence-ledger-entry" id="evidence-E06" data-evidence-id="E06" data-evidence-entry="E06" tabindex="-1" aria-labelledby="evidence-E06-label" aria-describedby="evidence-E06-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E06-label" href="#decision-spine" aria-label="返回核心决策主线">E06</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E06-statement">截至 2026-07-15，Tushare 同日收盘价 1347.46 元、市值 8466.00 亿元；PE TTM 311.60 倍，位于历史正值样本 44.0% 分位（n=300，中位数 320.47 倍）；PB 65.77 倍位于 94.2% 分位（n=1,232，中位数 12.62 倍）；PS 102.36 倍位于 57.5% 分位（n=1,232，中位数 96.71 倍）。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 10 处</summary><div class="drawer-body"><div class="evidence-meta">research_os_valuation / valuation_lab.json#/current</div><nav class="evidence-backlinks" aria-label="E06 引用回链"><a data-evidence-backlink="E06" href="#evidence-ref-decision-spine-thesis-E06">返回 核心投资命题</a><a data-evidence-backlink="E06" href="#evidence-ref-hypothesis-H1-evidence-E06">返回 H1 证据</a><a data-evidence-backlink="E06" href="#evidence-ref-hypothesis-H3-evidence-E06">返回 H3 证据</a><a data-evidence-backlink="E06" href="#evidence-ref-scenario-bear-evidence-E06">返回 悲观情景证据</a><a data-evidence-backlink="E06" href="#evidence-ref-scenario-base-evidence-E06">返回 基准情景证据</a><a data-evidence-backlink="E06" href="#evidence-ref-scenario-bull-evidence-E06">返回 乐观情景证据</a><small>另有 4 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E07" data-evidence-id="E07" data-evidence-entry="E07" tabindex="-1" aria-labelledby="evidence-E07-label" aria-describedby="evidence-E07-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E07-label" href="#decision-spine" aria-label="返回核心决策主线">E07</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E07-statement">截至 2026-07-15，Tushare 历史正值样本中：PE TTM 311.60 倍位于 44.0% 分位（n=300，中位数 320.47 倍）；PB 65.77 倍位于 94.2% 分位（n=1,232，中位数 12.62 倍）；PS 102.36 倍位于 57.5% 分位（n=1,232，中位数 96.71 倍）。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 8 处</summary><div class="drawer-body"><div class="evidence-meta">research_os_valuation_history / valuation_lab.json#/historical_percentiles</div><nav class="evidence-backlinks" aria-label="E07 引用回链"><a data-evidence-backlink="E07" href="#evidence-ref-hypothesis-H1-evidence-E07">返回 H1 证据</a><a data-evidence-backlink="E07" href="#evidence-ref-hypothesis-H3-evidence-E07">返回 H3 证据</a><a data-evidence-backlink="E07" href="#evidence-ref-scenario-bear-evidence-E07">返回 悲观情景证据</a><a data-evidence-backlink="E07" href="#evidence-ref-scenario-base-evidence-E07">返回 基准情景证据</a><a data-evidence-backlink="E07" href="#evidence-ref-scenario-bull-evidence-E07">返回 乐观情景证据</a><a data-evidence-backlink="E07" href="#evidence-ref-assumption-scenario-bear-probability-evidence-E07">返回 假设 scenario.bear.probability</a><small>另有 2 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E08" data-evidence-id="E08" data-evidence-entry="E08" tabindex="-1" aria-labelledby="evidence-E08-label" aria-describedby="evidence-E08-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E08-label" href="#decision-spine" aria-label="返回核心决策主线">E08</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E08-statement">FY2025 FCF margin 约 -16.42%、经营现金流/净利润约 -0.24；营运资本/收入约 86.40%，存货/收入约 76.09%。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 12 处</summary><div class="drawer-body"><div class="evidence-meta">research_os_financial_quality / financial_quality.json#/annual/0</div><nav class="evidence-backlinks" aria-label="E08 引用回链"><a data-evidence-backlink="E08" href="#evidence-ref-hypothesis-H1-evidence-E08">返回 H1 证据</a><a data-evidence-backlink="E08" href="#evidence-ref-hypothesis-H3-evidence-E08">返回 H3 证据</a><a data-evidence-backlink="E08" href="#evidence-ref-scenario-bear-evidence-E08">返回 悲观情景证据</a><a data-evidence-backlink="E08" href="#evidence-ref-scenario-base-evidence-E08">返回 基准情景证据</a><a data-evidence-backlink="E08" href="#evidence-ref-scenario-bull-evidence-E08">返回 乐观情景证据</a><a data-evidence-backlink="E08" href="#evidence-ref-challenge-C2-evidence-E08">返回 质询证据 C2</a><small>另有 6 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E09" data-evidence-id="E09" data-evidence-entry="E09" tabindex="-1" aria-labelledby="evidence-E09-label" aria-describedby="evidence-E09-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E09-label" href="#decision-spine" aria-label="返回核心决策主线">E09</a><span class="tag">可用于模型 · medium</span></div>
+  <p id="evidence-E09-statement">截至 2026-07-15，按 EV=市值+有息负债-现金重放，企业价值为 8452.82 亿元；FY2025 收入 64.97 亿元、经营利润率 31.73%。在 WACC 10.00%、永续增长率 3.00% 下，市场隐含未来 5 年收入增速约 135.36%；3×3 利润率/WACC 敏感性区间为 109.37% 至 162.31%。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 8 处</summary><div class="drawer-body"><div class="evidence-meta">research_os_valuation / valuation_lab.json#/reverse_dcf</div><nav class="evidence-backlinks" aria-label="E09 引用回链"><a data-evidence-backlink="E09" href="#evidence-ref-hypothesis-H1-evidence-E09">返回 H1 证据</a><a data-evidence-backlink="E09" href="#evidence-ref-hypothesis-H3-evidence-E09">返回 H3 证据</a><a data-evidence-backlink="E09" href="#evidence-ref-scenario-bear-evidence-E09">返回 悲观情景证据</a><a data-evidence-backlink="E09" href="#evidence-ref-scenario-base-evidence-E09">返回 基准情景证据</a><a data-evidence-backlink="E09" href="#evidence-ref-scenario-bull-evidence-E09">返回 乐观情景证据</a><a data-evidence-backlink="E09" href="#evidence-ref-assumption-scenario-bear-probability-evidence-E09">返回 假设 scenario.bear.probability</a><small>另有 2 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E10" data-evidence-id="E10" data-evidence-entry="E10" tabindex="-1" aria-labelledby="evidence-E10-label" aria-describedby="evidence-E10-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E10-label" href="#decision-spine" aria-label="返回核心决策主线">E10</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E10-statement">截至 2026-07-15，qfq 一个月收益约 +3.10%，三个月约 +53.74%；现价低于 MA20 但高于 MA60，量比约 1.00。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 9 处</summary><div class="drawer-body"><div class="evidence-meta">market_timeseries / technical_data.json#/return_1m</div><nav class="evidence-backlinks" aria-label="E10 引用回链"><a data-evidence-backlink="E10" href="#evidence-ref-hypothesis-H1-evidence-E10">返回 H1 证据</a><a data-evidence-backlink="E10" href="#evidence-ref-hypothesis-H3-evidence-E10">返回 H3 证据</a><a data-evidence-backlink="E10" href="#evidence-ref-scenario-bear-evidence-E10">返回 悲观情景证据</a><a data-evidence-backlink="E10" href="#evidence-ref-scenario-base-evidence-E10">返回 基准情景证据</a><a data-evidence-backlink="E10" href="#evidence-ref-scenario-bull-evidence-E10">返回 乐观情景证据</a><a data-evidence-backlink="E10" href="#evidence-ref-challenge-C4-evidence-E10">返回 质询证据 C4</a><small>另有 3 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E11" data-evidence-id="E11" data-evidence-entry="E11" tabindex="-1" aria-labelledby="evidence-E11-label" aria-describedby="evidence-E11-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E11-label" href="#decision-spine" aria-label="返回核心决策主线">E11</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E11-statement">控股股东为陈天石；实际控制人为陈天石；前十名股东表中的最大持有人为陈天石，持股 28.35%；该角色不自动升格为控股股东；天健会计师事务所（特殊普通合伙）出具标准无保留意见。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 4 处</summary><div class="drawer-body"><div class="evidence-meta">governance_profile / official_disclosures.json#/evidence_sets/governance</div><nav class="evidence-backlinks" aria-label="E11 引用回链"><a data-evidence-backlink="E11" href="#evidence-ref-hypothesis-H1-evidence-E11">返回 H1 证据</a><a data-evidence-backlink="E11" href="#evidence-ref-hypothesis-H3-evidence-E11">返回 H3 证据</a><a data-evidence-backlink="E11" href="#evidence-ref-scenario-base-evidence-E11">返回 基准情景证据</a><a data-evidence-backlink="E11" href="#evidence-ref-assumption-scenario-base-probability-evidence-E11">返回 假设 scenario.base.probability</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E13" data-evidence-id="E13" data-evidence-entry="E13" tabindex="-1" aria-labelledby="evidence-E13-label" aria-describedby="evidence-E13-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E13-label" href="#decision-spine" aria-label="返回核心决策主线">E13</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E13-statement">2025 年报明确披露客户类别为有一定技术基础的商业客户群体；云服务器、数据中心、云计算、智能制造、智能零售、智能教育、智能家居和智能电网仅为应用场景，不得改写为客户身份；前五大客户收入占比 88.66%，但未据此推断客户名称。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 10 处</summary><div class="drawer-body"><div class="evidence-meta">annual_report_profile / official_disclosures.json#/evidence_sets/customers</div><nav class="evidence-backlinks" aria-label="E13 引用回链"><a data-evidence-backlink="E13" href="#evidence-ref-decision-spine-thesis-E13">返回 核心投资命题</a><a data-evidence-backlink="E13" href="#evidence-ref-hypothesis-H1-evidence-E13">返回 H1 证据</a><a data-evidence-backlink="E13" href="#evidence-ref-hypothesis-H3-evidence-E13">返回 H3 证据</a><a data-evidence-backlink="E13" href="#evidence-ref-scenario-bear-evidence-E13">返回 悲观情景证据</a><a data-evidence-backlink="E13" href="#evidence-ref-scenario-base-evidence-E13">返回 基准情景证据</a><a data-evidence-backlink="E13" href="#evidence-ref-scenario-bull-evidence-E13">返回 乐观情景证据</a><small>另有 4 处引用</small></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E19" data-evidence-id="E19" data-evidence-entry="E19" tabindex="-1" aria-labelledby="evidence-E19-label" aria-describedby="evidence-E19-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E19-label" href="#decision-spine" aria-label="返回核心决策主线">E19</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E19-statement">截至 2026-07-15，PIT 总股本为 6.28292969 亿股（原始股数 628292969，缩放因子 100000000）；基准期 20260331、披露日 20260430，口径为 as_of_total_shares_after_implemented_corporate_action，公司行动调整为 observed_after_implementation。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 6 处</summary><div class="drawer-body"><div class="evidence-meta">official_market_pit_observation / provider_results.json#/valuation_history/rows/1231/shares</div><nav class="evidence-backlinks" aria-label="E19 引用回链"><a data-evidence-backlink="E19" href="#evidence-ref-hypothesis-H1-evidence-E19">返回 H1 证据</a><a data-evidence-backlink="E19" href="#evidence-ref-hypothesis-H3-evidence-E19">返回 H3 证据</a><a data-evidence-backlink="E19" href="#evidence-ref-scenario-bear-evidence-E19">返回 悲观情景证据</a><a data-evidence-backlink="E19" href="#evidence-ref-scenario-base-evidence-E19">返回 基准情景证据</a><a data-evidence-backlink="E19" href="#evidence-ref-scenario-bull-evidence-E19">返回 乐观情景证据</a><a data-evidence-backlink="E19" href="#evidence-ref-assumption-capital-shares_yi-evidence-E19">返回 假设 capital.shares_yi</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E20" data-evidence-id="E20" data-evidence-entry="E20" tabindex="-1" aria-labelledby="evidence-E20-label" aria-describedby="evidence-E20-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E20-label" href="#decision-spine" aria-label="返回核心决策主线">E20</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E20-statement">bear 情景目标 PE 为 70.0x；政策模式 sellside_explicit_forward_pe_quantiles，状态 calibrated，可用于决策。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 3 处</summary><div class="drawer-body"><div class="evidence-meta">target_pe_policy_output / target_pe_policy.json#/outputs/bear</div><nav class="evidence-backlinks" aria-label="E20 引用回链"><a data-evidence-backlink="E20" href="#evidence-ref-scenario-bear-valuation-E20">返回 悲观情景valuation</a><a data-evidence-backlink="E20" href="#evidence-ref-scenario-bear-evidence-E20">返回 悲观情景证据</a><a data-evidence-backlink="E20" href="#evidence-ref-assumption-scenario-bear-target_pe-evidence-E20">返回 假设 scenario.bear.target_pe</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E21" data-evidence-id="E21" data-evidence-entry="E21" tabindex="-1" aria-labelledby="evidence-E21-label" aria-describedby="evidence-E21-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E21-label" href="#decision-spine" aria-label="返回核心决策主线">E21</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E21-statement">base 情景目标 PE 为 70.0x；政策模式 sellside_explicit_forward_pe_quantiles，状态 calibrated，可用于决策。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 6 处</summary><div class="drawer-body"><div class="evidence-meta">target_pe_policy_output / target_pe_policy.json#/outputs/base</div><nav class="evidence-backlinks" aria-label="E21 引用回链"><a data-evidence-backlink="E21" href="#evidence-ref-hypothesis-H1-evidence-E21">返回 H1 证据</a><a data-evidence-backlink="E21" href="#evidence-ref-hypothesis-H3-claim-E21">返回 H3 命题</a><a data-evidence-backlink="E21" href="#evidence-ref-hypothesis-H3-evidence-E21">返回 H3 证据</a><a data-evidence-backlink="E21" href="#evidence-ref-scenario-base-valuation-E21">返回 基准情景valuation</a><a data-evidence-backlink="E21" href="#evidence-ref-scenario-base-evidence-E21">返回 基准情景证据</a><a data-evidence-backlink="E21" href="#evidence-ref-assumption-scenario-base-target_pe-evidence-E21">返回 假设 scenario.base.target_pe</a></nav></div></details>
+</article><article class="evidence-ledger-entry" id="evidence-E22" data-evidence-id="E22" data-evidence-entry="E22" tabindex="-1" aria-labelledby="evidence-E22-label" aria-describedby="evidence-E22-statement">
+  <div class="evidence-ledger-head"><a class="evidence-backlink" id="evidence-E22-label" href="#decision-spine" aria-label="返回核心决策主线">E22</a><span class="tag">可用于模型 · high</span></div>
+  <p id="evidence-E22-statement">bull 情景目标 PE 为 72.0x；政策模式 sellside_explicit_forward_pe_quantiles，状态 calibrated，可用于决策。</p>
+  <details class="evidence-entry-audit"><summary>来源与引用 · 3 处</summary><div class="drawer-body"><div class="evidence-meta">target_pe_policy_output / target_pe_policy.json#/outputs/bull</div><nav class="evidence-backlinks" aria-label="E22 引用回链"><a data-evidence-backlink="E22" href="#evidence-ref-scenario-bull-valuation-E22">返回 乐观情景valuation</a><a data-evidence-backlink="E22" href="#evidence-ref-scenario-bull-evidence-E22">返回 乐观情景证据</a><a data-evidence-backlink="E22" href="#evidence-ref-assumption-scenario-bull-target_pe-evidence-E22">返回 假设 scenario.bull.target_pe</a></nav></div></details>
+</article></div>
+        </details>
+        <article class="evidence-group" data-research-dimension="pricing">
+          <details class="evidence-drawer">
+            <summary><span>定价与 ASP</span><small>19 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>总体来看,当前推理环节的成本和芯片供应压力比训练环节更大。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>近期的价格策略是一个动态博弈的结果,主要受市场供求关系和自身能力溢价的影响。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>如果竞争对手在能力上追平甚至超越,并采取降价策略,智谱也将面临降价的挑战。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>关于价格查询,可以在API 平台bigmodel.cn 上查看最新的价格信息。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>此外,注册用户通常会通过短信等方式接收到价格变动的通知。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 14 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="volume">
+          <details class="evidence-drawer">
+            <summary><span>出货与产能</span><small>26 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>虽然目前国产芯片尚不能完全满足需求,但未来几年内有望追赶上来。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>对于推理任务,其性能要求相对较低,H 系列芯片在性价比上尚可接受,因此市场上也有采购需求,但主要问题是供应短缺,买不到。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>公司内部销售的优先级排序中,能源电力和运营商领域与集团内部(百度)需求并列第一。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>能源电力领域每年都有海量的、持续的采购需求,其采购额相对固定,且具备充足的支付能力和业务场景,未来几年的需求是可持续的。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>包括腾讯、阿里在内的许多公司已经开始逐步接受并使用昇腾、昆仑芯、摩尔线程、沐曦等国产卡,寒武纪因产能有限接触相对较少。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 21 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="customers">
+          <details class="evidence-drawer">
+            <summary><span>客户与需求</span><small>22 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>目前, 国内主要通过多种渠道获取算力,例如租赁,或与第三方算力提供商及合资公司进行合作共建。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>因此,租赁和合作共建是当前更可行的方式。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>虽然没有进行过非常专业的横向评测,但从目前的合作情况来看,平头哥、摩尔线程和沐曦的表现都相当不错,并且与智谱的合作比较紧密。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>昇腾也一直在进行适配与合作,并且是早期一体机项目的硬件合作方之一,当时的合作方还包括UCloud。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>反而是吉利汽车这类传统领域的客户,其接受度相对较低,订单的持续性不强。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 17 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="supply_chain">
+          <details class="evidence-drawer">
+            <summary><span>供应链</span><small>20 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>• 供应链情况: – 国内12nm 工艺最高仅可支持64 核CPU 生产,更高核数产品国内工艺暂无法满足,飞腾80 核及以上产品需预定产能,订单规模至少为10 万片级别,集团已按目标规划备货。</p><div class="evidence-meta">2026-05-22 / 知识星球:国产AI芯片及CPU市场更新，智算需求规模估计，超节点发展预期等-英伟达、寒武纪、海光、天数智芯、沐曦、壁仞科技、摩尔、飞腾202605 / 研究样本 / confidence high / freshness current / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>同时当前英特尔、AMD 的高密度CPU 交期已达24 个月,供应不足也将进一步推动国产CPU 的替代需求。</p><div class="evidence-meta">2026-05-22 / 知识星球:国产AI芯片及CPU市场更新，智算需求规模估计，超节点发展预期等-英伟达、寒武纪、海光、天数智芯、沐曦、壁仞科技、摩尔、飞腾202605 / 研究样本 / confidence high / freshness current / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>– 供应链:台积电、群创均采用采购康宁玻璃原片、自行加工TGV 板的模式,同时与ABF 膜厂商开展合作。</p><div class="evidence-meta">2026-07-08 / 知识星球:玻璃基板厂商调研：GlassBridge技术路线解析，产业链影响，玻璃基板进展更新，市场应用前景202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>上游材料端玻璃原材目前主要由肖特、康宁、电气硝子、旭硝子等欧美日厂商供应,存在地缘政治导致断供的风险,国产玻璃替代进展较快,戈碧迦、沃格均已实现小批量应用,主要覆盖显示及部分半导体领域;</p><div class="evidence-meta">2026-07-08 / 知识星球:玻璃基板厂商调研：GlassBridge技术路线解析，产业链影响，玻璃基板进展更新，市场应用前景202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>目前,公司虽已是英伟达的合格供应商,但叠层固态电容产品尚未进入其H100 和H200 供应链,公司正在积极争取。</p><div class="evidence-meta">2026-07-04 / 知识星球:超级电容大厂调研：MLPC供需格局,牛角电容导入进展,超级电容竞争格局-聚焦松下、NCC、Rubycon、江海、丰宾、艾华、金山、武藏、奥威、烯晶碳能、AVX等202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 15 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="technology">
+          <details class="evidence-drawer">
+            <summary><span>技术路线</span><small>23 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>用于模型训练的芯片是高优先级保障的,因为持续的模型迭代是后续推理应用的基础。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>验证周期通常不长。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>产品在正式推向市场前,厂商内部会完成自身的验证。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>通常情况下,客户在采购前也会完成POC(概念验证)测试,尤其是在小集群或非超大集群环境中。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>品先采购入库,再进行边运行边验证的特殊情况。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 18 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="competition">
+          <details class="evidence-drawer">
+            <summary><span>竞争格局</span><small>21 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>度极快,能够准确预判一年的发展已属不易,展望两到三年的格局非常困难。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>如果竞争对手在能力上追平甚至超越,并采取降价策略,智谱也将面临降价的挑战。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>早在2025 年下半年,市场就已普遍缺卡,2026 年的订单格局也基本确定,因此不会再出现2024 年或2025 年上半年可能因应地缘政治或时局变化而出现的超售情况。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>市场格局的变化可能不会主要体现在海光和寒武纪身上。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>真正的竞争压力将主要来自阿里平头哥。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 16 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="risks">
+          <details class="evidence-drawer">
+            <summary><span>风险反证</span><small>18 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>因此,未来谁能成为第一,或者是否会形成多家并驾齐驱的局面,都存在很大的不确定性。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>直接购买高风险的、来历不明的芯片渠道现在已受到严格限制,批次等信息成为不可触碰的红线。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>产品原计划于2026 年第二季度发布,但目前已出现延迟。</p><div class="evidence-meta">2026-06-14 / 知识星球:昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>二是智能体AI 落地带来的增量需求,智能体场景对CPU 需求显著提升,AI 服务器原有的CPU 和GPU 配比约为2:8,智能体场景下配比将缩小到1:1,且智能体场景需求以高密度CPU 为主,要求核数多、内存大、延迟低。</p><div class="evidence-meta">2026-05-22 / 知识星球:国产AI芯片及CPU市场更新，智算需求规模估计，超节点发展预期等-英伟达、寒武纪、海光、天数智芯、沐曦、壁仞科技、摩尔、飞腾202605 / 研究样本 / confidence high / freshness current / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>– 材料端:玻璃原材目前主要被肖特、康宁、电气硝子、旭硝子垄断, 存在断供风险,国产替代进展较快,戈碧迦、沃格光电已实现小批量应用,主要覆盖显示领域。</p><div class="evidence-meta">2026-07-08 / 知识星球:玻璃基板厂商调研：GlassBridge技术路线解析，产业链影响，玻璃基板进展更新，市场应用前景202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><p class="table-note">另有 13 条进入附录证据池。</p></div>
+          </details>
+        </article>
+        <article class="evidence-group" data-research-dimension="financial_forecast">
+          <details class="evidence-drawer">
+            <summary><span>财务预测</span><small>15 条</small></summary>
+            <div class="evidence-stack"><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>正式卖方证据共重放 57 份个股报告、5 家合格目标价机构与 36 条预测修订；目标 PE 仅由同报告、同 FY 的显式目标价/EPS 样本校准。</p><div class="evidence-meta">2026-07-15 / sellside_evidence.json / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>虽然长远来看,芯片限制会对业务和营收产生影响,但训练所需的算力目前仍能得到保障。</p><div class="evidence-meta">2026-07-10 / 知识星球:模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">事实</span><p>目前,在AI 服务器相关业务中,海外客户的营收占比达到80%,绝大部分业务来自北美市场。</p><div class="evidence-meta">2026-06-29 / 知识星球:日系MLCC龙头近况更新一AI服务器占比、扩产进度及下半年展望202606 / 研究样本 / confidence high / freshness fresh / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>T 布目前的盈利状况可称为“暴利”。</p><div class="evidence-meta">2026-05-29 / 知识星球:T布龙头调研：供需紧张缺口驱动高毛利，织机与特种纱构筑行业壁垒202605 / 研究样本 / confidence high / freshness current / weight 未标注 / model False</div></div><div class="evidence" data-research-evidence="true"><span class="tag">观点</span><p>台湾市场2025 年营收约2000 万人民币,2026 年预计快速增长,已导入华硕、微星等客户;</p><div class="evidence-meta">2026-05-26 / 知识星球:国内DrMOS主要供应商进展跟踪.202605 / 研究样本 / confidence high / freshness current / weight 未标注 / model False</div></div><p class="table-note">另有 10 条进入附录证据池。</p></div>
+          </details>
+        </article>
+      </section>
+
+      <section id="appendix" data-section="appendix" data-reading-tier="audit" class="section-secondary">
+        <div class="section-head"><span class="eyebrow">AUDIT & METHODS</span><h2>数据质量、方法与审计底稿</h2></div>
+        <details class="audit-status-drawer" data-freshness-strip="true">
+          <summary>报告状态、量化与交付门禁</summary>
+          <div class="drawer-body audit-inner">
+            <div class="audit-summary">
+              <div class="audit-cell"><span class="audit-key">process</span><strong data-current-field="run-status">complete</strong></div>
+              <div class="audit-cell"><span class="audit-key">investment readiness</span><strong>conditional</strong></div>
+              <div class="audit-cell"><span class="audit-key">freshness</span><strong data-current-field="freshness-status">current</strong></div>
+              <div class="audit-cell"><span class="audit-key">market as of</span><strong data-current-field="freshness-market-data-as-of">2026-07-15</strong></div>
+            </div>
+            <div class="freshness-grid">
+              <div class="audit-cell"><span class="audit-key">report date</span><strong data-current-field="freshness-report-date">2026-07-16</strong></div>
+              <div class="audit-cell"><span class="audit-key">requested end</span><strong data-current-field="freshness-requested-end-date">2026-07-15</strong></div>
+              <div class="audit-cell"><span class="audit-key">latest trading day</span><strong data-current-field="freshness-latest-available-trading-day">2026-07-15</strong></div>
+              <div class="audit-cell"><span class="audit-key">stale days</span><strong data-current-field="freshness-stale-trading-days">0</strong></div>
+              <div class="audit-cell"><span class="audit-key">data note</span><strong data-current-field="freshness-message">行情截至最近可用交易日 2026-07-15。</strong></div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-chip inactive" data-quant-overlay="true"><b>量化闸门 · <span data-current-field="quant-signal">支持但未生效</span></b><p>仅择时；基本面动作仍为暂不新开仓。 · 覆盖 <span data-current-field="quant-coverage">100.0%</span> · 仓位乘数 ×1.00（未应用）</p></div>
+            </div>
+            <div class="decision-waterfall stable" data-decision-gate="true" data-decision-waterfall="true">
+              <div class="decision-waterfall-head"><b>双重门禁 · 原始回避 → 压力回避 → 最终回避</b><p>原始净 EV -24.4% / 赔率 0.25，未同时达到开仓线 EV≥15.0% 且赔率≥2.00；预设压力后动作未翻转；流程与数据门禁允许按当前动作交付</p></div>
+              <div class="decision-waterfall-steps"><div class="decision-step neutral" data-decision-step="true"><span>原始判定</span><strong>回避 0.0%</strong><small>净 EV -24.4% · 赔率 0.25</small></div><div class="decision-step pass" data-decision-step="true"><span>预设压力门禁</span><strong>回避</strong><small>指标未提供</small></div><div class="decision-step pass" data-decision-step="true"><span>数据门禁</span><strong>通过</strong><small>complete · fatal 0</small></div></div>
+            </div>
+          </div>
+        </details>
+        <div class="grid-3"><div class="note-block"><span class="label">process status</span><h3>complete</h3><p>仅表示契约、流程和发布完成。</p></div><div class="note-block"><span class="label">fundamental coverage / investment readiness</span><h3>广覆盖 / 95%</h3><p>investment readiness conditional；核心 19/20 组；增强缺口 6 项。</p><progress value="0.95" max="1">95%</progress></div><div class="note-block"><span class="label">data quality</span><h3>current</h3><p>行情截至最近可用交易日 2026-07-15。</p></div></div>
+        <h3>尚未结构化的研究缺口</h3><ul class="compact"><li>单一客户集中度（第一大客户销售额/占比）</li><li>前五大应收账款集中度</li><li>外币货币性资产负债/汇兑损益</li><li>实际套保头寸/覆盖率未披露</li><li>终端与上游价格链（同口径、同截止日）</li><li>决策校准样本未成熟</li></ul>
+        <details class="audit-drawer"><summary>S0-S6 流程证据</summary><div class="drawer-body"><div class="stage-grid"><div class="stage" data-stage="S0" data-stage-status="pass"><b>S0 · 预热与 Gate</b><small>2/2 Gate 通过</small></div><div class="stage" data-stage="S1" data-stage-status="pass"><b>S1 · 证据账本</b><small>schema=evidence_ledger.v1</small></div><div class="stage" data-stage="S2" data-stage-status="pass"><b>S2 · 论点构建</b><small>3 个情景 · scenario math PASS</small></div><div class="stage" data-stage="S3" data-stage-status="pass"><b>S3 · 质讯</b><small>4 条挑战 / 4 条回应</small></div><div class="stage" data-stage="S4" data-stage-status="pass"><b>S4 · EV 定价</b><small>净 EV -24.4% / 赔率 0.25</small></div><div class="stage" data-stage="S5" data-stage-status="pass"><b>S5 · 组合覆盖</b><small>仓位 0.0% / 波动 70.5%</small></div><div class="stage" data-stage="S6" data-stage-status="pass"><b>S6 · 决策记录</b><small>schema=decision_record.v1 / tracking=present</small></div></div></div></details>
+        <details class="audit-drawer"><summary>研究 Gate 与清单</summary><div class="drawer-body"><p><b>研究深度 / 通过</b><br>research_intel_runner 0 · research_intel_real 164 · company_notes 17 · industry_notes 17 · supply_chain_notes 15 · path_verified 34 · pool_company 28 · pool_industry 19</p><p><b>流程完整性 / 通过</b><br>company_type hypergrowth_tech · master_count 6 · master_expected 6 · strong_move True · fresh_drivers 2 · annual_years [&#39;2021&#39;, &#39;2022&#39;, &#39;2023&#39;, &#39;2024&#39;, &#39;2025&#39;] · master_rows_total 6 · ricky_master_count 0 · ricky_master_file_count 0 · master_policy framework_checks_only;ricky_s3_interrogator_only</p><p data-evidence-quality-summary="true"><b>证据质量门禁</b><br>原始证据 164 条 · 核心合格 64 条 · 隔离 100 条。问句 0 / 残句 1 / 重复 29 / 范围未核 81 / 新鲜度未知 0。原始材料仍完整保留，隔离项不进入核心排序、模型资格或决策用途。</p><p>证据 schema evidence_ledger.v1 · quality policy aihf_research_evidence_quality.v1</p><ul class="compact"><li>公司：模型大厂算力供给和国产卡替代，Anthropic收入增长斜率的放缓原因判断。开闭源模型能力差异和战略反向，Token分成商业模式展望，昇腾、寒武纪、平头哥、摩尔202607</li><li>公司：昆仑芯调研：当前客户结构以及客户拓展预期，未来三年国内AI算力产品竞争格局预期，存储短缺对交付影响等-寒武纪、平头哥、沐曦、海光202606</li><li>公司：国产AI芯片及CPU市场更新，智算需求规模估计，超节点发展预期等-英伟达、寒武纪、海光、天数智芯、沐曦、壁仞科技、摩尔、飞腾202605</li><li>公司：国内第一大公有云调研：AI业务架构重组影响，MAAS业务增长及毛利提升预期，日均Tokens调用量增长以及Capex等202606</li><li>公司：自动驾驶行业2026下半年展望：技术范式，竞争格局，L3影响，Robotaxi经济性202606</li><li>公司：玻璃基板厂商调研：GlassBridge技术路线解析，产业链影响，玻璃基板进展更新，市场应用前景202607</li><li>公司：覆铜板调研：涨价趋势及竞争格局,AI订单需求及盈利能力,物料供应链风险-聚焦建滔、生益、金安国纪、南亚新材等202607</li><li>公司：超级电容大厂调研：MLPC供需格局,牛角电容导入进展,超级电容竞争格局-聚焦松下、NCC、Rubycon、江海、丰宾、艾华、金山、武藏、奥威、烯晶碳能、AVX等202607</li><li>公司：ODM大厂调研：MI系列放量节奏及L6份额,客户AI服务器需求,DRAM国产部件导入进展-聚焦AMD、英伟达、字节、高通、戴尔、惠普、联想等202607</li><li>公司：日系MLCC龙头近况更新一AI服务器占比、扩产进度及下半年展望202606</li><li>公司：玻璃基板调研：产业推进趋势及重要节点大厂产能布局及项目合作进展,工艺难点及设备厂供应能力,TGV技术竞争格局202606</li><li>公司：智谱GLM-5.2填补海外模型断供的空白，重构全球AI大模型的生态202606</li><li>公司：PCle Switch行业调研：未来2-3年超节点渗透率提升预期及PCle Switch需求变化，国产PCle Switch进展及国产替代节奏预期-博通202606</li><li>公司：专家会：国产卡和ASIC大厂更新，昇腾真武智谱，高通AI200等202606</li><li>公司：AI服务器被动元器件调研：钽电容与芯片电感量价齐升(1)202606</li><li>公司：PCle Switch行业调研：国内核心玩家产品进展以及潜在市场竞争格局，2026至2027年国内PCle Switch市场规模估计，未来AI服务器PCle S202606</li><li>公司：3DDRAM-光宇芯辰：核心技术优势以及潜在应用方向，存算一体和近存计算领域竞争力表现，行业发展预期(1)202606</li><li>行业：国产第三方测试龙头专家访谈-AI算力芯片测试复杂度及价值量提升，设备及客户储备，国产设备情况202604</li><li>行业：半导体测试设备调研：AI算力芯片及存储芯片测试设备供需变化趋势，UItraFlex Plus与V93000测试能力对比及未来在Rubin在TPU测试领域份额估计202605</li><li>行业：高端PCB与铜箔设备调研：填孔、通孔设备进展,AI服务器PCB材料结构与CCL涨价传导,算力板厂产能扩张及订单周期变化等-聚焦三孚新科、明毅、东威、生益、台光202607</li><li>行业：钠离子电池龙头2026H1更新202607</li><li>行业：海外液冷泵龙头国内业务近况更新202607</li><li>行业：服务器深度调研：ISG业务AI订单爆发与全球供应链竞争策略202607</li><li>行业：服务器大厂调研：英伟达、谷歌电源供应链竞争格局，台达产能规划,公司客户结构-聚焦英伟达、谷歌、亚马逊、Meta、微软、台达、欧陆通、光宝、麦格米特等202607</li><li>行业：服务器ODM厂商调研：NVIAMD等出货节奏和客户需求，上游、存储电源、液冷等零组件供给和价格趋势202607</li><li>行业：日系铝电解电容龙头调研：MLPC供需格局与份额重塑、牛角电容技术路线与供需瓶颈、扩产节奏与行业竞争展望202607</li><li>行业：半导体设备行业调研：存储等大厂需求变化，核心供应商对比，交付周期变化及扩产规划等-AMAT、LRCX、KLAC、ASML、三星、海力士、美光202607</li><li>行业：分选机设备调研：大厂先进封装领域客户进展,分选机市场份额及技术差距等-聚焦爱德万、鸿劲、泰瑞达、长川、日月光等202607</li><li>行业：从苹果印度数据泄露事件看手机供应链何去何从？202607</li><li>行业：专家会：北美ASIC和算力更新，Meta对外云租赁，TPU、Trainium等。202607</li><li>行业：PCB调研：价格和上游材料成本变化趋势，NV正交背板进展更新，供应商份额格局202607</li><li>行业：OCS市场调研：2026&amp;2027年出货量估计，最新CSP大厂部署态度及规划，不同方案迭代进展，核心供应链厂商对比-谷歌、Lumentum、Coherent、Ciena、中际旭创、光库科技、赛微电子202607</li><li>行业：DCI市场调研-2：2027年DCI市场规模估计，诺基亚与Ciena在北美市场竞争格局、产能状况以及供应链策略对比，国内代工厂扩产规划及意愿等-Lumentum202607</li><li>行业：DCI市场调研-1：2026年头部客户需求及实际产出估计，最新供给格局，400G、 800G DSP供应商格局及核心供应卡点，磷化铟光源、泵浦激光器、特种光纤等202607</li></ul></div></details>
+        <details class="audit-drawer"><summary>Research OS 身份与数据系谱</summary><div class="drawer-body"><p><b>run ed095dabbab8eddf9e32befd</b> / status complete / reused False</p><p>snapshot 2697fe3e1c9975c55381331a</p><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-21">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 21" aria-describedby="table-scroll-hint-21"><table><thead><tr><th>Dataset</th><th>Status</th><th>Source</th><th>Confidence</th><th>Decision use</th><th>Fallback</th></tr></thead><tbody><tr><td>balancesheet</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>cashflow</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>fina_indicator</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>income</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr><tr><td>valuation_history</td><td>ok</td><td>tushare</td><td>0.85 / high</td><td>decisive</td><td>否</td></tr></tbody></table></div><ul class="compact"><li>offline_frozen_provider_rebuild</li><li>net_cash: source value missing</li></ul></div></details>
+        <details class="audit-drawer"><summary>决策校准与样本成熟度</summary><div class="drawer-body"><p class="table-note">eval 6812660b8661ec00bd7badf1 / 截至 2026-07-15。未到期、未决或缺基准的数据保持“样本未成熟”，不按 0 分处理。</p><div class="grid-2"><div class="note-block"><span class="label">Brier score</span><h3>样本未成熟</h3><p>unavailable · no resolved valid scenario observations</p></div><div class="note-block"><span class="label">方向命中率</span><h3>样本未成熟</h3><p>unavailable · 命中 0 / 已决 0</p></div><div class="note-block"><span class="label">可证伪断言</span><h3>样本未成熟</h3><p>unavailable · 已决 0 / 未到期 8</p></div><div class="note-block"><span class="label">相对基准收益</span><h3>样本未成熟</h3><p>unavailable · benchmark return unavailable</p></div></div></div></details>
+        <details class="audit-drawer"><summary>可重算假设台账</summary><div class="drawer-body"><p class="table-note">假设哈希 72b7ccbd1eb7f7d5ea2f75f1。决策驱动输入必须有 source_ref 与 evidence_refs；净利润、EPS、目标价是派生值，不冒充假设。</p><p class="scroll-hint table-scroll-hint" id="table-scroll-hint-22">左右滑动查看完整表格，首列保持可见</p><div class="table-wrap wide-table" tabindex="0" role="region" aria-label="可横向滚动的数据表 22" aria-describedby="table-scroll-hint-22"><table><thead><tr><th>ID</th><th>指标</th><th>值</th><th>期间</th><th>来源 / 指针</th><th>证据</th><th>敏感度序</th><th>可证伪断言</th></tr></thead><tbody><tr><td>reverse_dcf.implied_revenue_growth</td><td>市场隐含收入增速</td><td>135.4% </td><td>5Y</td><td>market-implied<br><small>未提供</small></td><td>未绑定</td><td>1</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.wacc</td><td>WACC</td><td>10.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>3</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.terminal_growth</td><td>永续增长率</td><td>3.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>4</td><td>模型参数（非情景命题）</td></tr><tr><td>reverse_dcf.reinvestment_rate</td><td>再投资率</td><td>35.0% </td><td>5Y</td><td>Research OS default/override<br><small>未提供</small></td><td>未绑定</td><td>5</td><td>模型参数（非情景命题）</td></tr><tr><td>capital.shares_yi</td><td>总股本（亿股）</td><td>6.2829 100m shares</td><td>20260715</td><td>provider_results.json<br><small>provider_results.json#/valuation_history/rows/1231/shares</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-capital-shares_yi-evidence-E19" data-evidence-ref="E19" href="#evidence-E19" aria-label="查看证据 E19">E19</a></td><td>5</td><td>待绑定情景命题</td></tr><tr><td>scenario.bear.revenue_yi</td><td>收入（亿元）</td><td>180 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bear/model/revenue_yi</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-revenue_yi-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-revenue_yi-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a></td><td>1</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.net_margin</td><td>净利率</td><td>0.26 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bear/model/net_margin</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-net_margin-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-net_margin-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-net_margin-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a></td><td>2</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.target_pe</td><td>情景目标 PE（政策输出）</td><td>70 x</td><td>2027</td><td>target_pe_policy.json<br><small>target_pe_policy.json#/outputs/bear</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-target_pe-evidence-E20" data-evidence-ref="E20" href="#evidence-E20" aria-label="查看证据 E20">E20</a></td><td>3</td><td>bear.claim.1</td></tr><tr><td>scenario.bear.probability</td><td>情景概率</td><td>0.4 probability</td><td>2026-07-15</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/bear</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bear-probability-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></td><td>4</td><td>bear.claim.1</td></tr><tr><td>scenario.base.revenue_yi</td><td>收入（亿元）</td><td>280 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/base/model/revenue_yi</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-base-revenue_yi-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-revenue_yi-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a></td><td>1</td><td>base.claim.1</td></tr><tr><td>scenario.base.net_margin</td><td>净利率</td><td>0.36 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/base/model/net_margin</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-base-net_margin-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-net_margin-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-net_margin-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a></td><td>2</td><td>base.claim.1</td></tr><tr><td>scenario.base.target_pe</td><td>情景目标 PE（政策输出）</td><td>70 x</td><td>2027</td><td>target_pe_policy.json<br><small>target_pe_policy.json#/outputs/base</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-base-target_pe-evidence-E21" data-evidence-ref="E21" href="#evidence-E21" aria-label="查看证据 E21">E21</a></td><td>3</td><td>base.claim.1</td></tr><tr><td>scenario.base.probability</td><td>情景概率</td><td>0.45 probability</td><td>2026-07-15</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/base</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E11" data-evidence-ref="E11" href="#evidence-E11" aria-label="查看证据 E11">E11</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-base-probability-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></td><td>4</td><td>base.claim.1</td></tr><tr><td>scenario.bull.revenue_yi</td><td>收入（亿元）</td><td>430 CNY 100m</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bull/model/revenue_yi</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-revenue_yi-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-revenue_yi-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a></td><td>1</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.net_margin</td><td>净利率</td><td>0.42 ratio</td><td>2027</td><td>thesis.json<br><small>thesis.json#/scenarios/bull/model/net_margin</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-net_margin-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-net_margin-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-net_margin-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a></td><td>2</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.target_pe</td><td>情景目标 PE（政策输出）</td><td>72 x</td><td>2027</td><td>target_pe_policy.json<br><small>target_pe_policy.json#/outputs/bull</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-target_pe-evidence-E22" data-evidence-ref="E22" href="#evidence-E22" aria-label="查看证据 E22">E22</a></td><td>3</td><td>bull.claim.1</td></tr><tr><td>scenario.bull.probability</td><td>情景概率</td><td>0.15 probability</td><td>2026-07-15</td><td>interrogation_log.json<br><small>interrogation_log.json#/probs_after/bull</small></td><td><a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E01" data-evidence-ref="E01" href="#evidence-E01" aria-label="查看证据 E01">E01</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E02" data-evidence-ref="E02" href="#evidence-E02" aria-label="查看证据 E02">E02</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E06" data-evidence-ref="E06" href="#evidence-E06" aria-label="查看证据 E06">E06</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E07" data-evidence-ref="E07" href="#evidence-E07" aria-label="查看证据 E07">E07</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E08" data-evidence-ref="E08" href="#evidence-E08" aria-label="查看证据 E08">E08</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E09" data-evidence-ref="E09" href="#evidence-E09" aria-label="查看证据 E09">E09</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E10" data-evidence-ref="E10" href="#evidence-E10" aria-label="查看证据 E10">E10</a>、<a class="evidence-ref" id="evidence-ref-assumption-scenario-bull-probability-evidence-E13" data-evidence-ref="E13" href="#evidence-E13" aria-label="查看证据 E13">E13</a></td><td>4</td><td>bull.claim.1</td></tr></tbody></table></div></div></details>
+        <details class="audit-drawer" data-master-frameworks="true"><summary>八维观察与质询框架</summary><div class="drawer-body"><div class="grid-2"><div><h3>维度辅助观察</h3><ul class="compact"><li>sentiment：28.2</li><li>china_market：45.6</li><li>macro：62.0</li><li>capital_flow：56.9</li><li>news：44.0</li><li>governance：52.8</li><li>technical：51.0</li><li>fundamental：76.3</li></ul></div><div><h3>大师质询框架</h3><p class="table-note">这些框架只用于提出反证问题，不形成独立投票、评分或目标价。</p><ul class="compact"><li><b>阿斯沃斯·达摩达兰</b>：估值假设、现金流反推与安全边际</li><li><b>纳西姆·塔勒布</b>：尾部风险、脆弱性与反事实</li><li><b>彼得·林奇</b>：业务可理解性、成长兑现与估值纪律</li><li><b>菲利普·费雪</b>：长期成长质量、研发与管理层兑现</li><li><b>斯坦利·德鲁肯米勒</b>：趋势、流动性与赔率共振</li><li><b>巴菲特-芒格</b>：商业质量、护城河与安全边际</li></ul></div></div></div></details>
+      </section>
+    </article>
+  </div>
+</main>
+<script>
+  (() => {
+    const openedForPrint = new Set();
+    const revealHashTarget = () => {
+      if (!window.location.hash) return;
+      const target = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+      if (!target) return;
+      let ancestor = target.parentElement;
+      while (ancestor) {
+        if (ancestor.tagName === "DETAILS") ancestor.open = true;
+        ancestor = ancestor.parentElement;
+      }
+      window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    };
+    window.addEventListener("hashchange", revealHashTarget);
+    window.addEventListener("beforeprint", () => {
+      document.querySelectorAll("details:not(.audit-footnote):not([open])").forEach((detail) => {
+        openedForPrint.add(detail);
+        detail.open = true;
+      });
+    });
+    window.addEventListener("afterprint", () => {
+      openedForPrint.forEach((detail) => { detail.open = false; });
+      openedForPrint.clear();
+    });
+    revealHashTarget();
+  })();
+</script>
+</body>
+</html>
